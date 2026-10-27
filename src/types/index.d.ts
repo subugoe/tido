@@ -196,6 +196,7 @@ export interface PanelConfig {
   selectedAnnotationId?: string
   showSidebar?: boolean
   showSynopsisNavigation?: boolean
+  widthViews?: number[]
 }
 
 export type PanelViewType = 'text' | 'image'

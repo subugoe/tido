@@ -106,6 +106,15 @@ function validatePanels(input: unknown): ValidationResult<TidoConfig['panels']> 
     return defaultConfig.panels ?? []
   })()
 
+  result.forEach((panel, i) => {
+    const { widthViews } = panel ?? {}
+    if (widthViews === undefined) return
+    if (!Array.isArray(widthViews) || widthViews.some(w => typeof w !== 'number' || !(w > 0))) {
+      errors[`panels[${i}].widthViews`] = 'must be an array of positive numbers'
+      delete panel.widthViews
+    }
+  })
+
   return { result, errors }
 }
 
@@ -476,7 +485,8 @@ export async function mergeAndValidateConfig(
             ...(itemIndex > -1 && { item }),
             ...(manifestIndex > -1 && { manifest }),
             ...(selectedAnnotationId && { selectedAnnotationId, showSidebar: true }),
-            ...(resultViews && { views: resultViews })
+            ...(resultViews && { views: resultViews }),
+            ...(panels.result?.[i]?.widthViews && { widthViews: panels.result[i].widthViews })
           }
         }))
       }

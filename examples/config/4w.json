@@ -8,7 +8,8 @@
   "lang": "de",
   "panels": [
     {
-      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/collections/transcriptions"
+      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/collections/transcriptions",
+      "widthViews": [1,3]
     }
   ],
   "tree": {
