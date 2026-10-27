@@ -175,6 +175,7 @@ function targetYPosition(pane, selector) {
 // the synopsis sync, so the gesture the pane listens for (a pressed pointer) is triggered before
 // scrolling - see the scroll listener in GenericTextRenderer.
 function scrollTargetIntoSyncBand(contentUrl, selector) {
+  getTextPane(contentUrl).find(selector).should('exist')
   getTextPane(contentUrl).trigger('pointerdown', { button: 0 })
 
   getTextPane(contentUrl).then($pane => {
@@ -238,6 +239,12 @@ describe('Panel Synopsis', () => {
     // wait until both panels have rendered their texts
     cy.get('[data-cy="panel"]').should('have.length', panels.length)
     getPanel(SYNOPSIS_PANEL).find('[data-text-container]').should('have.length', panelViews.length)
+    // wait until the synopsis is ready: the text containers exist before their texts are loaded, and
+    // the counter only shows the total once the sync targets of both texts are computed. A scroll
+    // before that cannot move the target of a text that has not arrived yet, and is never repeated
+    getSyncTargetNavigation(SYNOPSIS_PANEL)
+      .find('[data-cy="sync-target-counter"]')
+      .should('have.text', `1/${sumSyncTargets(syncTargets[SYNOPSIS_PANEL])}`)
   })
 
   it('Should show the Sync Target Navigation only in a panel that renders synced targets', () => {
