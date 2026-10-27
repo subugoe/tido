@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react'
 
 import { useDataStore } from '@/store/DataStore'
 import { TreeProvider } from '@/contexts/TreeContext.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 import Tree from '@/components/tree/Tree.tsx'
 
@@ -18,6 +19,7 @@ interface Props {
 
 const TreeSelection: FC<Props> = ({ onConfirm }) => {
   const { t } = useTranslation()
+  const { tree: { showItemLevel } } = useConfig()
   const addPanel = usePanelStore(state => state.addPanel)
   const nodes = useDataStore(state => state.treeNodes)
   // we define the way to show nodes in Global tree using "treeNodes"
@@ -50,17 +52,17 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
     // for now we define same loadNodes in every container which displays tree.
     // Later we can customize the initial display based on the requirements
     const loadNodes = async (nodes: TreeNode[]) => {
-      const treeNodes = nodes.length > 1 ? nodes : nodes.length === 1 ? [await getExpandedNode(nodes[0])] : []
+      const treeNodes = nodes.length > 1 ? nodes : nodes.length === 1 ? [await getExpandedNode(nodes[0], showItemLevel)] : []
       setTreeNodes(treeNodes)
     }
 
     loadNodes(nodes)
-  }, [nodes])
+  }, [nodes, showItemLevel])
 
 
   return <div className="flex flex-col max-w-full overflow-x-hidden">
     <div className="max-h-80 overflow-y-auto">
-      <TreeProvider onSelect={onSelect} getChildren={getChildren}>
+      <TreeProvider onSelect={onSelect} getChildren={(node) => getChildren(node, showItemLevel)}>
         <Tree nodes={treeNodes} showQuickView={true} />
       </TreeProvider>
     </div>

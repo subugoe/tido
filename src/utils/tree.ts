@@ -31,7 +31,7 @@ async function createCollectionNode(url: string) {
 }
 
 
-async function getChildren(node: TreeNode): Promise<TreeNode[]> {
+async function getChildren(node: TreeNode, showItemLevel = true): Promise<TreeNode[]> {
   const { id } = node
   const parentKey = node.key
 
@@ -93,7 +93,8 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
       type,
       label,
       key: parentKey + NODE_KEY_DELIMITER + id,
-      leaf: type === 'item',
+      // without the item level, manifests are the last level and open the panel at their first item
+      leaf: type === (showItemLevel ? 'item' : 'manifest'),
       expanded: false,
       children: [] as TreeNode[]
     }
@@ -157,8 +158,8 @@ function getPanelConfigFromNode(node: TreeNode): PanelConfig {
   return { collection: ids[ids.length - 1] }
 }
 
-async function getExpandedNode(node: TreeNode): Promise<TreeNode> {
-  node.children = [...await getChildren(node)]
+async function getExpandedNode(node: TreeNode, showItemLevel = true): Promise<TreeNode> {
+  node.children = [...await getChildren(node, showItemLevel)]
   if (node.children.length > 0) node.expanded = true
   return node
 }

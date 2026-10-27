@@ -216,6 +216,10 @@ export interface PanelView {
   visible?: boolean
 }
 
+export interface TreeConfig {
+  showItemLevel: boolean
+}
+
 export interface ThemeConfig {
   primaryColor: string,
   mode: 'light' | 'dark' | 'system'
@@ -250,6 +254,7 @@ export interface TidoConfig {
   theme: ThemeConfig
   title: string
   translations: TranslationsConfig,
+  tree: TreeConfig,
   panelViews: PanelView[],
   annotations: AnnotationsConfig
 }

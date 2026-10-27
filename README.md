@@ -619,6 +619,24 @@ Defines a translation key/value pair for a supported language. You can override 
 
 Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration.
 
+---
+
+##### `tree`
+
+- **Type:** Object
+- **Default:** `{}`
+
+Specifies settings for the trees (global tree and collection selection).
+
+---
+
+##### `tree.showItemLevel`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Toggles the display of items in the trees. When false, manifests are the last level of the tree and selecting one opens its first item.
+
 ### Panel Views
 This array of `PanelViewConfig` objects defines the actual visible content inside a panel. It is a list of
 objects, each of which creates a resizable split pane inside the panel. This configuration will be applied to all
