@@ -38,7 +38,7 @@ function useManifestSwitcher(): ManifestSwitcher {
     // With only one item there is nothing to select, so the item label is merged into the
     // manifest label and the item navigation is hidden entirely.
     const itemLabel = t(panelState?.item?.division ?? '')
-    return itemLabel ? `${manifestLabel} - ${itemLabel}` : manifestLabel
+    return itemLabel && itemLabel !== manifestLabel ? `${manifestLabel} - ${itemLabel}` : manifestLabel
   }, [selectedManifest, panelState?.manifest?.titles, panelState?.item, isSingleItem, t])
 
   useEffect(() => {
