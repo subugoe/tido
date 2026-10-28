@@ -1,5 +1,5 @@
 import { useDataStore } from '@/store/DataStore.tsx'
-import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
+import { hasManifests, isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { PanelConfig } from '@/types'
 import { NODE_KEY_DELIMITER } from './constants'
@@ -125,6 +125,23 @@ async function getRootChildrenCollectionsIds(rootCollection: Collection) {
   return Array.from(result)
 }
 
+// Panels can only be opened with a leaf collection (one holding manifests). Descend depth-first through
+// nested collections and return the id of the first leaf collection, or null if there is none.
+async function getFirstLeafCollectionId(collectionId: string): Promise<string | null> {
+  const collection = await useDataStore.getState().initCollection(collectionId)
+  if (hasManifests(collection)) return collection.id
+
+  for (const child of collection.collections ?? []) {
+    const childId = typeof child === 'object' ? child.id : child
+    if (!isCollectionUrl(childId)) continue
+
+    const leafId = await getFirstLeafCollectionId(childId)
+    if (leafId) return leafId
+  }
+
+  return null
+}
+
 function getCollectionSlug(id: string) {
   const urlParts = id.split('/')
   const markerIndex = urlParts.findIndex(part => part === 'collections')
@@ -165,5 +182,6 @@ async function getExpandedNode(node: TreeNode, showItemLevel = true): Promise<Tr
 }
 
 export {  createCollectionNode, createCollectionNodes, getChildren,
-  getNodeIndices, getPanelConfigFromNode, getCollectionSlug, getExpandedNode, getRootChildrenCollectionsIds
+  getNodeIndices, getPanelConfigFromNode, getCollectionSlug, getExpandedNode, getRootChildrenCollectionsIds,
+  getFirstLeafCollectionId
 }
