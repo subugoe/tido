@@ -4,6 +4,7 @@ import { TreeProvider } from '@/contexts/TreeContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { logError } from '@/utils/custom-error.ts'
 
 import Tree from '@/components/tree/Tree.tsx'
 
@@ -15,7 +16,8 @@ interface Props {
 }
 
 const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
-  const { panelId } = usePanel()
+  const { panelId, usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
   const { tree: { showItemLevel } } = useConfig()
   const updatePanel = usePanelStore(state => state.updatePanel)
   const [treeNodes, setTreeNodes] = useState([])
@@ -31,7 +33,7 @@ const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
       const collectionNode = await createCollectionNode(collectionId)
       setTreeNodes([await getExpandedNode(collectionNode, showItemLevel)])
     }
-    initTreeNode(collectionId)
+    initTreeNode(collectionId).catch(e => logError(e, t))
   }, [])
 
   return <div className="flex flex-col">

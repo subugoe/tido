@@ -8,6 +8,7 @@ import { PanelView } from '@/types'
 import { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import SynopsisContent from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContent.tsx'
 import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
+import { logError } from '@/utils/custom-error.ts'
 
 interface Props {
   syncTargets: SynopsisConnection,
@@ -144,7 +145,7 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
         newPanelId
       )
     } catch (e) {
-      console.error(e)
+      logError(e, t)
     }
   }
 

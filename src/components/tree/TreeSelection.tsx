@@ -9,6 +9,7 @@ import Tree from '@/components/tree/Tree.tsx'
 import { getChildren, getExpandedNode, getPanelConfigFromNode } from '@/utils/tree.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
+import { logError } from '@/utils/custom-error.ts'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
 
@@ -56,7 +57,7 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
       setTreeNodes(treeNodes)
     }
 
-    loadNodes(nodes)
+    loadNodes(nodes).catch(e => logError(e, t))
   }, [nodes, showItemLevel])
 
 

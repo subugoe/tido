@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import ExistingCollectionDialog from '@/components/rail/ExistingCollectionDialog.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { useTranslation } from 'react-i18next'
+import { logError } from '@/utils/custom-error.ts'
 import { createCollectionNode } from '@/utils/tree.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
@@ -101,7 +102,7 @@ const AddNewPanelContent: FC = () => {
               data-cy="new-collection-input"
             />
             <Button
-              onClick={handleAdd}
+              onClick={() => handleAdd().catch(e => logError(e, t))}
               disabled={!inputValue.trim()}
               className="w-fit gap-2"
               data-cy="new-collection-add"

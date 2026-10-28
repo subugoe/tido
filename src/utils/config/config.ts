@@ -6,6 +6,8 @@ import { TidoConfig, PanelConfig, TidoContentState, TidoContentStateTarget, Pane
 import { apiRequest } from '@/utils/api.ts'
 import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
+import { TFunction } from 'i18next'
+import { translateError } from '@/utils/custom-error.ts'
 
 let _panelViewsUserExplicit = false
 
@@ -373,7 +375,7 @@ export function mergeAndValidateI18nConfig(
 }
 
 export async function mergeAndValidateConfig(
-  userConfig: Partial<TidoConfig>, defaultConfig: Partial<TidoConfig>, i18nConfig: I18nConfig
+  userConfig: Partial<TidoConfig>, defaultConfig: Partial<TidoConfig>, i18nConfig: I18nConfig, t: TFunction
 ): Promise<{ config: TidoConfig; errors: Record<string, object | string> }> {
 
   const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
@@ -479,7 +481,8 @@ export async function mergeAndValidateConfig(
         }))
       }
     } catch (e) {
-      console.error(`Bookmarking Error: Unexpected error during reading from the bookmarking string - ${e}`)
+      const { title, message } = e instanceof Error ? translateError(e, t) : { title: null, message: String(e) }
+      console.error(`Bookmarking Error: Unexpected error during reading from the bookmarking string - ${title ? `${title}: ` : ''}${message}`)
     }
   }
 
