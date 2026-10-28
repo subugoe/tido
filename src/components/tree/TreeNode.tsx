@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
-import { getPanelConfigFromNode, getRootChildrenCollectionsIds } from '@/utils/tree.ts'
+import { getFirstLeafCollectionId, getPanelConfigFromNode, getRootChildrenCollectionsIds } from '@/utils/tree.ts'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 import { logError } from '@/utils/custom-error.ts'
 
@@ -86,9 +86,19 @@ const TreeNode: FC<TreeNodeProps> = ({ node, showQuickView = false }) => {
     updatePanelsNumbersOpened().catch(e => logError(e, t))
   }, [panels])
 
-  function openPanel(e: MouseEvent<HTMLElement>) {
+  async function openPanel(e: MouseEvent<HTMLElement>) {
     e.stopPropagation()
     const config = getPanelConfigFromNode(node)
+
+    if (node.type === 'collection') {
+      // The collection may hold nested collections, so open the panel with the first leaf collection
+      try {
+        config.collection = await getFirstLeafCollectionId(node.id) ?? config.collection
+      } catch (error) {
+        logError(error, t)
+      }
+    }
+
     const newPanelId = crypto.randomUUID()
     useUIStore.getState().updateNewestPanelId(newPanelId)
     usePanelStore.getState().addPanel(config, newPanelId)
