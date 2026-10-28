@@ -1,10 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { I18nextProvider } from 'react-i18next'
+import { i18n as I18n } from 'i18next'
 import { TidoConfig } from '@/types'
 import { mergeAndValidateConfig, mergeAndValidateI18nConfig } from '@/utils/config/config.ts'
 import { getColors } from '@/utils/colors.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
-import { initI18n } from '@/utils/translations.ts'
+import { createI18n } from '@/utils/translations.ts'
+import { logError } from '@/utils/custom-error.ts'
 import Loading from '@/components/ui/loading.tsx'
 import { defaultConfig } from '@/utils/config/default-config.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
@@ -32,6 +35,7 @@ const ConfigContext = createContext(null)
 export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) => {
 
   const [config, setConfig] = useState<TidoConfig>(null)
+  const [i18n, setI18n] = useState<I18n | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
 
   const createTreeNodes = useDataStore.getState().createTreeNodes
@@ -39,15 +43,15 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
 
   useEffect(() => {
     async function initApp() {
+      let instance: I18n | null = null
       try {
         setLoading(true)
 
-        // i18n first: mergeAndValidateConfig fetches collections and manifests, and the errors
-        // those throw are translated.
         const { errors: i18nErrors, ...i18nConfig } = mergeAndValidateI18nConfig(userConfig)
-        initI18n(i18nConfig.translations, i18nConfig.lang)
+        instance = createI18n(i18nConfig.translations, i18nConfig.lang)
+        setI18n(instance)
 
-        const { config, errors } = await mergeAndValidateConfig(userConfig, defaultConfig, i18nConfig)
+        const { config, errors } = await mergeAndValidateConfig(userConfig, defaultConfig, i18nConfig, instance.t)
 
         const allErrors = { ...i18nErrors, ...errors }
         if (Object.keys(allErrors).length > 0) console.error(allErrors)
@@ -64,14 +68,17 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
           config.rootCollections.map(url => useDataStore.getState().initCollection(url))
         )
 
-        createTreeNodes(config.rootCollections)
+        createTreeNodes(config.rootCollections).catch(e => logError(e, instance.t))
 
         setConfig(config)
 
-        config.rootCollections.forEach(url => useSynopsisStore.getState().addSyncAnnotationsFromCollection(url))
+        config.rootCollections.forEach(url =>
+          useSynopsisStore.getState().addSyncAnnotationsFromCollection(url).catch(e => logError(e, instance.t))
+        )
 
       } catch(e) {
-        console.error(e)
+        if (instance) logError(e, instance.t)
+        else console.error(e)
       } finally {
         setLoading(false)
       }
@@ -87,10 +94,18 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
     </div>
   }
 
-  return (
+  const configProvider = (
     <ConfigContext.Provider value={config}>
       {children}
     </ConfigContext.Provider>
+  )
+
+  if (!i18n) return configProvider
+
+  return (
+    <I18nextProvider i18n={i18n}>
+      {configProvider}
+    </I18nextProvider>
   )
 }
 

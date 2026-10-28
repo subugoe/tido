@@ -3,6 +3,7 @@ import { CircleX, RotateCcw } from 'lucide-react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { FallbackProps } from 'react-error-boundary'
 import { Button } from '@/components/ui/button.tsx'
+import { translateError } from '@/utils/custom-error.ts'
 
 interface Props extends FallbackProps {
   error: string | Error
@@ -11,7 +12,7 @@ const TextViewError: FC<Props> = ({ error, resetErrorBoundary }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
-  const message = typeof error === 'string' ? new Error(error).message : error.message
+  const { message } = translateError(typeof error === 'string' ? new Error(error) : error, t)
 
 
   return <div className="w-full overflow-hidden flex flex-col items-center m-3 py-3 px-8 bg-red-50 dark:bg-red-300/20 rounded-lg">

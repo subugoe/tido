@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
+import { logError } from '@/utils/custom-error.ts'
 
 interface ManifestSwitcher {
   manifestOptions: DropdownOption[]
@@ -38,7 +39,7 @@ function useManifestSwitcher(): ManifestSwitcher {
     // With only one item there is nothing to select, so the item label is merged into the
     // manifest label and the item navigation is hidden entirely.
     const itemLabel = t(panelState?.item?.division ?? '')
-    return itemLabel ? `${manifestLabel} - ${itemLabel}` : manifestLabel
+    return itemLabel && itemLabel !== manifestLabel ? `${manifestLabel} - ${itemLabel}` : manifestLabel
   }, [selectedManifest, panelState?.manifest?.titles, panelState?.item, isSingleItem, t])
 
   useEffect(() => {
@@ -54,7 +55,7 @@ function useManifestSwitcher(): ManifestSwitcher {
       )
       setManifestOptions(manifests)
     }
-    loadManifestOptions()
+    loadManifestOptions().catch(e => logError(e, t))
   }, [collection])
 
   const itemOptions = useMemo(() => {
@@ -119,11 +120,11 @@ function useManifestSwitcher(): ManifestSwitcher {
     selectedLabel,
     isSelecting,
     isSingleItem,
-    onManifestSelect,
+    onManifestSelect: (...args: Parameters<typeof onManifestSelect>) => { onManifestSelect(...args).catch(e => logError(e, t)) },
     itemOptions,
     showItemDropdown,
     setShowItemDropdown,
-    onItemSelect,
+    onItemSelect: (...args: Parameters<typeof onItemSelect>) => { onItemSelect(...args).catch(e => logError(e, t)) },
     onItemDropdownClose
   }
 }
