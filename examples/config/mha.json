@@ -25,16 +25,6 @@
       "manifest": "https://textapi.mha.d.sub.uni-goettingen.de/api/manifests/MHA01"
     }
   ],
-  "panelViews": [
-    {
-      "label": "Image",
-      "view": "image"
-    },
-    {
-      "label": "Text",
-      "view": "text"
-    }
-  ],
   "annotations": {
     "filters": {
       "rootSelectionRule": "single",
