@@ -8,39 +8,39 @@
   ],
   "assets": [
     {
-      "assetType": "css",
       "contentType": "text/css",
-      "id": "http://localhost:8181/4w/css/styles-2.css"
+      "id": "http://localhost:8181/4w/css/styles-2.css",
+      "textapiType": "TextApiAsset"
     },
     {
-      "assetType": "font",
-      "contentType": "font/ttf",
-      "id": "http://localhost:8181/4w/fonts/JunicodeVF-Roman.woff2"
+      "contentType": "font/woff2",
+      "id": "http://localhost:8181/4w/fonts/JunicodeVF-Roman.woff2",
+      "textapiType": "TextApiAsset"
     },
     {
-      "assetType": "font",
       "contentType": "font/ttf",
-      "id": "http://localhost:8181/4w/fonts/Junicode-Italic.ttf"
+      "id": "http://localhost:8181/4w/fonts/Junicode-Italic.ttf",
+      "textapiType": "TextApiAsset"
     },
     {
-      "assetType": "font",
       "contentType": "font/ttf",
-      "id": "http://localhost:8181/4w/fonts/Junicode-Light.ttf"
+      "id": "http://localhost:8181/4w/fonts/Junicode-Light.ttf",
+      "textapiType": "TextApiAsset"
     },
     {
-      "assetType": "font",
       "contentType": "font/ttf",
-      "id": "http://localhost:8181/4w/fonts/Junicode-Bold.ttf"
+      "id": "http://localhost:8181/4w/fonts/Junicode-Bold.ttf",
+      "textapiType": "TextApiAsset"
     },
     {
-      "assetType": "font",
-      "contentType": "font/ttf",
-      "id": "http://localhost:8181/4w/fonts/JunicodeVF-Italic.woff2"
+      "contentType": "font/woff2",
+      "id": "http://localhost:8181/4w/fonts/JunicodeVF-Italic.woff2",
+      "textapiType": "TextApiAsset"
     },
     {
-      "assetType": "font",
       "contentType": "font/ttf",
-      "id": "http://localhost:8181/4w/fonts/Junicode-Regular.ttf"
+      "id": "http://localhost:8181/4w/fonts/Junicode-Regular.ttf",
+      "textapiType": "TextApiAsset"
     }
   ],
   "license": "CC-BY-SA-4.0",

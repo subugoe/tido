@@ -155,14 +155,6 @@ declare global {
     endSelector: CssSelector
   }
 
-  interface Asset {
-    id: string
-    assetType: string
-    contentType: string
-    type: string
-    integrity?: DataIntegrity
-  }
-
   type SuccessResponse<T> = {
     success: true
     data: T

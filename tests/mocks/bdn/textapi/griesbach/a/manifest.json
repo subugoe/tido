@@ -64,6 +64,13 @@
       "label": "Druckfehler"
     }
   ],
+  "assets": [
+    {
+      "contentType": "text/css",
+      "id": "http://localhost:8181/bdn/files/css/neologie.css",
+      "textapiType": "TextApiAsset"
+    }
+  ],
   "textapiType": "TextApiManifest",
   "revision": "1",
   "total": 10,
