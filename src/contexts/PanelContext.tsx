@@ -4,7 +4,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 
 import { getSelectedTypes } from '@/utils/annotations.ts'
 import { getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
-import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
+import { getContentTypes, hasImage, isNewManifest } from '@/utils/panel.ts'
 import { getAssets } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
 import { FilterNodeWithSelection, PanelConfig, PanelView, SelectedAnnotation } from '@/types'
@@ -265,9 +265,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         resultPanelViews = baseViews.map((view, i) => enhanceView(view, panelState.panelViews[i]))
       } else {
         // Without a views config, the item decides on every navigation: an image view is only shown when the item has images.
-        // An empty images array counts as no images. Broken images are still shown in the image view with an error.
-        const hasImages = item?.images?.length > 0
-        const itemViews = hasImages ? configuredViews : configuredViews.filter(v => v.view !== 'image')
+        // No images key, an empty images array or an image without url count as no images. Broken images are still shown in the image view with an error.
+        const itemViews = hasImage(item) ? configuredViews : configuredViews.filter(v => v.view !== 'image')
 
         // Keep what the user changed on the matching views of the previous item, i.e. a toggled off view or the active content type
         resultPanelViews = itemViews.map((view) => {

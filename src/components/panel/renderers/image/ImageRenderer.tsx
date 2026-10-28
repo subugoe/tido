@@ -87,15 +87,8 @@ const ImageRenderer: FC = () => {
 
     if (loadingPanel) return
 
-    if (panelState.item?.images && panelState.item.images.length === 0) {
-      showBoundary(t('no_images_found'))
-      return
-    }
-
-    if (!imageUrl || !viewerRef.current) {
-      showBoundary(t('could_not_find_image'))
-      return
-    }
+    // An item without an image url never gets here, ImageView shows the empty state for it instead
+    if (!imageUrl || !viewerRef.current) return
 
     const oldItem = viewerRef.current.world.getItemAt(0)
     if (oldItem) viewerRef.current.world.removeItem(oldItem)
