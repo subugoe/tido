@@ -25,10 +25,17 @@ function loadCss (url: string){
   document.head.appendChild(element)
 }
 
-export const getAssets = (assets: Asset[] | undefined) => {
+function getMimeType(contentType: string) {
+  // strip optional parameters, e.g. 'text/css; charset=utf-8' -> 'text/css'
+  return contentType.split(';')[0].trim().toLowerCase()
+}
+
+export const getAssets = (assets: Asset[] | null | undefined) => {
   assets?.forEach((s) => {
-    const hasElement = document.getElementById(s.id)
-    if (s.assetType === 'font' && !hasElement) loadFont(s.id)
-    if (s.assetType === 'css' && !hasElement) loadCss(s.id)
+    if (!s.id || !s.contentType || document.getElementById(s.id)) return
+
+    const mimeType = getMimeType(s.contentType)
+    if (mimeType === 'text/css') loadCss(s.id)
+    else if (mimeType.startsWith('font/')) loadFont(s.id)
   })
 }
