@@ -4,6 +4,11 @@ import { PanelConfig, PanelView } from '@/types'
 import { useUIStore } from '@/store/UIStore.tsx'
 import { SUPPORTED_MIME_TYPES } from './constants'
 
+// an item has an image to display when its first image has a url. No images key, an empty array or an image without url count as no image
+export function hasImage(item: Item | null): boolean {
+  return !!item?.images?.[0]?.id
+}
+
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
   let manifestUrl = ''

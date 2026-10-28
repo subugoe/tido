@@ -4,7 +4,10 @@
   "id": "http://localhost:8181/example/manifests/images-test.json",
   "items": [
     "http://localhost:8181/example/items/no-images-page.json",
-    "http://localhost:8181/example/items/empty-images-page.json"
+    "http://localhost:8181/example/items/empty-images-page.json",
+    "http://localhost:8181/example/items/with-images-page.json",
+    "http://localhost:8181/example/items/broken-image-page.json",
+    "http://localhost:8181/example/items/image-without-url-page.json"
   ],
   "textapiType": "TextApiManifest",
   "revision": "1",

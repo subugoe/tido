@@ -1,0 +1,28 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/example/items/image-without-url-page.json",
+  "textapiType": "TextApiItem",
+  "revision": "1",
+  "division": "Page 5",
+  "titles": [
+    "Image Without Url Page"
+  ],
+  "languages": [
+    "eng"
+  ],
+  "images": [
+    {
+      "license": "CC0-1.0",
+      "mimetype": "image/png"
+    }
+  ],
+  "contents": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "id": "http://localhost:8181/example/html/image-without-url-page_transcription.html",
+      "contentType": "text/html;type=transcription"
+    }
+  ],
+  "textItemType": "page"
+}

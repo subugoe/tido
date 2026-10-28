@@ -428,6 +428,8 @@ Overrides the global `panelViews` config for this specific panel. Use this to cu
 
 Configures an initial distribution of content views inside each panel. The defined views here can then be toggled on/off in the "View" dropdown in the panel header. See [Panel Views](#panel-views) chapter.
 
+If `panelViews` is not specified, TIDO decides for each item whether to show the image view: an item with images shows the image and the text view, an item without images (no `images` key, an empty `images` array or an image without `id`) shows only the text view. This is evaluated again on every item navigation. If some items have images but others don't, it is recommended not to specify `panelViews` at all and let TIDO discover whether to show the image view. When `panelViews` is specified, the configured views are shown for every item, i.e. a configured image view shows a "No image available" empty state for items without images, and an error only when the given image cannot be loaded.
+
 ---
 
 ##### `panelViews[i].activeContentType`

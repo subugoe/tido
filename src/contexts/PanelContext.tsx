@@ -4,7 +4,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 
 import { getSelectedTypes } from '@/utils/annotations.ts'
 import { getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
-import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
+import { getContentTypes, hasImage, isNewManifest } from '@/utils/panel.ts'
 import { getAssets } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
 import { FilterNodeWithSelection, PanelConfig, PanelView, SelectedAnnotation } from '@/types'
@@ -229,8 +229,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
       // 4. We discover the correct "views" config. This can come from a global config (root key "panelViews")
       // or local config (key "views" in the panel config).
-      const enhanceView = (view: PanelView, viewIndex: number): Partial<PanelView> => {
-        const oldActiveContentType = panelState.panelViews[viewIndex]?.activeContentType ?? null
+      const enhanceView = (view: PanelView, oldView?: PanelView): PanelView => {
+        const oldActiveContentType = oldView?.activeContentType ?? null
         let activeContentType = null
         if (contentTypes?.length > 0) {
           if (oldActiveContentType) {
@@ -251,22 +251,28 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         }
       }
 
-      // next line we prioritize the views changed from the user on the current panel. I.e toggle off views and navigate to a new item on same panel
-      // we should preserve the selected views from user for this panel
-      let resultPanelViews: PanelView[] = panelState.panelViews && panelState.panelViews.length > 0 ? panelState.panelViews.map((view, i) => ({
-        ...enhanceView(view, i),
-      })) :
-        config.views && config.views.length > 0
-          ? config.views.map((view, i) => ({
-            ...(globalPanelViewsConfig[i] ?? {}),
-            ...enhanceView(view, i),
-          }))
-          : globalPanelViewsConfig.map((view: PanelView, i: number) => enhanceView(view, i))
+      const configuredViews: PanelView[] = config.views && config.views.length > 0
+        ? config.views.map((view, i) => ({ ...(globalPanelViewsConfig[i] ?? {}), ...view }))
+        : globalPanelViewsConfig
 
-      // Remove the image pane when the item has no images, unless the user explicitly configured an image view.
-      // This is done before the views are stored, so no image view exists at all - not even from the default config.
-      if (!item?.images && !isPanelViewsUserExplicit()) {
-        resultPanelViews = resultPanelViews.filter(v => v.view !== 'image')
+      let resultPanelViews: PanelView[]
+
+      if (isPanelViewsUserExplicit() || config.views?.length > 0) {
+        // The views are configured explicitly, so they are kept as they are on every item.
+        // We prioritize the views changed from the user on the current panel. I.e toggle off views and navigate to a new item on same panel
+        // we should preserve the selected views from user for this panel
+        const baseViews = panelState.panelViews && panelState.panelViews.length > 0 ? panelState.panelViews : configuredViews
+        resultPanelViews = baseViews.map((view, i) => enhanceView(view, panelState.panelViews[i]))
+      } else {
+        // Without a views config, the item decides on every navigation: an image view is only shown when the item has images.
+        // No images key, an empty images array or an image without url count as no images. Broken images are still shown in the image view with an error.
+        const itemViews = hasImage(item) ? configuredViews : configuredViews.filter(v => v.view !== 'image')
+
+        // Keep what the user changed on the matching views of the previous item, i.e. a toggled off view or the active content type
+        resultPanelViews = itemViews.map((view) => {
+          const oldView = panelState.panelViews.find(v => v.view === view.view && v.label === view.label)
+          return enhanceView(oldView ?? view, oldView)
+        })
       }
 
       // 5. We update the panel state with the data.
