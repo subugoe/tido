@@ -1,0 +1,29 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/example/items/broken-image-page.json",
+  "textapiType": "TextApiItem",
+  "revision": "1",
+  "division": "Page 4",
+  "titles": [
+    "Broken Image Page"
+  ],
+  "languages": [
+    "eng"
+  ],
+  "images": [
+    {
+      "id": "http://localhost:8181/example/does-not-exist.png",
+      "license": "CC0-1.0",
+      "mimetype": "image/png"
+    }
+  ],
+  "contents": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "id": "http://localhost:8181/example/html/broken-image-page_transcription.html",
+      "contentType": "text/html;type=transcription"
+    }
+  ],
+  "textItemType": "page"
+}
