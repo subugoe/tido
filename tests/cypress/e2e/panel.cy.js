@@ -85,10 +85,18 @@ describe('Panel', () => {
       .children()
       .eq(2)
       .click()
-      .validateLabel('item','Page 3')
 
-      .findPanelTitleAndNavArrows()
+    // Wait until the item dropdown is closed and Page 3 is loaded. Otherwise, on a slow machine the
+    // click on the next button lands while the dropdown is still closing and gets lost.
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="items-dropdown"]').should('not.exist')
+    cy.validateLabel('item','Page 3')
+    cy.validateText('Chapter 3 - The Spouter-Inn')
+
+    cy.findPanelTitleAndNavArrows()
       .find('[data-cy="next-item-button"]')
+      .should('not.be.disabled')
       .click()
       .validateLabel('manifest', 'The Great Gatsby')         // Manifest and item labels should get updated
       .validateLabel('item', 'Page 1')
