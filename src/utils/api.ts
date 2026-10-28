@@ -2,7 +2,6 @@ import { request } from '@/utils/http.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { hasItems, hasManifests, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
-import { t } from '@/utils/translations.ts'
 import { getFirstPageUrl } from '@/utils/annotation-data.ts'
 
 // Helper to extract ID string from collection/manifest/item array elements
@@ -21,7 +20,7 @@ async function apiRequest<T>(url: string): Promise<T> {
   if (!response.success) {
     const err = response as ErrorResponse
     throw new CustomError(
-      t('error_loading_data'),
+      'error_loading_data',
       `Failed to load ${url}: ${err.message} (${err.code})`
     )
   }
@@ -38,7 +37,7 @@ async function getAnnotationPage(annotationCollectionUrl: string): Promise<Annot
   const promise = (async () => {
     const collection: AnnotationCollection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
     if (typeof collection !== 'object' || !Object.hasOwn(collection, 'first')) {
-      throw new CustomError(t('annotations_init_error'), t('annotation_collection_response_error'))
+      throw new CustomError('annotations_init_error', 'annotation_collection_response_error')
     }
     return await apiRequest<AnnotationPage>(getFirstPageUrl(collection))
   })()
@@ -53,12 +52,12 @@ async function getAnnotationPage(annotationCollectionUrl: string): Promise<Annot
 
 async function getFirstManifest(collection: Collection) {
   if (!hasManifests(collection)) {
-    throw new CustomError(t('panel_init_error'), t('error_contains_no_manifests', { url: collection.id }))
+    throw new CustomError('panel_init_error', 'error_contains_no_manifests', { url: collection.id })
   }
 
   const first = getIdFromElement(collection.manifests[0])
   if (!isManifestUrl(first)) {
-    throw new CustomError(t('panel_init_error'), t('error_invalid_manifest_url', { url: first }))
+    throw new CustomError('panel_init_error', 'error_invalid_manifest_url', { url: first })
   }
 
   return await useDataStore.getState().initManifest(first)
@@ -66,13 +65,13 @@ async function getFirstManifest(collection: Collection) {
 
 async function getFirstItem(manifest: Manifest) {
   if (!hasItems(manifest)) {
-    throw new CustomError(t('panel_init_error'), t('error_contains_no_items', { url: manifest.id }))
+    throw new CustomError('panel_init_error', 'error_contains_no_items', { url: manifest.id })
   }
 
   const first = manifest.items?.[0]
   const firstId = first ? getIdFromElement(first) : undefined
   if (!firstId || !isItemUrl(firstId)) {
-    throw new CustomError(t('panel_init_error'), t('error_invalid_item_url', { url: firstId }))
+    throw new CustomError('panel_init_error', 'error_invalid_item_url', { url: firstId })
   }
 
   return await useDataStore.getState().initItem(firstId)

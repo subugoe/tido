@@ -1,5 +1,4 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import { usePanel } from '@/contexts/PanelContext.tsx'
 import { validateCrossRefNode } from '@/utils/cross-ref.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import CrossRefLink from '@/components/panel/annotations/popover/cross-ref/CrossRefLink.tsx'
@@ -12,10 +11,8 @@ interface Props {
 }
 
 const CrossRefItem: FC<Props> = ({ annotation, onSelect }) => {
-  const { usePanelTranslation } = usePanel()
   const [error, setError] = useState<CustomError>(null)
   const [loading, setLoading] = useState(false)
-  const { t } = usePanelTranslation()
 
   const extendedCrossRefInfoRef = useRef<CrossRefInfo>(null)
   const loadedData = useRef<boolean>(null)
@@ -43,12 +40,12 @@ const CrossRefItem: FC<Props> = ({ annotation, onSelect }) => {
             const referencedText: string = await apiRequest(itemData.contents[contentIndex].id)
             const textEl = parser.parseFromString(referencedText, 'text/html')
             const targetExists = textEl.querySelector(crossRefInfo.selector)
-            if (!targetExists) setError(new CustomError(t('cross_ref_error_title'), t('referenced_element_not_found')))
+            if (!targetExists) setError(new CustomError('cross_ref_error_title', 'referenced_element_not_found'))
           }
 
           loadedData.current = true
         } catch(e) {
-          setError(new CustomError(t(e.name), t(e.message)))
+          setError(new CustomError(e.name, e.message, e.options))
         } finally {
           setLoading(false)
         }

@@ -3,9 +3,11 @@ import { useDataStore } from '@/store/DataStore.tsx'
 import { PanelConfig } from '@/types'
 import NavigationButton from '@/components/panel/navigation/NavigationButton.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { logError } from '@/utils/custom-error.ts'
 
 const NextItemButton: FC = () => {
-  const { panelState, init } = usePanel()
+  const { panelState, init, usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
   const [isDisabled, setIsDisabled] = useState(false)
 
   useEffect(() => {
@@ -87,7 +89,7 @@ const NextItemButton: FC = () => {
 
   return <NavigationButton
     isDisabled={isDisabled}
-    navigate={navigate}
+    navigate={() => navigate().catch(e => logError(e, t))}
     dataCy="next-item-button"
     tooltipKey="next_item"
   />

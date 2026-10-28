@@ -3,7 +3,6 @@ import { apiRequest } from '@/utils/api.ts'
 import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { createCollectionNodes } from '@/utils/tree.ts'
-import { t } from '@/utils/translations.ts'
 import { getFirstPageUrl, getPageAnnotations } from '@/utils/annotation-data.ts'
 
 
@@ -72,7 +71,7 @@ interface DataStoreType {
   initItem: (url: string) => Promise<Item>
   initAnnotations: (collectionId: string, url: string) => Promise<void>
   appendRootNode: (newNode: TreeNode) => void,
-  createTreeNodes: (rootCollections: string[]) => void
+  createTreeNodes: (rootCollections: string[]) => Promise<void>
 }
 
 export const useDataStore = create<DataStoreType>((set, get) => ({
@@ -87,7 +86,7 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   initCollection: async (url: string) => {
     if (url in get().collections) return get().collections[url]
 
-    if (!isCollectionUrl(url)) throw new CustomError(null, t('error_collection_url', { url }))
+    if (!isCollectionUrl(url)) throw new CustomError(null, 'error_collection_url', { url })
 
     if (inflightCollections.has(url)) return inflightCollections.get(url)!
 
@@ -115,7 +114,7 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   initManifest: async (url: string) => {
     if (url in get().manifests) return get().manifests[url]
 
-    if (!isManifestUrl(url)) throw new CustomError(null, t('error_invalid_manifest_url', { url }))
+    if (!isManifestUrl(url)) throw new CustomError(null, 'error_invalid_manifest_url', { url })
 
     if (inflightManifests.has(url)) return inflightManifests.get(url)!
 
@@ -143,7 +142,7 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   initItem: async (url: string) => {
     if (url in get().items) return get().items[url]
 
-    if (!isItemUrl(url)) throw new CustomError(null, t('error_invalid_item_url', { url }))
+    if (!isItemUrl(url)) throw new CustomError(null, 'error_invalid_item_url', { url })
 
     if (inflightItems.has(url)) return inflightItems.get(url)!
 

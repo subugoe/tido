@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
+import { logError } from '@/utils/custom-error.ts'
 
 interface ManifestSwitcher {
   manifestOptions: DropdownOption[]
@@ -54,7 +55,7 @@ function useManifestSwitcher(): ManifestSwitcher {
       )
       setManifestOptions(manifests)
     }
-    loadManifestOptions()
+    loadManifestOptions().catch(e => logError(e, t))
   }, [collection])
 
   const itemOptions = useMemo(() => {
@@ -119,11 +120,11 @@ function useManifestSwitcher(): ManifestSwitcher {
     selectedLabel,
     isSelecting,
     isSingleItem,
-    onManifestSelect,
+    onManifestSelect: (...args: Parameters<typeof onManifestSelect>) => { onManifestSelect(...args).catch(e => logError(e, t)) },
     itemOptions,
     showItemDropdown,
     setShowItemDropdown,
-    onItemSelect,
+    onItemSelect: (...args: Parameters<typeof onItemSelect>) => { onItemSelect(...args).catch(e => logError(e, t)) },
     onItemDropdownClose
   }
 }

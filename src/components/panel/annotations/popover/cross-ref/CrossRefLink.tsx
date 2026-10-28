@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { CustomError } from '@/utils/custom-error.ts'
+import { CustomError, logError } from '@/utils/custom-error.ts'
 
 import { createNewPanel, setNewActiveContentType } from '@/utils/panel.ts'
 import { waitForElementInDom } from '@/utils/dom.ts'
@@ -89,7 +89,7 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
         }, 700)
       })
     } catch (e) {
-      console.error(e)
+      logError(e, t)
     }
   }
 

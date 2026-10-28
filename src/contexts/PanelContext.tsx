@@ -14,7 +14,7 @@ import { setColors } from '@/utils/witness-colors.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { Scroller } from '@/utils/scroller.ts'
-import { CustomError } from '@/utils/custom-error.ts'
+import { CustomError, logError } from '@/utils/custom-error.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { isPanelViewsUserExplicit } from '@/utils/config/config.ts'
@@ -173,7 +173,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       if (config.item) {
         if (isItemUrl(config.item)) item = await getItem(config.item)
         else {
-          setError(new CustomError(t('panel_init_error'), t('error_invalid_item_url', { url: config.item })))
+          setError(new CustomError('panel_init_error', 'error_invalid_item_url', { url: config.item }))
           return
         }
       }
@@ -181,7 +181,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       if (config.manifest) {
         if (isManifestUrl(config.manifest)) manifest = await getManifest(config.manifest)
         else {
-          setError(new CustomError(t('panel_init_error'), t('error_invalid_manifest_url', { url: config.manifest })))
+          setError(new CustomError('panel_init_error', 'error_invalid_manifest_url', { url: config.manifest }))
           return
         }
       }
@@ -189,7 +189,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       if (config.collection) {
         if (isCollectionUrl(config.collection)) collection = await getCollection(config.collection)
         else {
-          setError(new CustomError(t('panel_init_error'), t('error_invalid_collection_url', { url: config.collection })))
+          setError(new CustomError('panel_init_error', 'error_invalid_collection_url', { url: config.collection }))
           return
         }
       }
@@ -200,7 +200,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         if (collection && !manifest) manifest = await getFirstManifest(collection)
       } else {
         if (!collection && !manifest) {
-          setError(new CustomError(t('panel_init_error'), t('something_went_completely_wrong')))
+          setError(new CustomError('panel_init_error', 'something_went_completely_wrong'))
           return
         }
 
@@ -216,7 +216,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       const contentTypes = getContentTypes(item.contents)
 
       if (contentTypes.length === 0) {
-        setError(new CustomError(t('panel_init_error'), t('error_no_supported_content_types')))
+        setError(new CustomError('panel_init_error', 'error_no_supported_content_types'))
         return
       }
 
@@ -310,7 +310,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
             showSidebar: true
             })          }
         } catch (e) {
-          console.error(e)
+          logError(e, t)
           setAnnotationsError(e)
         } finally {
           setTimeout(() => setAnnotationsLoading(false), 500)
@@ -329,8 +329,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       }
 
     } catch (e) {
-      console.error(e)
-      setError(new CustomError(t('panel_init_error'), e.message))
+      logError(e, t)
+      setError(new CustomError('panel_init_error', e.message, e.options))
     } finally {
       // add a timeout to wait until updatePanel() is finished
       setTimeout(() => {

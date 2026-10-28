@@ -3,6 +3,7 @@ import { apiRequest } from '@/utils/api.ts'
 import { sanitize } from '@/utils/text-sanitize.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useErrorBoundary } from 'react-error-boundary'
+import { logError } from '@/utils/custom-error.ts'
 
 type State = {
   // translation keys of the problems found for this text, each one listed once
@@ -90,7 +91,7 @@ export const TextViewProvider = ({
       } catch (e) {
         if (stale) return
         showBoundary(e)
-        console.error(e)
+        logError(e, t)
       }
     }
 

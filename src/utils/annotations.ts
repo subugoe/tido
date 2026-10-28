@@ -140,7 +140,7 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
       contentUrl = source?.id
     }
   } catch(e) {
-    throw new CustomError(`Error loading data in Cross Ref. Failed request: ${failedRequestUrl}`, e.message || String(e))
+    throw new CustomError(`Error loading data in Cross Ref. Failed request: ${failedRequestUrl}`, e.message || String(e), e.options)
   }
 
   const refContentType = refItemData?.contents?.find(c => c.id === contentUrl)?.contentType?.split('type=')[1]

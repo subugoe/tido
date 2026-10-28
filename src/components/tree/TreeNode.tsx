@@ -12,6 +12,7 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
 import { getPanelConfigFromNode, getRootChildrenCollectionsIds } from '@/utils/tree.ts'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
+import { logError } from '@/utils/custom-error.ts'
 
 
 interface TreeNodeProps {
@@ -78,11 +79,11 @@ const TreeNode: FC<TreeNodeProps> = ({ node, showQuickView = false }) => {
     }
 
     async function updatePanelsNumbersOpened() {
-      if (node.type === 'item' || node.type === 'manifest') updatePanelsNumbersForItemOrManifest(node)
-      if (node.type === 'collection') updatePanelsNumbersForCollection(node)
+      if (node.type === 'item' || node.type === 'manifest') await updatePanelsNumbersForItemOrManifest(node)
+      if (node.type === 'collection') await updatePanelsNumbersForCollection(node)
     }
 
-    updatePanelsNumbersOpened()
+    updatePanelsNumbersOpened().catch(e => logError(e, t))
   }, [panels])
 
   function openPanel(e: MouseEvent<HTMLElement>) {
@@ -111,7 +112,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node, showQuickView = false }) => {
         setChildren(node.children)
         if (node.children.length > 0) return
       } catch (error) {
-        console.error(error)
+        logError(error, t)
         setShowErrorNode(true)
         return
       }
@@ -137,7 +138,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node, showQuickView = false }) => {
       // setChildren -> rerender the component
     } catch(error) {
       setShowErrorNode(true)
-      console.error(error)
+      logError(error, t)
     }
   }
 
