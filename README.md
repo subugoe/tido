@@ -426,7 +426,7 @@ Overrides the global `panelViews` config for this specific panel. Use this to cu
 - **Type:** Number[]
 - **Default:** *(equal widths)*
 
-Defines the initial width of each view in this panel as portions, one value per view in the order of the panel's views. E.g. `[1, 3]` gives the first view 1/4 and the second view 3/4 of the views area. The sidebar width is not included. Only applies to the initial display - after the views are changed (e.g. toggled or the panel navigates), they are distributed equally again.
+Defines the width of each view in this panel as portions, one value per view in the order of the panel's views. E.g. `[1, 3]` gives the first view 1/4 and the second view 3/4 of the views area. The sidebar width is not included. The proportions are kept in the panel state: they apply again when the panel navigates to another item, and when views are toggled the remaining visible views share the width according to their portions.
 
 ---
 

@@ -275,12 +275,21 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         })
       }
 
+      // The width portions are kept in the panel state, so navigating to a new item keeps the proportions.
+      // They only apply when there is exactly one value per view.
+      const widthViews = panelState.widthViews ?? config.widthViews
+      const resultWidthViews = widthViews?.length === resultPanelViews.length ? widthViews : undefined
+      if (widthViews?.length > 0 && !resultWidthViews) {
+        console.warn(`widthViews has ${widthViews.length} values, but the panel has ${resultPanelViews.length} views - the views get equal widths`)
+      }
+
       // 5. We update the panel state with the data.
       updatePanel({
         collectionId: collection?.id ?? null,
         manifest,
         item,
         panelViews: resultPanelViews,
+        widthViews: resultWidthViews,
         showSidebar: config.showSidebar ?? panelState.showSidebar,
       })
 

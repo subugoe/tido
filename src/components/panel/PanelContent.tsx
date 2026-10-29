@@ -12,6 +12,7 @@ import { Allotment, AllotmentHandle } from 'allotment'
 import SidebarView from '@/components/panel/views/sidebar/SidebarView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
+import PaneResizeHandles from '@/components/panel/PaneResizeHandles.tsx'
 import Loading from '@/components/ui/loading.tsx'
 import { getContentUrlByType } from '@/utils/text.ts'
 
@@ -20,11 +21,25 @@ const PanelContent: FC = React.memo(() => {
   const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
   const [contentPanes, setContentPanes] = useState([])
   const allotmentRef = useRef<AllotmentHandle>(null)
+  const allotmentContainerRef = useRef<HTMLDivElement>(null)
 
 
   const visibleCount = panelState.panelViews.filter(v => v.visible ?? true).length
   // equal preferred size is computed before rendering - when we call allotment.reset() -> Allotment uses the updated preferred sizes
   const equalPreferredSize = visibleCount > 0 ? `${100 / visibleCount}%` : '100%'
+
+  // widthViews are portions per view, i.e. [1, 3] gives 1/4 and 3/4 of the views area (the sidebar is not part of it).
+  // They are part of the panel state, so they also apply after navigating to another item or toggling views.
+  const widthViews = panelState.widthViews
+  const useWidthViews = widthViews?.length > 0 && widthViews.length === panelState.panelViews.length
+  const visibleWidthsSum = useWidthViews
+    ? panelState.panelViews.reduce((sum, v, i) => (v.visible ?? true) ? sum + widthViews[i] : sum, 0)
+    : 0
+
+  function getPreferredSize(index: number) {
+    if (!useWidthViews || visibleWidthsSum === 0) return equalPreferredSize
+    return `${widthViews[index] / visibleWidthsSum * 100}%`
+  }
 
   useEffect(() => {
     const panes = panelState.panelViews.map((v, i) => {
@@ -86,15 +101,16 @@ const PanelContent: FC = React.memo(() => {
       <div className="h-full w-full overflow-hidden relative" data-cy="panel-container">
         <div className="main-content flex flex-col h-full @container/panel">
           <PanelHeader />
-          <div className="flex-1">
+          <div className="flex-1" ref={allotmentContainerRef}>
             <Allotment ref={allotmentRef} proportionalLayout={true}>
               {contentPanes.map((pane, index) => {
                 const visible = panelState.panelViews[index]?.visible ?? true
-                return <Allotment.Pane key={pane.key} visible={visible} preferredSize={equalPreferredSize}>
+                return <Allotment.Pane key={pane.key} visible={visible} preferredSize={getPreferredSize(index)}>
                   {pane}
                 </Allotment.Pane>
               })}
             </Allotment>
+            <PaneResizeHandles containerRef={allotmentContainerRef} />
           </div>
           <PanelFooter />
         </div>

@@ -120,6 +120,8 @@ declare global {
     showSidebar: boolean
     selectedAnnotation?: SelectedAnnotation
     panelViews: PanelView[]
+    // width portions per view, aligned with panelViews. Initialized from config.widthViews and kept across navigation
+    widthViews?: number[]
     contentTypes: string[]
   }
 
