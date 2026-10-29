@@ -359,7 +359,8 @@ const TextAnnotationsLayer: FC<Props> = ({
         if (!selector) return false
 
         try {
-          return Array.from(parsedDom.querySelectorAll(selector))
+          // scoped to the text like in matchAnnotations, so a click finds the same targets
+          return Array.from(parsedDom.querySelectorAll(`:scope ${selector}`))
             .some(el => el === target || el.contains(target))
         } catch {
           return false
