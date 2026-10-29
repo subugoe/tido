@@ -14,6 +14,7 @@ import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
 import Loading from '@/components/ui/loading.tsx'
 import { getContentUrlByType } from '@/utils/text.ts'
+import { PanelView } from '@/types'
 
 const PanelContent: FC = React.memo(() => {
   const { init, panelState, resizer, error, loading, syncedTargetsMap, setSyncedTargets } = usePanel()
@@ -22,9 +23,15 @@ const PanelContent: FC = React.memo(() => {
   const allotmentRef = useRef<AllotmentHandle>(null)
 
 
-  const visibleCount = panelState.panelViews.filter(v => v.visible ?? true).length
-  // equal preferred size is computed before rendering - when we call allotment.reset() -> Allotment uses the updated preferred sizes
-  const equalPreferredSize = visibleCount > 0 ? `${100 / visibleCount}%` : '100%'
+  const visibleViews = panelState.panelViews.filter(v => v.visible ?? true)
+  // the preferred sizes are computed before rendering - when we call allotment.reset() -> Allotment uses the updated preferred sizes.
+  // Each visible view gets its share of the width ratios of the visible views, or an equal share without ratios.
+  const hasRatios = visibleViews.length > 0 && visibleViews.every(v => v.widthRatio > 0)
+  const ratioSum = hasRatios ? visibleViews.reduce((sum, v) => sum + v.widthRatio, 0) : 0
+  const getPreferredSize = (view: PanelView) => {
+    if (hasRatios) return `${view.widthRatio / ratioSum * 100}%`
+    return visibleViews.length > 0 ? `${100 / visibleViews.length}%` : '100%'
+  }
 
   useEffect(() => {
     const panes = panelState.panelViews.map((v, i) => {
@@ -89,8 +96,9 @@ const PanelContent: FC = React.memo(() => {
           <div className="flex-1">
             <Allotment ref={allotmentRef} proportionalLayout={true}>
               {contentPanes.map((pane, index) => {
-                const visible = panelState.panelViews[index]?.visible ?? true
-                return <Allotment.Pane key={pane.key} visible={visible} preferredSize={equalPreferredSize}>
+                const view = panelState.panelViews[index]
+                const visible = view?.visible ?? true
+                return <Allotment.Pane key={pane.key} visible={visible} preferredSize={view ? getPreferredSize(view) : undefined}>
                   {pane}
                 </Allotment.Pane>
               })}

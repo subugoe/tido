@@ -8,6 +8,7 @@
   "lang": "de",
   "panels": [
     {
+      "viewsWidthRatio": [1,3],
       "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/collections/transcriptions"
     }
   ],

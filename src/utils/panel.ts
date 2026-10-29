@@ -9,6 +9,20 @@ export function hasImage(item: Item | null): boolean {
   return !!item?.images?.[0]?.id
 }
 
+// The viewsWidthRatio of a panel as positive numbers, one per view - null when it is not set or does not
+// fit the views, in which case the views share the panel width equally. Values from the url are strings.
+export function getViewsWidthRatio(viewsWidthRatio: unknown, viewsCount: number): number[] | null {
+  if (viewsWidthRatio === undefined) return null
+
+  const ratios = Array.isArray(viewsWidthRatio) ? viewsWidthRatio.map(Number) : []
+  if (ratios.length !== viewsCount || ratios.some(r => !Number.isFinite(r) || r <= 0)) {
+    console.warn(`viewsWidthRatio must have one positive number for each of the ${viewsCount} views - the views get equal widths`)
+    return null
+  }
+
+  return ratios
+}
+
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
   let manifestUrl = ''

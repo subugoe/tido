@@ -196,6 +196,9 @@ export interface PanelConfig {
   selectedAnnotationId?: string
   showSidebar?: boolean
   showSynopsisNavigation?: boolean
+  // the width of each view relative to the others, one value per view: [1, 3] gives the first view
+  // 1/4 and the second 3/4 of the panel width
+  viewsWidthRatio?: number[]
 }
 
 export type PanelViewType = 'text' | 'image'
@@ -206,6 +209,8 @@ export interface PanelView {
   label?: string
   view: PanelViewType
   visible?: boolean
+  // set by the panel from its viewsWidthRatio config - the share of the panel width this view gets
+  widthRatio?: number
 }
 
 export interface TreeConfig {
