@@ -413,6 +413,15 @@ Controls whether the Sync Target Navigation is rendered for this panel, overridi
 
 ---
 
+##### `panels[i].showViewportWidth`
+
+- **Type:** Boolean
+- **Default:** `false`
+
+Lets the panel open at the full width of the viewport. No room is kept for the annotations sidebar: when the sidebar is opened, it is added beside the panel content, beyond the viewport. Panels without this option share the width among themselves as usual.
+
+---
+
 ##### `panels[i].viewsWidthRatio`
 
 - **Type:** Number[]
