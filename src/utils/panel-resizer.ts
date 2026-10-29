@@ -14,6 +14,9 @@ import { PanelConfig } from '@/types'
 // panel when it is opened. The "open new panel" placeholder is not subtracted - it simply keeps
 // the width it needs, so it stays visible as long as the panels do not fill the whole row.
 // When the room left is too small for a minimum width, the panels fall back to MIN_PANEL_WIDTH.
+// A panel with showViewportWidth takes the full width of the wrapper on its own, without room for a
+// sidebar - a sidebar opened in it is added beyond the viewport. The other panels share the room as
+// if it were not there.
 function getInitialPanelWidths(wrapper: HTMLElement, configs: PanelConfig[]): number[] {
   if (configs.length === 0) return []
 
@@ -22,16 +25,18 @@ function getInitialPanelWidths(wrapper: HTMLElement, configs: PanelConfig[]): nu
     - (parseFloat(wrapperStyle.paddingLeft) || 0)
     - (parseFloat(wrapperStyle.paddingRight) || 0)
 
+  const sharingCount = configs.filter(config => !config.showViewportWidth).length
+
   // One gap between each pair of panels, plus one before the visible placeholder.
   const hasPlaceholder = wrapper.querySelector('[data-panel-placeholder]') !== null
-  const gutters = PANEL_GAP * (configs.length - 1 + (hasPlaceholder ? 1 : 0))
+  const gutters = PANEL_GAP * (sharingCount - 1 + (hasPlaceholder ? 1 : 0))
 
   // Keep room for a sidebar: when it is opened, it is added to the width of its panel.
   const sidebarRoom = SIDEBAR_DEFAULT_WIDTH
 
-  const contentPerPanel = (contentWidth - gutters - sidebarRoom) / configs.length
+  const contentPerPanel = (contentWidth - gutters - sidebarRoom) / sharingCount
 
-  return configs.map(() => Math.max(MIN_PANEL_WIDTH, contentPerPanel))
+  return configs.map((config) => Math.max(MIN_PANEL_WIDTH, config.showViewportWidth ? contentWidth : contentPerPanel))
 }
 
 class PanelResizer {
