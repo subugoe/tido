@@ -241,7 +241,7 @@ describe('Config', () => {
 
       cy.get('[data-cy="content-types-dropdown"]').should('not.exist')
   });
-  runConfigTest('rootCollections[]=http://localhost:8181/4w/collections/transcriptions.json&panels[0].collection=http://localhost:8181/4w/collections/transcriptions.json',
+  runConfigTest('rootCollections[]=http://localhost:8181/4w/collections/transcriptions.json&panels[0].collection=http://localhost:8181/4w/collections/transcriptions.json&tree.showRootNode=true',
     'Should show markers in tree for open panel', () => {
       Tree.open()
       Tree.getRootNodes()
@@ -276,6 +276,15 @@ describe('Config', () => {
       })
   });
   runConfigTest('rootCollections[]=http://localhost:8181/example/collections/example.json',
+    'Should hide the root node of one root collection in global tree by default', () => {
+      Tree.open()
+      Tree.getTree().then(($tree) => {
+        // the manifests of the root collection are the top level
+        Tree.shouldHaveChildren($tree, 3)
+      })
+      Tree.getTree().find('[data-cy="node-label"]').should('not.contain.text', 'Classic Literature Collection')
+  });
+  runConfigTest('rootCollections[]=http://localhost:8181/example/collections/example.json&tree.showRootNode=true',
     'Should show one root collection in global tree with root node expanded', () => {
       Tree.open()
       Tree.getRootNodes()

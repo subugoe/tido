@@ -6,7 +6,7 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 import Tree from '@/components/tree/Tree.tsx'
 
-import { getChildren, getExpandedNode, getPanelConfigFromNode } from '@/utils/tree.ts'
+import { getChildren, getPanelConfigFromNode, getTopLevelNodes } from '@/utils/tree.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
 import { logError } from '@/utils/custom-error.ts'
@@ -20,7 +20,7 @@ interface Props {
 
 const TreeSelection: FC<Props> = ({ onConfirm }) => {
   const { t } = useTranslation()
-  const { tree: { showItemLevel } } = useConfig()
+  const { tree: { showItemLevel, showRootNode } } = useConfig()
   const addPanel = usePanelStore(state => state.addPanel)
   const nodes = useDataStore(state => state.treeNodes)
   // we define the way to show nodes in Global tree using "treeNodes"
@@ -53,12 +53,11 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
     // for now we define same loadNodes in every container which displays tree.
     // Later we can customize the initial display based on the requirements
     const loadNodes = async (nodes: TreeNode[]) => {
-      const treeNodes = nodes.length > 1 ? nodes : nodes.length === 1 ? [await getExpandedNode(nodes[0], showItemLevel)] : []
-      setTreeNodes(treeNodes)
+      setTreeNodes(await getTopLevelNodes(nodes, showItemLevel, showRootNode))
     }
 
     loadNodes(nodes).catch(e => logError(e, t))
-  }, [nodes, showItemLevel])
+  }, [nodes, showItemLevel, showRootNode])
 
 
   return <div className="flex flex-col max-w-full overflow-x-hidden">

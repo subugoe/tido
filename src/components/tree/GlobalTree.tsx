@@ -7,14 +7,14 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 import Tree from '@/components/tree/Tree.tsx'
 import GlobalTreeSelectionModalContent from '@/components/tree/tree-modal/GlobalTreeSelectionModalContent.tsx'
 import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover.tsx'
-import { getChildren, getExpandedNode } from '@/utils/tree.ts'
+import { getChildren, getTopLevelNodes } from '@/utils/tree.ts'
 
 interface GlobalTreeProps {
   open?: boolean
 }
 
 const GlobalTree: FC<GlobalTreeProps> = ({ open = true }) => {
-  const { tree: { showItemLevel } } = useConfig()
+  const { tree: { showItemLevel, showRootNode } } = useConfig()
 
   const selectedNode = useRef<TreeNode>(null)
 
@@ -36,14 +36,13 @@ const GlobalTree: FC<GlobalTreeProps> = ({ open = true }) => {
   useEffect(() => {
     const loadNodes = async (nodes: TreeNode[]) => {
       try {
-        const treeNodes = nodes.length > 1 ? nodes : nodes.length === 1 ? [await getExpandedNode(nodes[0], showItemLevel)] : []
-        setTreeNodes(treeNodes)
+        setTreeNodes(await getTopLevelNodes(nodes, showItemLevel, showRootNode))
       } catch {
         console.error('error while loading data in Global tree')
       }
     }
     loadNodes(nodes)
-  }, [nodes, showItemLevel])
+  }, [nodes, showItemLevel, showRootNode])
 
   return <div className={`${open ? 'opacity-100 visible' : 'opacity-0 invisible'} flex-1 flex transition-all duration-300 overflow-hidden`}>
     <div className="shrink-0 overflow-auto [scrollbar-gutter:stable] flex-1 min-w-0">

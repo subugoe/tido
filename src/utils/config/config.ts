@@ -218,6 +218,13 @@ function validateTree(input: unknown): ValidationResult<TidoConfig['tree']> {
         : (() => {
           if (inputObj && inputObj['showItemLevel'] !== undefined) errors['tree.showItemLevel'] = 'must be a boolean'
           return defaultConfig.tree.showItemLevel
+        })(),
+    showRootNode:
+      inputObj && typeof inputObj['showRootNode'] === 'boolean'
+        ? inputObj['showRootNode'] as boolean
+        : (() => {
+          if (inputObj && inputObj['showRootNode'] !== undefined) errors['tree.showRootNode'] = 'must be a boolean'
+          return defaultConfig.tree.showRootNode
         })()
   }
   return { result, errors }

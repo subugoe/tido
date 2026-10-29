@@ -656,6 +656,15 @@ Specifies settings for the trees (global tree and collection selection).
 
 Toggles the display of items in the trees. When false, manifests are the last level of the tree and selecting one opens its first item.
 
+---
+
+##### `tree.showRootNode`
+
+- **Type:** Boolean
+- **Default:** `false`
+
+Toggles the display of the root node in the trees (global tree, collection selection and the collection tree of a panel). When false, the root node is hidden and its direct children are the top level of the tree. When true, the root node is shown, expanded. With several `rootCollections` there is no single root, so all of them are shown.
+
 ### Panel Views
 This array of `PanelViewConfig` objects defines the actual visible content inside a panel. It is a list of
 objects, each of which creates a resizable split pane inside the panel. This configuration will be applied to all
