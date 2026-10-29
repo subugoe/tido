@@ -43,10 +43,10 @@ const NO_SYNC_TARGETS: HTMLElement[] = []
 function resolveSyncedTargetElements(syncedTargets: SyncedTargetRef[]): HTMLElement[] {
   const texts = Array.from(document.querySelectorAll('[data-text-source]'))
 
+  // a selector may list several elements (e.g. `#ab_11,#ab_12`) - all of them belong to the target
   const targetEls = syncedTargets.flatMap((syncedTarget) => texts
     .filter((text) => text.getAttribute('data-text-source') === syncedTarget.source.id)
-    .map((text) => text.querySelector(syncedTarget.selector) as HTMLElement)
-    .filter(Boolean)
+    .flatMap((text) => Array.from(text.querySelectorAll(syncedTarget.selector)) as HTMLElement[])
   )
 
   return [...new Set(targetEls)]
@@ -182,11 +182,11 @@ function useSynopsis(): SynopsisLogic {
 
     if (ownsNavigatedTarget) addSynopsisSelectedStyle(navigatedTarget)
 
-    // the connection's targets that live in this text, resolved from their selector
+    // the connection's targets that live in this text, resolved from their selector - which may
+    // match several elements
     const ownTargets = otherSyncedTargets
       .filter((syncedTarget) => syncedTarget.source.id === source)
-      .map((syncedTarget) => text.querySelector(syncedTarget.selector) as HTMLElement)
-      .filter(Boolean)
+      .flatMap((syncedTarget) => Array.from(text.querySelectorAll(syncedTarget.selector)) as HTMLElement[])
 
     ownTargets.forEach((targetEl) => addSynopsisSelectedStyle(targetEl))
     scrollToTargets(ownTargets, yPos)

@@ -79,6 +79,12 @@ const WITNESS_ITEM_LABEL = 'Chapter 1'
 // the manifest Panel 2 opens - '#ishmael' is synced with its own diplomatic text, with Chapter 2 of
 // this manifest and with Chapter 1 of 'Country Manners'
 const WHALE_VOYAGES = 'Whale Voyages'
+// '#meditation' of the transcription of Panel 2 is synced with a target of the diplomatic text whose
+// selector lists two elements ('#dipl-meditation,#dipl-water') - both belong to the connection
+const MEDITATION = '#meditation'
+const DIPL_MEDITATION_TARGETS = ['#dipl-meditation', '#dipl-water']
+// utils/constants.ts - SYNOPSIS_HOVER_STYLE, the background of a hovered target and its synced ones
+const SYNOPSIS_HOVER_CLASS = 'bg-synopsis-hover'
 
 // Sync targets per rendered text of each panel, computed from the sync annotations of the
 // collections in 'panels' and in 'rootCollections' - see support/synopsis-helpers.js
@@ -379,6 +385,37 @@ describe('Panel Synopsis', () => {
       expect(isInSyncBand(panes.transcription, ISHMAEL), `'${ISHMAEL}' of transcription in sync band`).to.be.true
       expect(isInSyncBand(panes.diplomatic, ISHMAEL), `'${ISHMAEL}' of diplomatic in sync band`).to.be.true
     })
+  })
+
+  it('Should highlight every element of a synced target whose selector lists several elements when hovering', () => {
+    const transcription = findText(SYNOPSIS_PANEL, 'transcription')
+    const diplomatic = findText(SYNOPSIS_PANEL, 'diplomatic')
+
+    hoverTarget(transcription.contentUrl, MEDITATION, 'mouseenter')
+
+    getTextPane(transcription.contentUrl).find(MEDITATION).should('have.class', SYNOPSIS_HOVER_CLASS)
+    DIPL_MEDITATION_TARGETS.forEach(selector =>
+      getTextPane(diplomatic.contentUrl).find(selector).should('have.class', SYNOPSIS_HOVER_CLASS))
+
+    // hovering out drops the hover style from all of them again
+    hoverTarget(transcription.contentUrl, MEDITATION, 'mouseleave')
+
+    getTextPane(transcription.contentUrl).find(MEDITATION).should('not.have.class', SYNOPSIS_HOVER_CLASS)
+    DIPL_MEDITATION_TARGETS.forEach(selector =>
+      getTextPane(diplomatic.contentUrl).find(selector).should('not.have.class', SYNOPSIS_HOVER_CLASS))
+  })
+
+  it('Should give every element of a synced target whose selector lists several elements the synopsis style when clicking', () => {
+    const transcription = findText(SYNOPSIS_PANEL, 'transcription')
+    const diplomatic = findText(SYNOPSIS_PANEL, 'diplomatic')
+
+    // '#meditation' carries no other annotation and is synced with a single target, so the click
+    // selects the connection right away without a popover
+    hoverTarget(transcription.contentUrl, MEDITATION, 'mouseenter')
+    getTextPane(transcription.contentUrl).find(MEDITATION).click({ scrollBehavior: false, force: true })
+
+    DIPL_MEDITATION_TARGETS.forEach(selector =>
+      getTextPane(diplomatic.contentUrl).find(selector).should('have.class', SYNOPSIS_STYLE_CLASS))
   })
 
   /*

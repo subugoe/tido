@@ -217,7 +217,8 @@ function getSyncedTargets(clickedEl: HTMLElement, source: string, targetSyncAnno
 }
 
 // Whether an element belongs to the given synopsis connection - either as its navigated target or
-// as one of the synced targets of the given source, resolved by selector within the container.
+// as one of the synced targets of the given source, matched by selector within the container (a
+// selector may match several elements).
 function isPartOfActiveSynopsisConnection(
   el: HTMLElement,
   connection: SynopsisConnection,
@@ -227,7 +228,8 @@ function isPartOfActiveSynopsisConnection(
   return el === connection.navigatedTarget ||
     connection.otherSyncedTargets.some((syncedTarget) =>
       syncedTarget.source.id === source &&
-      container?.querySelector(syncedTarget.selector) === el
+      !!container?.contains(el) &&
+      el.matches(syncedTarget.selector)
     )
 }
 
