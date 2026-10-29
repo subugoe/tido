@@ -217,6 +217,8 @@ export interface PanelView {
 
 export interface TreeConfig {
   showItemLevel: boolean
+  // shows the root node of a tree with a single root, otherwise its children are the top level
+  showRootNode: boolean
 }
 
 export interface ThemeConfig {

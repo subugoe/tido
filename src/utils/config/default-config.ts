@@ -21,7 +21,8 @@ const defaultConfig: TidoConfig = {
   title: '',
   translations: {},
   tree: {
-    showItemLevel: true
+    showItemLevel: true,
+    showRootNode: false
   },
   panelViews: [
     {

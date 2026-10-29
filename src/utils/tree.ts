@@ -181,7 +181,16 @@ async function getExpandedNode(node: TreeNode, showItemLevel = true): Promise<Tr
   return node
 }
 
+// The top level of a tree. Several root nodes are shown collapsed. A single root node is expanded, or
+// without showRootNode hidden, so that its children are the top level.
+async function getTopLevelNodes(nodes: TreeNode[], showItemLevel = true, showRootNode = false): Promise<TreeNode[]> {
+  if (nodes.length !== 1) return nodes
+
+  const rootNode = await getExpandedNode(nodes[0], showItemLevel)
+  return showRootNode ? [rootNode] : rootNode.children
+}
+
 export {  createCollectionNode, createCollectionNodes, getChildren,
   getNodeIndices, getPanelConfigFromNode, getCollectionSlug, getExpandedNode, getRootChildrenCollectionsIds,
-  getFirstLeafCollectionId
+  getFirstLeafCollectionId, getTopLevelNodes
 }

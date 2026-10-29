@@ -376,6 +376,13 @@
     <li><strong>Default:</strong> <code>true</code></li>
     </ul>
     <p>Toggles the display of items in the trees. When false, manifests are the last level of the tree and selecting one opens its first item.</p>
+    <hr>
+    <h5><code>tree.showRootNode</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>false</code></li>
+    </ul>
+    <p>Toggles the display of the root node in the trees (global tree, collection selection and the collection tree of a panel). When false, the root node is hidden and its direct children are the top level of the tree. When true, the root node is shown, expanded. With several <code>rootCollections</code> there is no single root, so all of them are shown.</p>
     <h3>Panel Views</h3>
     <p>This array of <code>PanelViewConfig</code> objects defines the actual visible content inside a panel. It is a list of
     objects, each of which creates a resizable split pane inside the panel. This configuration will be applied to all
