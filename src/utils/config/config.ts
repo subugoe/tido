@@ -471,8 +471,13 @@ export async function mergeAndValidateConfig(
             }
           }
 
+          // the widths are not part of the bookmark, so they come from the panel config
+          const { viewsWidthRatio, showViewportWidth } = panels.result?.[i] ?? {}
+
           return {
             collection,
+            ...(viewsWidthRatio && { viewsWidthRatio }),
+            ...(showViewportWidth && { showViewportWidth }),
             ...(itemIndex > -1 && { item }),
             ...(manifestIndex > -1 && { manifest }),
             ...(selectedAnnotationId && { selectedAnnotationId, showSidebar: true }),

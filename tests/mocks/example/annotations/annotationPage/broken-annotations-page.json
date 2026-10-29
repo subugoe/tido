@@ -5,7 +5,7 @@
   "partOf": {
     "id": "http://localhost:8181/example/annotations/annotationCollection/broken-annotations-page.json",
     "label": "Broken annotations",
-    "total": 4
+    "total": 7
   },
   "next": null,
   "prev": null,
@@ -89,6 +89,69 @@
           "selector": {
             "type": "CssSelector",
             "value": "#does-not-exist"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/broken-annotations/annotation-5",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "An annotation with a nested selector.",
+        "format": "text/html",
+        "annotationType": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#para3 #bennet"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/broken-annotations/annotation-6",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "An annotation with a nested selector whose outer part only matches outside the text.",
+        "format": "text/html",
+        "annotationType": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": ".panel #netherfield"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/broken-annotations/annotation-7",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "An annotation with a nested selector none of whose parts are in the text.",
+        "format": "text/html",
+        "annotationType": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#missing-paragraph .missing-phrase"
           },
           "format": "text/html",
           "language": "eng"

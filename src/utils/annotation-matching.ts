@@ -52,7 +52,9 @@ function matchAnnotations(
 
       let targetNodes: Element[]
       try {
-        targetNodes = Array.from(parsedDom.querySelectorAll(selector))
+        // :scope anchors the selector to the text: in a nested selector (`.classA .classB`) the
+        // outer parts have to match inside the text as well, not in the panel or page around it
+        targetNodes = Array.from(parsedDom.querySelectorAll(`:scope ${selector}`))
       } catch (e) {
         onMatchError?.(cur, 'invalid_selector', { selector, error: e })
         return

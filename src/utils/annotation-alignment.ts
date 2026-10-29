@@ -38,7 +38,8 @@ function getAlignmentPair(panelEl: HTMLElement, annotation: Annotation) {
   const textScrollContainer = getTextEl(panelEl, targetSourceUrl)
   if (!textScrollContainer) return null
 
-  const targetEl = textScrollContainer.querySelector((target.selector as CssSelector).value) as HTMLElement
+  // scoped to the text like in matchAnnotations, so a target that is not matched there is not aligned either
+  const targetEl = textScrollContainer.querySelector(`:scope ${(target.selector as CssSelector).value}`) as HTMLElement
   const annotationEl = getAnnotationEl(panelEl, annotation)
   if (!targetEl || !annotationEl) return null
 

@@ -4,7 +4,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 
 import { getSelectedTypes } from '@/utils/annotations.ts'
 import { getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
-import { getContentTypes, hasImage, isNewManifest } from '@/utils/panel.ts'
+import { getContentTypes, getViewsWidthRatio, hasImage, isNewManifest } from '@/utils/panel.ts'
 import { getAssets } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
 import { FilterNodeWithSelection, PanelConfig, PanelView, SelectedAnnotation } from '@/types'
@@ -251,9 +251,14 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         }
       }
 
-      const configuredViews: PanelView[] = config.views && config.views.length > 0
+      const views: PanelView[] = config.views && config.views.length > 0
         ? config.views.map((view, i) => ({ ...(globalPanelViewsConfig[i] ?? {}), ...view }))
         : globalPanelViewsConfig
+
+      // Every view carries its own width ratio, so the ratio stays with its view on every item -
+      // also when a view is left out, like the image view of an item without images.
+      const viewsWidthRatio = getViewsWidthRatio(config.viewsWidthRatio, views.length)
+      const configuredViews: PanelView[] = views.map((view, i) => ({ ...view, widthRatio: viewsWidthRatio?.[i] }))
 
       let resultPanelViews: PanelView[]
 
