@@ -8,7 +8,7 @@ import { logError } from '@/utils/custom-error.ts'
 
 import Tree from '@/components/tree/Tree.tsx'
 
-import { createCollectionNode, getChildren, getExpandedNode, getPanelConfigFromNode } from '@/utils/tree.ts'
+import { createCollectionNode, getChildren, getPanelConfigFromNode, getTopLevelNodes } from '@/utils/tree.ts'
 
 interface Props {
   collectionId: string,
@@ -18,7 +18,7 @@ interface Props {
 const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
   const { panelId, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
-  const { tree: { showItemLevel } } = useConfig()
+  const { tree: { showItemLevel, showRootNode } } = useConfig()
   const updatePanel = usePanelStore(state => state.updatePanel)
   const [treeNodes, setTreeNodes] = useState([])
 
@@ -31,7 +31,7 @@ const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
   useEffect(() => {
     async function initTreeNode(collectionId: string) {
       const collectionNode = await createCollectionNode(collectionId)
-      setTreeNodes([await getExpandedNode(collectionNode, showItemLevel)])
+      setTreeNodes(await getTopLevelNodes([collectionNode], showItemLevel, showRootNode))
     }
     initTreeNode(collectionId).catch(e => logError(e, t))
   }, [])
