@@ -15,7 +15,7 @@ const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181'
 const collection = `${apiUrl}/example/collections/example.json`
 const manifest = `${apiUrl}/example/manifests/book2.json`
 const singleItemCollection = `${apiUrl}/example/collections/example-single-item.json`
-// the local tree tests navigate from the root node, which is hidden by default
+// the local tree tests navigate from the root node, which is shown by default
 const config = `panels[0].collection=${collection}&panels[0].manifest=${manifest}&tree.showRootNode=true`
 
 // Widths for switching the panel between the small (<600px) and large (>=600px) layout.

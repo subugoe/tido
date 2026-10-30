@@ -30,16 +30,16 @@ function shouldHaveTopLevelLabels(labels) {
 describe('Tree root node', () => {
 
   describe('Global tree', () => {
-    it('Hides the root node by default and shows its children as the top level', () => {
-      visit({ 'rootCollections[0]': parentCollection })
+    it('Hides the root node when showRootNode is false and shows its children as the top level', () => {
+      visit({ 'rootCollections[0]': parentCollection, 'tree.showRootNode': 'false' })
       Tree.open()
 
       shouldHaveTopLevelLabels(['example.json'])
       Tree.getTree().find(selectors.nodeLabel).should('not.contain.text', 'Classic Literature Parent Collection')
     })
 
-    it('Shows the root node, expanded, when showRootNode is true', () => {
-      visit({ 'rootCollections[0]': parentCollection, 'tree.showRootNode': 'true' })
+    it('Shows the root node, expanded, by default', () => {
+      visit({ 'rootCollections[0]': parentCollection })
       Tree.open()
 
       Tree.getRootNodes().should('have.length', 1).first().then(($root) => {
@@ -59,11 +59,11 @@ describe('Tree root node', () => {
 
   describe('Collection tree of a panel', () => {
     beforeEach(() => {
-      visit({ 'panels[0].collection': collection, 'panels[0].manifest': manifest })
+      visit({ 'panels[0].collection': collection, 'panels[0].manifest': manifest, 'tree.showRootNode': 'false' })
       cy.get(selectors.panel).find('[data-cy="item-label"]').should('be.visible')
     })
 
-    it('Hides the root node by default and shows its children as the top level', () => {
+    it('Hides the root node when showRootNode is false and shows its children as the top level', () => {
       cy.get(selectors.panel).find(selectors.collectionTitle).click()
 
       shouldHaveTopLevelLabels(['book1.json', 'book2.json', 'book3.json'])
@@ -71,8 +71,8 @@ describe('Tree root node', () => {
   })
 
   describe('Tree for a new panel', () => {
-    it('Hides the root node by default and shows its children as the top level', () => {
-      visit({ 'rootCollections[0]': parentCollection })
+    it('Hides the root node when showRootNode is false and shows its children as the top level', () => {
+      visit({ 'rootCollections[0]': parentCollection, 'tree.showRootNode': 'false' })
       cy.get(selectors.panelPlaceholder).click()
 
       shouldHaveTopLevelLabels(['example.json'])
