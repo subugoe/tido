@@ -85,6 +85,10 @@ describe('Tree', () => {
       .first()
       .should('have.class', 'active')
 
+    // Popover shows a hint on where to open the content
+    cy.get('[data-cy="global-tree-modal-hint"]')
+      .should('have.text', 'Please select where to open the content')
+
     // Popover shows update buttons for existing panels
     cy.get('[data-cy="global-tree-modal"]')
       .find('[data-cy="buttons-update-panel"]')
