@@ -85,7 +85,6 @@ const TextAnnotationsLayer: FC<Props> = ({
   const selectedAnnotationRef = useRef<SelectedAnnotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
-  const activeAnnotationTypesRef = useRef<AnnotationTypesDict | null>(null)
   const { popover, onTargetClick } = useAnnotationPopover({
     source,
     wrapper: wrapperRef.current,
@@ -104,7 +103,7 @@ const TextAnnotationsLayer: FC<Props> = ({
     let resultMap: MatchedAnnotationsMap = {}
     try {
       resultMap = matchAnnotations(parsedDom, annotations, source, annotationsConfig, {
-        activeAnnotationTypes: activeAnnotationTypesRef.current,
+        activeAnnotationTypes,
         ignoreFilters,
         onMatchError: (annotation, kind, detail) => report.add(kind, annotation, detail)
       })
@@ -257,7 +256,6 @@ const TextAnnotationsLayer: FC<Props> = ({
     if (Object.keys(matchedMap).length === 0 || !activeAnnotationTypes) return
 
     try {
-      activeAnnotationTypesRef.current = activeAnnotationTypes
       const resultMap = { ...matchedMap }
 
       const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
