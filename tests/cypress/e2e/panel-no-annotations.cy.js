@@ -1,6 +1,18 @@
 const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181'
 const manifest = `${apiUrl}/example/manifests/images-test.json`
 const noAnnotationsItem = `${apiUrl}/example/items/no-images-page.json`
+const annotatedCollection = `${apiUrl}/example/collections/example.json`
+
+function expectTitleCenteredInHeader() {
+  cy.get('#panels-wrapper')
+    .children().eq(0)
+    .find('[data-cy="panel-title-and-nav-arrows"]')
+    .then(($title) => {
+      const title = $title[0].getBoundingClientRect()
+      const header = $title[0].parentElement.getBoundingClientRect()
+      expect(title.left + title.width / 2).to.be.closeTo(header.left + header.width / 2, 1)
+    })
+}
 
 describe('Panel header with no annotations', () => {
   beforeEach(() => {
@@ -12,5 +24,18 @@ describe('Panel header with no annotations', () => {
       .children().eq(0)
       .find('[data-cy="sidebar-toggle"]')
       .should('not.exist')
+  })
+
+  it('keeps the title centered in the header', () => {
+    cy.get('[data-cy="item-label"]').should('be.visible')
+    expectTitleCenteredInHeader()
+  })
+})
+
+describe('Panel header with annotations', () => {
+  it('keeps the title centered in the header', () => {
+    cy.visit(`/e2e.html?panels[0].collection=${annotatedCollection}`)
+    cy.get('[data-cy="sidebar-toggle"]').should('be.visible')
+    expectTitleCenteredInHeader()
   })
 })

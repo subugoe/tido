@@ -661,7 +661,7 @@ Toggles the display of items in the trees. When false, manifests are the last le
 ##### `tree.showRootNode`
 
 - **Type:** Boolean
-- **Default:** `false`
+- **Default:** `true`
 
 Toggles the display of the root node in the trees (global tree, collection selection and the collection tree of a panel). When false, the root node is hidden and its direct children are the top level of the tree. When true, the root node is shown, expanded. With several `rootCollections` there is no single root, so all of them are shown.
 

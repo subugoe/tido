@@ -94,8 +94,9 @@ const PanelHeader: FC = () => {
   const hasManifest = panelState && panelState.manifest
 
   return (
-    <div className="flex items-center border-b border-border px-2 bg-background" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
-      <div className="flex items-center shrink-0">
+    // equal side columns keep the title centered, whether or not the sidebar toggle is shown
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center border-b border-border px-2 bg-background" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
+      <div className="flex items-center">
         {showCollectionTitle && (
           <div className="hidden @min-[600px]/panel:inline-flex">
             <CollectionTitle />
@@ -119,10 +120,10 @@ const PanelHeader: FC = () => {
           )}
         </div>
       </div>
-      <div className="flex-1 flex items-center justify-center gap-1 min-w-0 overflow-hidden @min-[600px]/panel:gap-2" data-cy="panel-title-and-nav-arrows">
+      <div className="flex items-center justify-center gap-1 min-w-0 overflow-hidden @min-[600px]/panel:gap-2" data-cy="panel-title-and-nav-arrows">
         <PanelTitle switcher={switcher} />
       </div>
-      <div className="flex items-center gap-1 shrink-0 @min-[600px]/panel:gap-2">
+      <div className="flex items-center justify-end gap-1 @min-[600px]/panel:gap-2">
         <SidebarToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild data-cy="panel-menu">
