@@ -1,4 +1,4 @@
-import { FC, memo, useEffect, useState } from 'react'
+import { FC, memo, useEffect, useRef, useState } from 'react'
 import { MoreVertical, Image, AlignCenter, FileQuestionMark, MessageSquareText, X, type LucideIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
@@ -31,9 +31,14 @@ interface PanelView {
 }
 
 const SidebarToggle = memo((props) => {
-  const { panelState, updatePanel, usePanelTranslation, filteredAnnotations } = usePanel()
+  const { panelState, updatePanel, usePanelTranslation, filteredAnnotations, annotationsPending } = usePanel()
   const [tooltipMessage, setTooltipMessage] = useState('')
   const { t } = usePanelTranslation()
+
+  // The annotations are empty for a moment when navigating to another item, so the last final count
+  // is kept until the new one is known - otherwise the toggle would flicker on every navigation.
+  const annotationsCount = useRef(0)
+  if (!annotationsPending) annotationsCount.current = filteredAnnotations.length
 
   useEffect(() => {
     setTooltipMessage(t(panelState.showSidebar ? 'hide_annotations' : 'display_annotations'))
@@ -47,7 +52,7 @@ const SidebarToggle = memo((props) => {
 
   // Without any annotations there is nothing to display in the sidebar,
   // so the toggle is hidden entirely.
-  if (filteredAnnotations.length === 0) return null
+  if (annotationsCount.current === 0) return null
 
   return <BaseTooltip message={tooltipMessage}>
     <Button
@@ -60,7 +65,7 @@ const SidebarToggle = memo((props) => {
       <span className="hidden @min-[1000px]/panel:inline">{ t('annotations') }</span>
       <MessageSquareText className="hidden @max-[999px]/panel:inline" />
       <Badge className={`px-1.5 py-0.5 rounded-full text-xs leading-none  transition-colors ${panelState.showSidebar ? '' : 'text-foreground group-hover:bg-accent'}`} variant={panelState.showSidebar ? 'secondary' : 'muted'}>
-        { filteredAnnotations.length }
+        { annotationsCount.current }
       </Badge>
     </Button>
   </BaseTooltip>

@@ -18,7 +18,7 @@ import { CustomError, logError } from '@/utils/custom-error.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { isPanelViewsUserExplicit } from '@/utils/config/config.ts'
-import { useFilteredAnnotations } from '@/contexts/AnnotationsContext.tsx'
+import { useAnnotationsPending, useFilteredAnnotations } from '@/contexts/AnnotationsContext.tsx'
 import { getPageAnnotations, getPageWitnesses } from '@/utils/annotation-data.ts'
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined)
@@ -72,6 +72,8 @@ interface PanelContextType {
   // Filtered annotations of the visible text views, in panelViews order. Computed by useFilteredAnnotations
   // (AnnotationsContext), read by the sidebar list and the header badge.
   filteredAnnotations: Annotation[]
+  // True while filteredAnnotations is not final yet, e.g. after navigating until the new text is matched
+  annotationsPending: boolean
   // Discovered annotation types keyed per text (contentUrl), used only when no annotation filters are
   // configured. The flat annotationFilters list is derived from these entries.
   annotationTypesBySource: {[contentUrl: string]: FilterNodeWithSelection[]}
@@ -143,6 +145,14 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     panelState?.panelViews,
     panelState?.item?.contents,
     annotationsConfig?.tooltipTypes
+  )
+
+  const annotationsPending = useAnnotationsPending(
+    matchedAnnotationsMaps,
+    panelState?.panelViews,
+    panelState?.item,
+    loading,
+    annotationsError
   )
 
   function usePanelTranslation(): UseTranslationResponse<'common', never> {
@@ -503,6 +513,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       matchedAnnotationsMaps,
       updateMatchedAnnotationsMap,
       filteredAnnotations,
+      annotationsPending,
       annotationTypesBySource,
       updateAnnotationTypesBySource,
       syncedTargetsMap,

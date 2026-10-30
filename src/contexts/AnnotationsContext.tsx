@@ -4,6 +4,7 @@ import { getFilteredAnnotations } from '@/utils/annotations.ts'
 import { getContentUrlByType } from '@/utils/text.ts'
 import { PanelView } from '@/types'
 import { getAnnotationType } from '@/utils/annotation-data.ts'
+import { CustomError } from '@/utils/custom-error.ts'
 
 type MatchedMaps = {[id: string]: MatchedAnnotationsMap}
 
@@ -18,6 +19,16 @@ type State = {
 
 const AnnotationsContext = createContext<State>(null)
 
+// Deduplicated in case two views show the same text.
+function getVisibleContentUrls(panelViews: PanelView[] | undefined, contents: Content[] | undefined): string[] {
+  return [...new Set(
+    (panelViews ?? [])
+      .filter(view => view.view === 'text' && (view.visible ?? true))
+      .map(view => getContentUrlByType(contents ?? [], view.activeContentType))
+      .filter(Boolean)
+  )]
+}
+
 // Derives the filtered annotations of the visible text views (in panelViews order), without tooltip types.
 // It is called from PanelProvider, so the result is part of PanelContext and available outside the sidebar
 // (e.g. for the header badge)
@@ -28,20 +39,29 @@ export function useFilteredAnnotations(
   tooltipTypes: string[] | undefined
 ): Annotation[] {
   return useMemo(() => {
-    // Deduplicated in case two views show the same text.
-    const visibleContentUrls = [...new Set(
-      (panelViews ?? [])
-        .filter(view => view.view === 'text' && (view.visible ?? true))
-        .map(view => getContentUrlByType(contents ?? [], view.activeContentType))
-        .filter(Boolean)
-    )]
-
-    return visibleContentUrls.flatMap(contentUrl => {
+    return getVisibleContentUrls(panelViews, contents).flatMap(contentUrl => {
       const map = textMatchedMaps[contentUrl]
       if (!map) return []
       return getFilteredAnnotations(map).filter(a => !(tooltipTypes ?? []).includes(getAnnotationType(a)))
     })
   }, [textMatchedMaps, panelViews, contents, tooltipTypes])
+}
+
+// True while the filtered annotations are not final yet: the panel is still loading, or a visible text has
+// not been matched against the item's annotations. Without an annotation collection, or when it could not
+// be loaded, no match is waited for.
+export function useAnnotationsPending(
+  textMatchedMaps: MatchedMaps,
+  panelViews: PanelView[] | undefined,
+  item: Item | undefined,
+  loading: boolean,
+  annotationsError: CustomError | null
+): boolean {
+  return useMemo(() => {
+    if (loading) return true
+    if (!item?.annotationCollection || annotationsError) return false
+    return getVisibleContentUrls(panelViews, item.contents).some(contentUrl => !textMatchedMaps[contentUrl])
+  }, [textMatchedMaps, panelViews, item, loading, annotationsError])
 }
 
 export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
