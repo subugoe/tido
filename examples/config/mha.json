@@ -3,7 +3,7 @@
   "lang": "de",
   "theme": {
     "primaryColor": "#2b7fff",
-    "mode": "system"
+    "theme": "system"
   },
   "showPanelPlaceholder": false,
   "translations": {
@@ -15,42 +15,49 @@
         "next_manifest": "Nächste Editionseinheit",
         "previous_manifest": "Vorherige Editionseinheit",
         "item": "Seite",
-        "collector": "Herausgeberin"
+        "collectors": "Herausgeberin"
       }
     }
   },
-  "panels": [
+  "panelViews": [
     {
-      "collection": "https://textapi.mha.d.sub.uni-goettingen.de/api/collections/all",
-      "manifest": "https://textapi.mha.d.sub.uni-goettingen.de/api/manifests/MHA01"
+      "label": "Image",
+      "view": "image"
+    },
+    {
+      "label": "Text",
+      "view": "text"
     }
   ],
   "annotations": {
+    "tooltipTypes": ["BibliographicReference"],
+    "types": {
+      "EditorialNote": {
+        "label": "Sachkommentar"
+      },
+      "Textkrit": {
+        "label": "Textkritik"
+      }
+    },
     "filters": {
       "rootSelectionRule": "single",
       "items": [
         {
           "label": "Sachkommentar",
-          "selected": true,
-          "types": [
-            "EditorialNote"
-          ]
+          "types": ["EditorialNote"]
         },
         {
-          "label": "Textkritischer apparat",
-          "selected": false,
-          "types": [
-            "Textkrit"
-          ]
+          "label": "Textkritischer Apparat",
+          "types": ["Textkrit"]
         }
       ]
-    },
-    "defaultMode": "aligned",
-    "tooltipTypes": ["BibliographicReference"],
-    "crossRefContentType": "CrossRef"
+    }
   },
   "showContentTypeToggle": false,
-  "rootCollections": [
-    "https://textapi.mha.d.sub.uni-goettingen.de/api/collections/all"
+  "panels": [
+    {
+      "collection": "https://textapi.mha.d.sub.uni-goettingen.de/api/collections/all",
+      "manifest": "https://textapi.mha.d.sub.uni-goettingen.de/api/manifests/MHA01"
+    }
   ]
 }
