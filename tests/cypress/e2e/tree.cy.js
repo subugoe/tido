@@ -3,7 +3,7 @@ import { Tree } from '../support/tree-helpers'
 const parentCollection = 'http://localhost:8181/example/collections/example-parent.json'
 const collection = 'http://localhost:8181/example/collections/example.json'
 
-// these tests navigate from the root node, which is hidden by default
+// these tests navigate from the root node, which is shown by default
 const config = `rootCollections[0]=${parentCollection}&panels[0].collection=${collection}&panels[0].manifest=http://localhost:8181/example/manifests/book2.json&tree.showRootNode=true`;
 
 
@@ -84,6 +84,10 @@ describe('Tree', () => {
       .find('div')
       .first()
       .should('have.class', 'active')
+
+    // Popover shows a hint on where to open the content
+    cy.get('[data-cy="global-tree-modal-hint"]')
+      .should('have.text', 'Please select where to open the content')
 
     // Popover shows update buttons for existing panels
     cy.get('[data-cy="global-tree-modal"]')

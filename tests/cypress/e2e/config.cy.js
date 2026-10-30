@@ -275,8 +275,8 @@ describe('Config', () => {
           .then(($item) => Tree.shouldHaveLabel($item, 'einsiedeln_278_1040-279.json'))
       })
   });
-  runConfigTest('rootCollections[]=http://localhost:8181/example/collections/example.json',
-    'Should hide the root node of one root collection in global tree by default', () => {
+  runConfigTest('rootCollections[]=http://localhost:8181/example/collections/example.json&tree.showRootNode=false',
+    'Should hide the root node of one root collection in global tree when showRootNode is false', () => {
       Tree.open()
       Tree.getTree().then(($tree) => {
         // the manifests of the root collection are the top level
@@ -284,8 +284,8 @@ describe('Config', () => {
       })
       Tree.getTree().find('[data-cy="node-label"]').should('not.contain.text', 'Classic Literature Collection')
   });
-  runConfigTest('rootCollections[]=http://localhost:8181/example/collections/example.json&tree.showRootNode=true',
-    'Should show one root collection in global tree with root node expanded', () => {
+  runConfigTest('rootCollections[]=http://localhost:8181/example/collections/example.json',
+    'Should show one root collection in global tree with root node expanded by default', () => {
       Tree.open()
       Tree.getRootNodes()
         .should('have.length', 1)

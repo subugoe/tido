@@ -1,5 +1,5 @@
 const collection = 'http://localhost:8181/example/collections/example.json'
-// the local tree tests navigate from the root node, which is hidden by default
+// the local tree tests navigate from the root node, which is shown by default
 const config = `panels[0].collection=${collection}&panels[0].manifest=http://localhost:8181/example/manifests/book2.json&tree.showRootNode=true`;
 
 
