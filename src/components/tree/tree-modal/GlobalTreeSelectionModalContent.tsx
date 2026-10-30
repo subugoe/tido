@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useTree } from '@/contexts/TreeContext'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
@@ -16,6 +17,7 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
   const addPanel = usePanelStore(state => state.addPanel)
 
   const { setSelectedNodeId } = useTree()
+  const { t } = useTranslation()
 
   if (!node) return <div>'error'</div>
 
@@ -42,14 +44,17 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
       onClick={() => select(i)}>Panel {i + 1}</button>)
   }
 
-  return <div className="flex items-center h-12">
-    <div className="buttons-update-panel flex" data-cy="buttons-update-panel">
-      {buttonsUpdatePanel}
+  return <div>
+    <p className="px-1 pt-3 mb-2 text-sm" data-cy="global-tree-modal-hint">{t('select_where_to_open_content')}</p>
+    <div className="flex items-center h-12">
+      <div className="buttons-update-panel flex" data-cy="buttons-update-panel">
+        {buttonsUpdatePanel}
+      </div>
+      <button
+        className="button-new-panel bg-accent hover:bg-muted w-24 h-8 mr-1 rounded-md cursor-pointer" data-cy="button-new-panel"
+        onClick={() => select()}
+      >{t('new_panel')}</button>
     </div>
-    <button
-      className="button-new-panel bg-accent hover:bg-muted w-24 h-8 mr-1 rounded-md cursor-pointer" data-cy="button-new-panel"
-      onClick={() => select()}
-    >New Panel</button>
   </div>
 }
 

@@ -188,7 +188,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node, showQuickView = false }) => {
                   <SquareArrowRightEnter size={14} />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>{t('quick_view')}</TooltipContent>
+              <TooltipContent>{t('click_to_open_in_new_panel')}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         }
