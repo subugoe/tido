@@ -12,6 +12,7 @@ import { Allotment, AllotmentHandle } from 'allotment'
 import SidebarView from '@/components/panel/views/sidebar/SidebarView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
+import PaneResizeHandles from '@/components/panel/PaneResizeHandles.tsx'
 import Loading from '@/components/ui/loading.tsx'
 import { getContentUrlByType } from '@/utils/text.ts'
 import { PanelView } from '@/types'
@@ -21,6 +22,7 @@ const PanelContent: FC = React.memo(() => {
   const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
   const [contentPanes, setContentPanes] = useState([])
   const allotmentRef = useRef<AllotmentHandle>(null)
+  const allotmentContainerRef = useRef<HTMLDivElement>(null)
 
 
   const visibleViews = panelState.panelViews.filter(v => v.visible ?? true)
@@ -93,7 +95,7 @@ const PanelContent: FC = React.memo(() => {
       <div className="h-full w-full overflow-hidden relative" data-cy="panel-container">
         <div className="main-content flex flex-col h-full @container/panel">
           <PanelHeader />
-          <div className="flex-1">
+          <div className="flex-1" ref={allotmentContainerRef}>
             <Allotment ref={allotmentRef} proportionalLayout={true}>
               {contentPanes.map((pane, index) => {
                 const view = panelState.panelViews[index]
@@ -103,6 +105,7 @@ const PanelContent: FC = React.memo(() => {
                 </Allotment.Pane>
               })}
             </Allotment>
+            <PaneResizeHandles containerRef={allotmentContainerRef} />
           </div>
           <PanelFooter />
         </div>
