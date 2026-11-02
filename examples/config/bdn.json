@@ -8,6 +8,7 @@
   },
   "showPanelPlaceholder": false,
   "showContentTypeToggle": false,
+  "showCrossRefLabels": true,
   "translations": {
     "de": {
       "common": {
@@ -47,65 +48,42 @@
       }
     },
     "filters": {
-      "rootSelectionRule": "single",
+      "rootSelectionRule": "multiple",
       "selectedIndex": 0,
       "items": [
         {
-          "label": "Textkritik",
-          "items": [
+          "label": "Auflage a",
+          "types": [
             {
-              "label": "Auflage a",
-              "types": [
-                {
-                  "Variant": "a"
-                }
-              ]
-            },
-            {
-              "label": "Auflage b",
-              "types": [
-                {
-                  "Variant": "b"
-                }
-              ]
-            },
-            {
-              "label": "Auflage d",
-              "types": [
-                {
-                  "Variant": "d"
-                }
-              ]
+              "Variant": "a"
             }
           ]
         },
         {
-          "label": "Erläuterungen",
-          "items": [
+          "label": "Auflage b",
+          "types": [
             {
-              "label": "Satzfehlerkorrektur",
-              "types": [
-                "EditorialCorrection"
-              ]
-            },
-            {
-              "label": "Autorschaftliche Korrektur",
-              "types": [
-                "AuthorialCorrection"
-              ]
-            },
-            {
-              "label": "Editorische Erläuterung",
-              "types": [
-                "EditorialCommentary"
-              ]
+              "Variant": "b"
             }
+          ]
+        },
+        {
+          "label": "Auflage d",
+          "types": [
+            {
+              "Variant": "d"
+            }
+          ]
+        },
+        {
+          "label": "Editorische Erläuterung",
+          "types": [
+            "EditorialCommentary"
           ]
         }
       ]
     }
   },
-  "showCrossRefLabels": true,
   "panels": [
     {
       "collection": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/collections/griesbach"
