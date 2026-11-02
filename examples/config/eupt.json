@@ -16,6 +16,7 @@
       "BibliographicReference"
     ],
     "disableSynopsisSelection": true,
+    "disableHighlighting": ["DictLink", "Linguistic", "BibliographicReference", "EditorialComment-epi", "EditorialComment-phil", "PoetologicalGlossary"],
     "types": {
       "EditorialComment-epi": {
         "label": "Epigraphischer Kommentar"
