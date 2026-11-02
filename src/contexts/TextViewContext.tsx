@@ -11,7 +11,6 @@ type State = {
   addTextWarning: (key: string) => void
   removeTextWarning: (key: string) => void
   clearTextWarnings: () => void
-  contentTypes: string[]
   activeContentType: string
   activeContentUrl: RefObject<string>
   setActiveContentType: (contentType: string) => void
@@ -34,7 +33,8 @@ export const TextViewProvider = ({
   children: ReactNode
 }) => {
   const { panelState, loading: loadingPanel, usePanelTranslation, updatePanel, annotationsError } = usePanel()
-  const { contentTypes, activeContentType, label } = panelState.panelViews[viewIndex] ?? {}
+  const { activeContentType, label } = panelState.panelViews[viewIndex] ?? {}
+  const { contentTypes } = panelState
   const { showBoundary } = useErrorBoundary()
   const { t } = usePanelTranslation()
 
@@ -144,7 +144,6 @@ export const TextViewProvider = ({
       addTextWarning,
       removeTextWarning,
       clearTextWarnings,
-      contentTypes,
       activeContentType,
       activeContentUrl,
       setActiveContentType,
