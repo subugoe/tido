@@ -12,9 +12,10 @@ import { ChevronDown } from 'lucide-react'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
 
 const ContentTypesToggle: FC = () => {
-  const { usePanelTranslation, panelRootRef } = usePanel()
+  const { panelState, usePanelTranslation, panelRootRef } = usePanel()
+  const { contentTypes } = panelState
   const { t } = usePanelTranslation()
-  const { label, contentTypes, activeContentType, setActiveContentType } = useTextView()
+  const { label, activeContentType, setActiveContentType } = useTextView()
 
   function handleTextTabClick(value: string) {
     setTimeout(() => setActiveContentType(value), 100)
