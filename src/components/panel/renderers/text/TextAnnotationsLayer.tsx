@@ -170,7 +170,7 @@ const TextAnnotationsLayer: FC<Props> = ({
       setMatchedMap(resultMap)
       updateMatchedMap(resultMap)
     }
-  }, [parsedDom, annotations, annotationsConfig])
+  }, [parsedDom, annotations, annotationsConfig, source])
 
 
   useEffect(() => {

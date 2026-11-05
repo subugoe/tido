@@ -22,7 +22,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     annotationsMode
   } = usePanel()
 
-  const { activeContentUrl } = useTextView()
+  const { textSource } = useTextView()
 
   const annotationsModeRef = useRef<'aligned' | 'list'>(null)
 
@@ -39,7 +39,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     <GenericTextRenderer
       htmlString={htmlString}
       onReady={onReady}
-      source={activeContentUrl.current}
+      source={textSource}
       sourceType="text"
       onSelect={onSelect}
       paddingTop={showContentTypeToggle ? 16 : 2}
