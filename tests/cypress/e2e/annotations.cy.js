@@ -1,3 +1,5 @@
+import { assertEntryAtTarget, assertNoOverlappingSlots, slotOf } from '../support/aligned-helpers'
+
 describe('Annotations', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -43,6 +45,7 @@ describe('Annotations', () => {
     sidebarToggle: '[data-cy="sidebar-toggle"]',
     sidebarContainer: '[data-sidebar-view]',
     sidebarLoading: '[data-cy="sidebar-loading"]',
+    sidebarScroll: '[data-sidebar-scroll-container]',
     panel: '[data-cy="panel"]',
     textContainer: '[data-text-container]',
     viewsMenuToggle: '[data-cy="panel-menu"]',
@@ -95,68 +98,33 @@ describe('Annotations', () => {
     cy.get(selectors.viewsMenu).should('not.exist')
   }
 
-  // The card is inside the sidebar viewport and sits on exactly the same y position as its target.
-  // Both are measured from the top of the panel - the frame the sidebar and the text views share.
+  // The entry is shown at its target: on its own at exactly its height, or in the group above it.
   // Targets like #para1 and #spouter-inn exist in every content type of the item, so the target is
   // looked up in the view it belongs to rather than panel wide.
   const expectCardAlignedWithTarget = ({ card, target }, viewIndex) => {
-    cy.get(selectors.sidebarContainer).then(($sidebar) => {
+    cy.get(selectors.sidebarScroll).then(($sidebar) => {
       cy.get(card).should(($card) => {
-        const sidebarRect = $sidebar[0].getBoundingClientRect()
-
-        expect($card[0].getBoundingClientRect().top, 'card is inside the sidebar viewport')
-          .to.be.within(sidebarRect.top, sidebarRect.bottom)
-      })
-    })
-
-    cy.get(selectors.panel).then(($panel) => {
-      cy.get(card).should(($card) => {
-        const panelTop = $panel[0].getBoundingClientRect().top
         const targetEl = Cypress.$(selectors.textContainer).eq(viewIndex).find(target)[0]
-        const targetY = targetEl.getBoundingClientRect().top - panelTop
-        const cardY = $card[0].getBoundingClientRect().top - panelTop
-
-        expect(cardY, `card y ${cardY} vs target y ${targetY}`).to.be.closeTo(targetY, 0)
+        assertEntryAtTarget($card[0], targetEl, $sidebar[0])
       })
     })
   }
 
-  // The gap the sidebar leaves between two cards it has to stack, i.e. between the bottom edge of
-  // one card and the top edge of the next. Mirrors ANNOTATION_GAP in AlignAnnotationsList.
-  const ANNOTATION_GAP = 5
+  // Entries keep the order of their targets: the annotation whose target sits lower in the text is
+  // shown lower in the column too - or in the same group as the one before it.
+  const expectInOrderBelow = (previous, current, viewIndex) => {
+    cy.get(selectors.panel).should(() => {
+      const textEl = Cypress.$(selectors.textContainer).eq(viewIndex)
+      const prevTargetY = textEl.find(previous.target)[0].getBoundingClientRect().top
+      const curTargetY = textEl.find(current.target)[0].getBoundingClientRect().top
+      expect(curTargetY, `target ${current.target} lies below ${previous.target}`).to.be.greaterThan(prevTargetY)
 
-  // Where a card and its target sit, both measured from the top of the panel - the same origin
-  // expectCardAlignedWithTarget uses. cardBottom is what the next card stacks onto.
-  const readPosition = ({ card, target }, viewIndex) => cy.get(selectors.panel).then(($panel) => {
-    const panelTop = $panel[0].getBoundingClientRect().top
-    const targetEl = Cypress.$(selectors.textContainer).eq(viewIndex).find(target)[0]
-    const cardRect = Cypress.$(card)[0].getBoundingClientRect()
+      const prevSlot = slotOf(Cypress.$(previous.card)[0])
+      const curSlot = slotOf(Cypress.$(current.card)[0])
+      if (prevSlot === curSlot) return
 
-    return {
-      cardY: cardRect.top - panelTop,
-      cardBottom: cardRect.bottom - panelTop,
-      targetY: targetEl.getBoundingClientRect().top - panelTop
-    }
-  })
-
-  // Cards keep the order of their targets: the annotation whose target sits lower in the text has
-  // its card lower in the sidebar too. Pass stacked when the two targets sit too close together for
-  // both cards to align with them - the second card then follows the first one immediately, one
-  // ANNOTATION_GAP below its bottom edge, instead of drifting off somewhere down the sidebar.
-  const expectStackedBelow = (previous, current, viewIndex, stacked = false) => {
-    readPosition(previous, viewIndex).then((prev) => {
-      readPosition(current, viewIndex).then((cur) => {
-        expect(cur.targetY, `target ${current.target} y ${cur.targetY} vs ${previous.target} y ${prev.targetY}`)
-          .to.be.greaterThan(prev.targetY)
-
-        expect(cur.cardY, `card of ${current.target} y ${cur.cardY} vs card of ${previous.target} y ${prev.cardY}`)
-          .to.be.greaterThan(prev.cardY)
-
-        if (!stacked) return
-
-        expect(cur.cardY - prev.cardBottom, `card of ${current.target} follows the card of ${previous.target}`)
-          .to.be.closeTo(ANNOTATION_GAP, 1)
-      })
+      expect(curSlot.getBoundingClientRect().top, `${current.target} is shown below ${previous.target}`)
+        .to.be.greaterThan(prevSlot.getBoundingClientRect().top)
     })
   }
 
@@ -377,16 +345,16 @@ describe('Annotations', () => {
     cy.get(selectors.textContainer).eq(0).should('not.be.visible')
     cy.get(selectors.textContainer).eq(1).find(spouterInn.target).should('be.visible')
 
-    // The first card of the remaining text lines up exactly with its target, as in the test above.
+    // The first entry of the remaining text is shown at its target, as in the test above.
     expectCardAlignedWithTarget(spouterInn, 1)
 
-    // Every card after it follows the order of the targets in the text. The first pair only has to
-    // keep that order - its targets are a paragraph apart, so both cards can align with them. The
-    // two pairs after it sit on targets close enough together that the cards have to stack, so each
-    // one follows immediately below the previous card.
-    expectStackedBelow(spouterInn, oilPainting, 1)
-    expectStackedBelow(oilPainting, harpooneer, 1, true)
-    expectStackedBelow(harpooneer, diplAlt, 1, true)
+    // Every entry after it follows the order of the targets in the text - on its own further down,
+    // or in the group of the one before it when its targets sit too close to have a place of its own.
+    // Either way no two slots overlap.
+    expectInOrderBelow(spouterInn, oilPainting, 1)
+    expectInOrderBelow(oilPainting, harpooneer, 1)
+    expectInOrderBelow(harpooneer, diplAlt, 1)
+    cy.get(selectors.sidebarScroll).should(($sidebar) => assertNoOverlappingSlots($sidebar[0]))
   })
 
   it('Should align annotations correctly on toggling the first text view back on', () => {

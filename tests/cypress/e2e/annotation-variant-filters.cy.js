@@ -68,6 +68,9 @@ describe('Variant annotation filters with multiple root selection', () => {
     params.set('panels[0].manifest', manifest);
     params.set('panels[0].item', item);
     params.append('panelViews[]', JSON.stringify(view));
+    // The witness chips are part of the full annotation card, which the list shows in place. The
+    // aligned column only shows one line per annotation.
+    params.set('annotations.defaultMode', 'list');
     params.set('annotations.filters.rootSelectionRule', 'multiple');
     filterItems.forEach((filterItem) => params.append('annotations.filters.items[]', JSON.stringify(filterItem)));
 
