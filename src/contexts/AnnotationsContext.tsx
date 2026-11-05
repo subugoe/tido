@@ -20,7 +20,7 @@ type State = {
 const AnnotationsContext = createContext<State>(null)
 
 // Deduplicated in case two views show the same text.
-function getVisibleContentUrls(panelViews: PanelView[] | undefined, contents: Content[] | undefined): string[] {
+export function getVisibleContentUrls(panelViews: PanelView[] | undefined, contents: Content[] | undefined): string[] {
   return [...new Set(
     (panelViews ?? [])
       .filter(view => view.view === 'text' && (view.visible ?? true))

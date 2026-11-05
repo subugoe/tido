@@ -48,5 +48,9 @@ export const useHoveredAnnotations = () => useStore(useTextStore(), (state) => s
 export const useIsAnnotationHovered = (annotationId: string) =>
   useStore(useTextStore(), (state) => state.hoveredAnnotations?.includes(annotationId) ?? false)
 
+// Whether any of these annotations is hovered - for an entry standing for several annotations.
+export const useIsAnyAnnotationHovered = (annotationIds: string[]) =>
+  useStore(useTextStore(), (state) => state.hoveredAnnotations?.some((id) => annotationIds.includes(id)) ?? false)
+
 // The setter is created once with the store, so subscribing to it never causes a render.
 export const useSetHoveredAnnotations = () => useStore(useTextStore(), (state) => state.setHoveredAnnotations)

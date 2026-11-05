@@ -1,15 +1,16 @@
-import { getSource } from '@/utils/annotations.ts'
 import { isProgrammaticScroll, markProgrammaticScroll } from '@/utils/dom.ts'
-import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 
 export const SYNC_SCROLL_THRESHOLD_TOP = 0.35
 const SYNC_SCROLL_THRESHOLD_BOTTOM = 0.45
 
+// How long a scrollTop we set ourselves stays muted: its scroll event fires a frame later and must
+// not be taken for the user's scrolling and synced back.
+const MUTE_DURATION = 120
+
 // Find the topmost target sitting in the scroll container's "focused" band - the strip of the
 // visible area between SYNC_SCROLL_THRESHOLD_TOP and _BOTTOM, extended down to the container bottom
 // when scrolled near the end. The band is part of the visible area, so a target overlapping it is on
-// screen by definition. Shared by scrollOtherTexts and the synopsis scroll listener in
-// GenericTextRenderer.
+// screen by definition. Used by the synopsis scroll listener.
 export function findFocusedTarget(scrollContainer: HTMLElement, targets: Element[]): HTMLElement | undefined {
   const { top, bottom, height } = scrollContainer.getBoundingClientRect()
 
@@ -36,15 +37,19 @@ export function findFocusedTarget(scrollContainer: HTMLElement, targets: Element
   return focusedTarget
 }
 
+// Couples the aligned annotations sidebar with the texts of the panel. The entries are positioned in
+// the coordinates of their texts, so the sidebar shows them right as long as it has the scrollTop of
+// the text it is read against: the leading text, the one the user scrolled last. Scrolling the
+// sidebar scrolls the leading text along. The texts stay independent of each other - moving them
+// together is the synopsis' business, and the scrolls it makes never change the leading text.
 class Scroller {
   private sidebar: HTMLElement | null = null
   private texts: {[contentUrl: string]: HTMLElement} = {}
-  private isSyncing = false
   private syncEnabled = false
+  private leadUrl: string | null = null
   private originSelection: 'text' | 'annotation' | 'config' = 'text'
-  private focusedAnnotationId: string | null = null
-  private matchedMap: {[contentUrl: string]: MatchedAnnotationsMap} = {}
-  private syncMaps: {[contentUrl: string]: SyncMap} = {}
+  // scrollTops we set ourselves, per element, with the time until which their event is ignored
+  private muted = new WeakMap<Element, { top: number, until: number }>()
   private handleSidebarScrollBound: EventListener
   private handleTextScrollBound: EventListener
 
@@ -54,7 +59,10 @@ class Scroller {
   }
 
   setSidebar(element: HTMLElement) {
+    if (this.sidebar === element) return
+    this.stopSidebar()
     this.sidebar = element
+    this.startSidebar()
   }
 
   getSidebar() {
@@ -70,18 +78,6 @@ class Scroller {
     return this.texts[contentUrl]
   }
 
-  setMatchedMap(map: {[contentUrl: string]: MatchedAnnotationsMap}) {
-    this.matchedMap = map
-  }
-
-  setSyncMaps(map: {[contentUrl: string]: SyncMap}) {
-    this.syncMaps = map
-  }
-
-  setIsSyncing(value: boolean) {
-    this.isSyncing = value
-  }
-
   setOriginSelection(value: 'text' | 'annotation' | 'config') {
     this.originSelection = value
   }
@@ -90,121 +86,78 @@ class Scroller {
     return this.originSelection
   }
 
-  syncScroll(source: HTMLElement, target: HTMLElement) {
-    if (!source || !target) return
-    this.isSyncing = true
-    markProgrammaticScroll(target)
-    target.scrollTop = source.scrollTop
-    requestAnimationFrame(() => ( this.isSyncing = false))
+  getLead() {
+    return this.leadUrl
   }
 
-  scrollOtherTexts(contentUrl: string) {
-    if (!this.syncMaps[contentUrl] || !this.texts[contentUrl]) return
-    const text = this.texts[contentUrl]
-    const scrollTop = text.scrollTop
+  setLead(contentUrl: string | null) {
+    this.leadUrl = contentUrl
+  }
 
-    const remainingBottomHeight = text.clientHeight * (1 - SYNC_SCROLL_THRESHOLD_BOTTOM)
-    const remainingScrollAmount = text.scrollHeight - scrollTop - text.clientHeight
-    const isNearBottom = remainingScrollAmount <= remainingBottomHeight
+  // Sets a scrollTop and mutes the scroll event it causes.
+  private setScrollTop(el: HTMLElement, top: number) {
+    if (Math.abs(el.scrollTop - top) < 1) return
+    this.muted.set(el, { top, until: performance.now() + MUTE_DURATION })
+    el.scrollTop = top
+  }
 
-    const annotationIds = Object.keys(this.syncMaps[contentUrl])
-    let focusedTarget: HTMLElement | undefined
-    let focusedAnnotationId: string | undefined
+  private isMuted(el: HTMLElement) {
+    const mute = this.muted.get(el)
+    if (!mute) return false
+    if (performance.now() > mute.until) {
+      this.muted.delete(el)
+      return false
+    }
+    // the browser may clamp the value we set, so a small difference still counts as ours
+    return Math.abs(el.scrollTop - mute.top) < 2 || el.scrollTop >= el.scrollHeight - el.clientHeight - 1
+  }
 
-    for (const id of annotationIds) {
-      focusedTarget = findFocusedTarget(text, this.syncMaps[contentUrl][id])
+  // Gives the sidebar the scrollTop of the leading text. Smoothly when the leading text has just
+  // changed, so the entries visibly travel to their targets instead of jumping.
+  syncSidebarToLead(behavior: ScrollBehavior = 'instant') {
+    const lead = this.leadUrl ? this.texts[this.leadUrl] : null
+    if (!this.sidebar || !lead) return
 
-      if (focusedTarget) {
-        focusedAnnotationId = id
-        break
-      }
+    if (behavior === 'smooth') {
+      if (Math.abs(this.sidebar.scrollTop - lead.scrollTop) < 1) return
+      markProgrammaticScroll(this.sidebar)
+      this.sidebar.scrollTo({ top: lead.scrollTop, behavior: 'smooth' })
+      return
     }
 
-    if (!focusedTarget) return
-    this.isSyncing = true
+    this.setScrollTop(this.sidebar, lead.scrollTop)
+  }
 
-    const otherTexts = Object.keys(this.texts).filter(url => url !== contentUrl)
-    for (const otherUrl of otherTexts) {
-      const otherMap = this.syncMaps[otherUrl]
-      const otherTargets = otherMap[focusedAnnotationId]
+  private handleSidebarScroll() {
+    const sidebar = this.sidebar
+    const lead = this.leadUrl ? this.texts[this.leadUrl] : null
+    if (!sidebar || !lead) return
+    if (this.isMuted(sidebar) || isProgrammaticScroll(sidebar)) return
 
-      if (!otherTargets || otherTargets.length === 0) break
+    // Not marked as programmatic on purpose: for the synopsis this is the user scrolling the text,
+    // so its parallel texts follow as they would on a scroll in the text itself.
+    this.setScrollTop(lead, sidebar.scrollTop)
+  }
 
-      const otherText = this.texts[otherUrl]
-      const otherTextRect = otherText.getBoundingClientRect()
-      const targetRect = otherTargets[0].getBoundingClientRect()
+  private handleTextScroll(e: Event) {
+    const text = e.currentTarget as HTMLElement
+    const contentUrl = text.getAttribute('data-content-url')
+    if (!contentUrl || this.isMuted(text)) return
 
-      const targetTop = targetRect.top - otherTextRect.top + otherText.scrollTop
-      const targetOffset = otherText.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
-      markProgrammaticScroll(otherText)
-      otherText.scrollTop = isNearBottom ? scrollTop : targetTop - targetOffset
+    if (contentUrl !== this.leadUrl) {
+      // A scroll we started - the synopsis aligning a parallel text, a selection - does not make a
+      // text the leading one. Only the user's own scrolling does.
+      if (isProgrammaticScroll(text)) return
+      this.leadUrl = contentUrl
     }
 
-    setTimeout(() => this.isSyncing = false, 20)
+    // The leading text is followed whoever scrolled it, so the entries stay at their targets.
+    if (this.sidebar) this.setScrollTop(this.sidebar, text.scrollTop)
   }
 
-  syncSidebarToText(targetSource: string | AnnotationTargetSource) {
-    const url = typeof targetSource === 'string' ? targetSource : targetSource.id
-    this.syncScroll(this.texts[url], this.sidebar)
-  }
-
-
-  handleSidebarScroll() {
-    // isSyncing alone misses the sidebar scroll caused by syncScroll: that scroll event fires a frame
-    // after the rAF has already lifted the flag.
-    if (this.isSyncing || !this.sidebar || isProgrammaticScroll(this.sidebar)) return
-    const refY = this.sidebar.scrollTop + this.sidebar.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
-
-    const mapEntries = Object
-      .values(this.matchedMap)
-      .flatMap(map => Object.values(map))
-      .filter(item => item.filtered)
-    // TODO: Ther problem here is that tooltip annotations appear also as filtered=true, we need to handle them better
-
-    const bandEntry = mapEntries.find(entry => {
-      const card = this.sidebar.querySelector(`[data-annotation="${entry.annotation.id}"]`) as HTMLElement
-      if (!card) return false
-      const top = parseInt(card.style.top)
-      const bottom = top + card.offsetHeight
-      return refY >= top && refY < bottom
-    })
-
-    if (!bandEntry || bandEntry.annotation.id === this.focusedAnnotationId) return
-
-    this.focusedAnnotationId = bandEntry.annotation.id
-
-    const entry = bandEntry
-    if (this.isSyncing) return
-    this.isSyncing = true
-    const targetElement = entry.target[0]
-
-    if (targetElement) {
-      const contentUrl = getSource(getAnnotationTargets(entry.annotation)[0]).id
-      const text = this.texts[contentUrl]
-      const textRect = text.getBoundingClientRect()
-      const targetRect = targetElement.getBoundingClientRect()
-      const targetTop = targetRect.top - textRect.top + text.scrollTop
-      const targetOffset = text.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
-      markProgrammaticScroll(text)
-      text.scrollTop = targetTop - targetOffset
-      this.scrollOtherTexts(contentUrl)
-    }
-    setTimeout(() => this.isSyncing = false, 20)
-  }
-
-  handleTextScroll(e: Event) {
-    if (this.isSyncing) return
-    const contentUrl = (e.target as HTMLElement).getAttribute('data-content-url')
-    this.scrollOtherTexts(contentUrl)
-    if (this.originSelection === 'text')  {
-      this.syncScroll(this.texts[contentUrl], this.sidebar)
-    }
-  }
-
-  // Sidebar and text scroll in lockstep only while the aligned annotation list is mounted - it is
-  // what positions its cards against their targets. Everywhere else the two scroll independently,
-  // so the listeners stay off and a text view registering in the meantime does not turn them back
-  // on by itself.
+  // Sidebar and texts are coupled only while the aligned annotation list is mounted - it positions
+  // its entries against their targets. Everywhere else they scroll independently, so the listeners
+  // stay off and a text view registering in the meantime does not turn them back on by itself.
   startSync() {
     this.syncEnabled = true
     this.startSidebar()
@@ -219,7 +172,7 @@ class Scroller {
 
   startSidebar() {
     if (!this.syncEnabled) return
-    this.sidebar?.addEventListener('scroll', this.handleSidebarScrollBound)
+    this.sidebar?.addEventListener('scroll', this.handleSidebarScrollBound, { passive: true })
   }
 
   stopSidebar() {
@@ -228,33 +181,11 @@ class Scroller {
 
   startText(contentUrl: string) {
     if (!this.syncEnabled) return
-    this.texts[contentUrl]?.addEventListener('scroll', this.handleTextScrollBound)
+    this.texts[contentUrl]?.addEventListener('scroll', this.handleTextScrollBound, { passive: true })
   }
 
   stopText(contentUrl: string) {
     this.texts[contentUrl]?.removeEventListener('scroll', this.handleTextScrollBound)
-  }
-
-  // Scrolls the text by delta. The scroll is deliberate, so handleTextScroll must not treat it as a
-  // user scroll and sync on top of it - isSyncing keeps the listener out until the scroll has come
-  // to a stop.
-  scrollText(contentUrl: string, delta: number) {
-    const text = this.texts[contentUrl]
-    if (!text) return
-
-    // Landing on the scrollTop we are already at - because delta is zero or the container is at the
-    // end of its range - scrolls nothing and so never reaches scrollend, which means the guard has
-    // to be lifted right here instead.
-    const maxScrollTop = text.scrollHeight - text.clientHeight
-    const top = Math.max(0, Math.min(text.scrollTop + delta, maxScrollTop))
-    if (top === text.scrollTop) {
-      this.isSyncing = false
-      return
-    }
-
-    text.addEventListener('scrollend', () => (this.isSyncing = false), { once: true })
-    markProgrammaticScroll(text)
-    text.scrollTo({ top, behavior: 'smooth' })
   }
 }
 

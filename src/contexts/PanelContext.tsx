@@ -129,7 +129,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const scroller = useRef<Scroller>(null)
   const [annotationsLoading, setAnnotationsLoading] = useState(false)
 
-  const [syncMaps] = useState<{[contentUrl: string]: SyncMap}>({})
   const [syncedTargetsMap, setSyncedTargetsMap] = useState<{[contentUrl: string]: HTMLElement[]}>({})
   const [syncedTargets, setSyncedTargets] = useState<HTMLElement[]>([])
 
@@ -435,15 +434,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   useEffect(() => {
     init(panelState.config)
   }, [panelState.config, panelId])
-
-  useEffect(() => {
-    getScroller().setSyncMaps(syncMaps)
-  }, [syncMaps])
-
-
-  useEffect(() => {
-    getScroller().setMatchedMap(matchedAnnotationsMaps)
-  }, [matchedAnnotationsMaps])
 
 
   function updatePanel(data: Partial<PanelState>) {
