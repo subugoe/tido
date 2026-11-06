@@ -1,0 +1,12 @@
+{
+  "title": "DTS demo (DoTS demo server)",
+  "rootCollections": [
+    "https://dots.chartes.psl.eu/demo/api/dts/"
+  ],
+  "panels": [
+    {
+      "collection": "https://dots.chartes.psl.eu/demo/api/dts/collection?id=ENCPOS_c2",
+      "manifest": "https://dots.chartes.psl.eu/demo/api/dts/collection?id=ENCPOS_1849_c2"
+    }
+  ]
+}

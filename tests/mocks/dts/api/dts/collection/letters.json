@@ -1,0 +1,16 @@
+{
+  "@context": "https://dtsapi.org/context/v1.0.json",
+  "dtsVersion": "1.0",
+  "@id": "urn:cts:dtsTest:letters.lat1",
+  "@type": "Resource",
+  "title": "Letters",
+  "description": "A readable resource directly under the root collection",
+  "totalParents": 1,
+  "totalChildren": 0,
+  "collection": "/dts/api/dts/collection/letters.json{?nav}",
+  "document": "/dts/api/dts/document/letters.xml{?ref,start,end,tree,mediaType}",
+  "dublinCore": {
+    "creator": "Anonymous",
+    "language": "lat"
+  }
+}
