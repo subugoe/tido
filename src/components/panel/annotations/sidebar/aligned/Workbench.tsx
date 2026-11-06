@@ -1,4 +1,4 @@
-import { FC, KeyboardEvent, ReactElement, useEffect, useId, useRef } from 'react'
+import { FC, KeyboardEvent, useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
@@ -16,7 +16,7 @@ export interface WorkbenchActions {
   // a row of the column's annotations was clicked
   toggleRow: (key: string, annotationId: string) => void
   // a sub-annotation row was clicked: path is what is open below the row afterwards
-  setSubPath: (key: string, rowId: string, path: string[]) => void
+  setSubPath: (key: string, rowId: string, path: string[] | null) => void
   escape: () => void
 }
 
@@ -55,23 +55,6 @@ const Card: FC<CardProps> = ({ card, active, annotationsById, context, actions }
     ? `${annotations.length} ${t('annotations')}`
     : `${getTypeLabel(first)}: ${getAnnotationLabel(first)}`
 
-  // The rows down the path that is open below a row of the column.
-  function renderSubRows(rowId: string, level: number): (child: Annotation) => ReactElement {
-    const path = card.subPaths[rowId] ?? []
-    return function renderSubRow(child: Annotation) {
-      const expanded = path[level - 1] === child.id
-      return <WorkbenchRow
-        key={child.id}
-        annotation={child}
-        level={level}
-        expanded={expanded}
-        context={context}
-        onToggle={() => actions.setSubPath(card.key, rowId, expanded ? path.slice(0, level - 1) : [...path.slice(0, level - 1), child.id])}
-        renderChild={renderSubRows(rowId, level + 1)}
-      />
-    }
-  }
-
   return <li
     data-workbench-card={card.key}
     data-active={active || undefined}
@@ -105,11 +88,14 @@ const Card: FC<CardProps> = ({ card, active, annotationsById, context, actions }
       {annotations.map((annotation) => <WorkbenchRow
         key={annotation.id}
         annotation={annotation}
-        level={0}
         expanded={card.expandedRows.includes(annotation.id)}
         context={context}
         onToggle={() => actions.toggleRow(card.key, annotation.id)}
-        renderChild={renderSubRows(annotation.id, 1)}
+        openChildId={card.subPaths[annotation.id]?.[0] ?? null}
+        onOpenChild={(child) => {
+          const open = card.subPaths[annotation.id]?.[0] === child.id
+          actions.setSubPath(card.key, annotation.id, open ? null : [child.id])
+        }}
       />)}
     </ul>}
   </li>

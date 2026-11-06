@@ -1,6 +1,6 @@
-import { FC, ReactElement, useId, useMemo, useState } from 'react'
+import { FC, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronRight, CornerDownRight } from 'lucide-react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useIsAnnotationHovered, useSetHoveredAnnotations } from '@/contexts/TextContext.tsx'
 import GenericTextRenderer from '@/components/panel/renderers/text/GenericTextRenderer.tsx'
@@ -23,7 +23,7 @@ export interface WorkbenchRowContext {
 
 // The note of an annotation, rendered the way the annotation card renders it - targets of
 // sub-annotations and cross references in it work the same.
-const Note: FC<{ annotation: Annotation }> = ({ annotation }) => {
+export const Note: FC<{ annotation: Annotation }> = ({ annotation }) => {
   const { t } = useTranslation()
   const [full, setFull] = useState(false)
   const id = useId()
@@ -56,17 +56,46 @@ const Note: FC<{ annotation: Annotation }> = ({ annotation }) => {
 
 interface Props {
   annotation: Annotation
-  // 0 for an annotation of the column, 1 for its sub-annotations and so on
-  level: number
   expanded: boolean
   context: WorkbenchRowContext
   onToggle: () => void
-  // the rows below this one, rendered by the caller so it can decide what is open down the path
-  renderChild: (child: Annotation) => ReactElement
+  // With this the expanded row lists its sub-annotations, each one opening the column that shows
+  // it. Without it the row leaves them to the next column.
+  onOpenChild?: (child: Annotation) => void
+  // the sub-annotation whose column is open
+  openChildId?: string | null
 }
 
-// One annotation on the workbench: a header that expands its metadata, note and sub-annotations.
-const WorkbenchRow: FC<Props> = ({ annotation, level, expanded, context, onToggle, renderChild }) => {
+// A sub-annotation listed under a note: opens - or closes - the column that shows it.
+const SubAnnotationLink: FC<{ annotation: Annotation, open: boolean, onOpen: () => void }> = ({ annotation, open, onOpen }) => {
+  const setHoveredAnnotations = useSetHoveredAnnotations()
+  const getTypeLabel = useTypeLabel()
+  const typeLabel = getTypeLabel(annotation)
+  const label = useMemo(() => getAnnotationLabel(annotation), [annotation])
+
+  return <li data-sub-annotation-link={annotation.id}>
+    <button
+      type="button"
+      aria-expanded={open}
+      aria-label={`${typeLabel}: ${label}`}
+      onClick={onOpen}
+      onMouseEnter={() => setHoveredAnnotations([annotation.id])}
+      onMouseLeave={() => setHoveredAnnotations(null)}
+      className={cn(
+        'flex w-full min-h-8 items-center gap-2 rounded-md px-1.5 text-left text-sm cursor-pointer hover:bg-muted',
+        'focus-visible:outline-2 focus-visible:outline-primary',
+        open && 'bg-muted font-medium'
+      )}
+    >
+      <CornerDownRight size={14} aria-hidden className="shrink-0 text-muted-foreground" />
+      <span aria-hidden className="shrink-0 text-xs text-muted-foreground">{typeLabel}</span>
+      <span aria-hidden className="min-w-0 flex-1 truncate">{label}</span>
+    </button>
+  </li>
+}
+
+// One annotation on the workbench or in a column: a header that expands its metadata and note.
+const WorkbenchRow: FC<Props> = ({ annotation, expanded, context, onToggle, onOpenChild, openChildId }) => {
   const { t } = useTranslation()
   const { selectedAnnotation } = usePanel()
   const setHoveredAnnotations = useSetHoveredAnnotations()
@@ -80,7 +109,7 @@ const WorkbenchRow: FC<Props> = ({ annotation, level, expanded, context, onToggl
   const textIndex = context.textIndexOf(annotation.id)
   const isSelected = selectedAnnotation?.annotation?.id === annotation.id
 
-  return <li data-workbench-row={annotation.id} className={cn(level > 0 && 'border-l-2 border-border pl-2')}>
+  return <li data-workbench-row={annotation.id}>
     <button
       type="button"
       aria-expanded={expanded}
@@ -116,10 +145,15 @@ const WorkbenchRow: FC<Props> = ({ annotation, level, expanded, context, onToggl
 
       <Note annotation={annotation} />
 
-      {children.length > 0 && <section>
+      {onOpenChild && children.length > 0 && <section>
         <h4 className="mb-1 text-xs font-medium text-muted-foreground">{t('sub_annotations_list', { count: children.length })}</h4>
         <ul className="flex flex-col gap-0.5">
-          {children.map((child) => renderChild(child))}
+          {children.map((child) => <SubAnnotationLink
+            key={child.id}
+            annotation={child}
+            open={openChildId === child.id}
+            onOpen={() => onOpenChild(child)}
+          />)}
         </ul>
       </section>}
     </div>}

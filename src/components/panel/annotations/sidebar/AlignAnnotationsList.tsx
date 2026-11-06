@@ -13,6 +13,7 @@ import { SelectedAnnotation } from '@/types'
 import AlignedSlotView, { AlignedColumnInfo } from '@/components/panel/annotations/sidebar/aligned/AlignedSlotView.tsx'
 import Workbench, { WorkbenchActions } from '@/components/panel/annotations/sidebar/aligned/Workbench.tsx'
 import { WorkbenchRowContext } from '@/components/panel/annotations/sidebar/aligned/WorkbenchRow.tsx'
+import { useSubAnnotationColumns } from '@/contexts/SubAnnotationColumnsContext.tsx'
 
 interface Layout {
   slots: AlignedSlot[]
@@ -156,6 +157,25 @@ const AlignAnnotationsList: FC<Props> = ({ overlayHost }) => {
     return map
   }, [layout])
 
+  // Scrolls the text of an entry until its target stands in the upper part of the view, and makes
+  // that text the leading one - the sidebar follows it there.
+  const scrollTextToEntry = (annotationId: string) => {
+    const scroller = getScroller()
+    const entry = entriesById.get(annotationId)
+    const text = entry ? scroller.getText(entry.contentUrl) : null
+    if (!entry || !text) return
+
+    scroller.setLead(entry.contentUrl)
+    const maxScrollTop = text.scrollHeight - text.clientHeight
+    const top = Math.max(0, Math.min(entry.textTop - text.clientHeight * SYNC_SCROLL_THRESHOLD_TOP, maxScrollTop))
+    if (Math.abs(top - text.scrollTop) < 1) {
+      scroller.syncSidebarToLead('smooth')
+      return
+    }
+    markProgrammaticScroll(text)
+    text.scrollTo({ top, behavior: 'smooth' })
+  }
+
   // A selection never changes the layout. It only decides which text the sidebar is read against.
   useEffect(() => {
     if (!selectedAnnotation?.annotation || !layout) return
@@ -172,19 +192,7 @@ const AlignAnnotationsList: FC<Props> = ({ overlayHost }) => {
 
     // From elsewhere - config, bookmark, cross reference: the text is scrolled to the target and
     // leads, so the sidebar follows it there.
-    const entry = entriesById.get(annotation.id)
-    const text = entry ? scroller.getText(entry.contentUrl) : null
-    if (!entry || !text) return
-
-    scroller.setLead(entry.contentUrl)
-    const maxScrollTop = text.scrollHeight - text.clientHeight
-    const top = Math.max(0, Math.min(entry.textTop - text.clientHeight * SYNC_SCROLL_THRESHOLD_TOP, maxScrollTop))
-    if (Math.abs(top - text.scrollTop) < 1) {
-      scroller.syncSidebarToLead('smooth')
-      return
-    }
-    markProgrammaticScroll(text)
-    text.scrollTo({ top, behavior: 'smooth' })
+    scrollTextToEntry(annotation.id)
   }, [selectedAnnotation, layoutReady])
 
   // ---- Workbench -------------------------------------------------------------------------------
@@ -333,8 +341,12 @@ const AlignAnnotationsList: FC<Props> = ({ overlayHost }) => {
         .map((rowId) => card.subPaths[rowId][(nextCard.subPaths[rowId] ?? []).length])
         .find(Boolean)
       if (!collapsedId) return
+      // in the column it was shown in, or - when that column closed too - in the card's list
       requestAnimationFrame(() => {
-        const button = overlayHost?.querySelector(`[data-workbench-row="${CSS.escape(collapsedId)}"] > button`) as HTMLElement | null
+        const id = CSS.escape(collapsedId)
+        const panel = document.getElementById(panelId)
+        const button = (panel?.querySelector(`[data-sub-annotation-columns] [data-workbench-row="${id}"] > button`)
+          ?? panel?.querySelector(`[data-sub-annotation-link="${id}"] > button`)) as HTMLElement | null
         button?.focus()
       })
     }
@@ -345,6 +357,32 @@ const AlignAnnotationsList: FC<Props> = ({ overlayHost }) => {
     showOrigin: column.showOrigin,
     textIndexOf: (id) => entriesById.get(id)?.textIndex
   }), [childrenById, column.showOrigin, entriesById])
+
+  // ---- Columns ---------------------------------------------------------------------------------
+  // The sub-annotations opened below a row of the active card open as columns next to the sidebar.
+  // Their path goes to the columns through a context, as they sit outside of the sidebar.
+  const { setModel: setColumnsModel } = useSubAnnotationColumns()
+  const activeCard = workbench.cards.find((c) => c.key === workbench.activeKey)
+  const columnRow = activeCard?.annotationIds.find((id) => activeCard.subPaths[id] !== undefined) ?? null
+  const columnPathKey = columnRow ? [columnRow, ...activeCard.subPaths[columnRow]].join(' ') : ''
+
+  useEffect(() => {
+    if (!activeCard || !columnRow) {
+      setColumnsModel(null)
+      return
+    }
+    setColumnsModel({
+      path: [columnRow, ...activeCard.subPaths[columnRow]],
+      annotationsById,
+      childrenOf: rowContext.childrenOf,
+      rootContentUrl: entriesById.get(columnRow)?.contentUrl ?? null,
+      setPath: (path) => workbenchActions.setSubPath(activeCard.key, columnRow, path ? path.slice(1) : null),
+      showInText: () => scrollTextToEntry(columnRow),
+      escape: workbenchActions.escape
+    })
+  }, [columnPathKey, activeCard?.key, annotationsById, rowContext, entriesById])
+
+  useEffect(() => () => setColumnsModel(null), [])
 
   // A click on the sidebar outside of an entry deselects.
   useEffect(() => {

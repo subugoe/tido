@@ -10,7 +10,8 @@ export interface WorkbenchCard {
   collapsed: boolean
   // the rows of the card that are expanded, by annotation id
   expandedRows: string[]
-  // per row: the chain of sub-annotations opened below it, outermost first
+  // per row whose sub-annotation columns are open: the chain of sub-annotations chosen below it,
+  // outermost first - empty when level 1 is open with nothing chosen. No entry: no columns.
   subPaths: Record<string, string[]>
 }
 
@@ -99,13 +100,18 @@ export function toggleRow(state: WorkbenchState, key: string, annotationId: stri
 }
 
 // Opens the chain of sub-annotations below a row - replacing what was open below it, as a path
-// leads down one branch at a time. The row itself is expanded too.
-export function setSubPath(state: WorkbenchState, key: string, rowId: string, path: string[]): WorkbenchState {
-  return updateCard(state, key, (card) => ({
-    ...card,
-    expandedRows: card.expandedRows.includes(rowId) ? card.expandedRows : [...card.expandedRows, rowId],
-    subPaths: { ...card.subPaths, [rowId]: path }
-  }))
+// leads down one branch at a time - or, with null, closes it. The row itself is expanded too.
+export function setSubPath(state: WorkbenchState, key: string, rowId: string, path: string[] | null): WorkbenchState {
+  return updateCard(state, key, (card) => {
+    const subPaths = { ...card.subPaths }
+    if (path === null) delete subPaths[rowId]
+    else subPaths[rowId] = path
+    return {
+      ...card,
+      expandedRows: card.expandedRows.includes(rowId) ? card.expandedRows : [...card.expandedRows, rowId],
+      subPaths
+    }
+  })
 }
 
 // What Escape closes: the deepest open sub-annotation of the active card, else the card itself.
@@ -114,11 +120,12 @@ export function closeDeepest(state: WorkbenchState): WorkbenchState {
   if (!card) return state
 
   const deepestRow = Object.keys(card.subPaths)
-    .filter((rowId) => card.subPaths[rowId].length > 0)
     .sort((a, b) => card.subPaths[b].length - card.subPaths[a].length)[0]
 
   if (deepestRow) {
-    return setSubPath(state, card.key, deepestRow, card.subPaths[deepestRow].slice(0, -1))
+    // the last chosen sub-annotation goes; with at most one left the columns close altogether
+    const path = card.subPaths[deepestRow]
+    return setSubPath(state, card.key, deepestRow, path.length > 1 ? path.slice(0, -1) : null)
   }
 
   return closeCard(state, card.key)

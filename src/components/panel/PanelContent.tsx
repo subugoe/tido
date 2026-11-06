@@ -16,6 +16,8 @@ import PaneResizeHandles from '@/components/panel/PaneResizeHandles.tsx'
 import Loading from '@/components/ui/loading.tsx'
 import { getContentUrlByType } from '@/utils/text.ts'
 import { PanelView } from '@/types'
+import { SubAnnotationColumnsProvider } from '@/contexts/SubAnnotationColumnsContext.tsx'
+import SubAnnotationColumns from '@/components/panel/annotations/sidebar/aligned/SubAnnotationColumns.tsx'
 
 const PanelContent: FC = React.memo(() => {
   const { init, panelState, resizer, error, loading, syncedTargetsMap, setSyncedTargets } = usePanel()
@@ -23,6 +25,8 @@ const PanelContent: FC = React.memo(() => {
   const [contentPanes, setContentPanes] = useState([])
   const allotmentRef = useRef<AllotmentHandle>(null)
   const allotmentContainerRef = useRef<HTMLDivElement>(null)
+  // the texts and, in aligned mode, the columns of opened sub-annotations next to them
+  const viewsRowRef = useRef<HTMLDivElement>(null)
 
 
   const visibleViews = panelState.panelViews.filter(v => v.visible ?? true)
@@ -86,7 +90,7 @@ const PanelContent: FC = React.memo(() => {
 
   if (error && !loading) return <PanelError error={error} resetErrorBoundary={() =>  init(panelState.config)} />
 
-  return (<TextProvider>
+  return (<TextProvider><SubAnnotationColumnsProvider>
     <div
       className={`h-full flex flex-col relative overflow-hidden`} style={{
         '--sash-hover-size': '2px',
@@ -95,17 +99,20 @@ const PanelContent: FC = React.memo(() => {
       <div className="h-full w-full overflow-hidden relative" data-cy="panel-container">
         <div className="main-content flex flex-col h-full @container/panel">
           <PanelHeader />
-          <div className="flex-1" ref={allotmentContainerRef}>
-            <Allotment ref={allotmentRef} proportionalLayout={true}>
-              {contentPanes.map((pane, index) => {
-                const view = panelState.panelViews[index]
-                const visible = view?.visible ?? true
-                return <Allotment.Pane key={pane.key} visible={visible} preferredSize={view ? getPreferredSize(view) : undefined}>
-                  {pane}
-                </Allotment.Pane>
-              })}
-            </Allotment>
-            <PaneResizeHandles containerRef={allotmentContainerRef} />
+          <div className="flex min-h-0 flex-1" ref={viewsRowRef}>
+            <div className="min-w-0 flex-1" ref={allotmentContainerRef}>
+              <Allotment ref={allotmentRef} proportionalLayout={true}>
+                {contentPanes.map((pane, index) => {
+                  const view = panelState.panelViews[index]
+                  const visible = view?.visible ?? true
+                  return <Allotment.Pane key={pane.key} visible={visible} preferredSize={view ? getPreferredSize(view) : undefined}>
+                    {pane}
+                  </Allotment.Pane>
+                })}
+              </Allotment>
+              <PaneResizeHandles containerRef={allotmentContainerRef} />
+            </div>
+            <SubAnnotationColumns rowRef={viewsRowRef} />
           </div>
           <PanelFooter />
         </div>
@@ -117,7 +124,7 @@ const PanelContent: FC = React.memo(() => {
         </div>
       </div>
     </div>
-  </TextProvider>
+  </SubAnnotationColumnsProvider></TextProvider>
   )
 })
 
