@@ -16,6 +16,9 @@ type State = {
   setActiveContentType: (contentType: string) => void
   label: string
   text: string
+  // the content url the current text was loaded from - changes together with the text, so whoever
+  // pairs the text with its source (e.g. the annotation matching) never sees one without the other
+  textSource: string | null
   loadingText: boolean
   setLoadingText: (value: boolean) => void
   visible: boolean
@@ -54,6 +57,7 @@ export const TextViewProvider = ({
   const clearTextWarnings = useCallback(() => setTextWarnings([]), [])
   // const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState<MatchedAnnotationsMap>(null)
   const [text, setText] = useState<string>('')
+  const [textSource, setTextSource] = useState<string | null>(null)
   const [loadingText, setLoadingText] = useState(false)
 
   const activeContentUrl = useRef(null)
@@ -78,11 +82,11 @@ export const TextViewProvider = ({
         if (stale) return
         const { output, removed } = sanitize(response)
         setText(output)
-
+        setTextSource(url)
         // Normally the loading is set to false when a text has finished rendering in TextRenderer.
-        // When trying to load the same text again it won't rerender, so the loading is always true.
-        // This is a fix for that.
-        if (text === output) setLoadingText(false)
+        // When loading the same text from the same source again, no new DOM is attached, so the
+        // loading would stay true. This is a fix for that.
+        if (text === output && textSource === url) setLoadingText(false)
 
         if (removed.length > 0) {
           addTextWarning('text_not_displayed_correctly')
@@ -131,10 +135,8 @@ export const TextViewProvider = ({
 
   function setActiveContentType(type: string | null) {
     updatePanel({
-      panelViews: panelState.panelViews.map((v, i) => {
-        if (i === viewIndex) v.activeContentType = type
-        return v
-      })
+      // a new object for the changed view instead of mutating the one shared with the store
+      panelViews: panelState.panelViews.map((v, i) => i === viewIndex ? { ...v, activeContentType: type } : v)
     })
   }
 
@@ -149,6 +151,7 @@ export const TextViewProvider = ({
       setActiveContentType,
       label,
       text,
+      textSource,
       loadingText,
       setLoadingText,
       visible

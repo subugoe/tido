@@ -31,11 +31,20 @@ const GenericTextRenderer: FC<Props> = memo(({
 }) => {
   const { annotations } = usePanel()
 
+  // The wrapper holds the text and the annotations layer, and is the positioning context of the
+  // popover anchor the layer renders into it.
   const textWrapperRef = useRef<HTMLDivElement>(null)
-  // the parsed text once it is in the document - the annotations layer starts working on it then
-  const [attachedDom, setAttachedDom] = useState<Element | null>(null)
+  // The parsed text goes in here and nowhere else. React never renders into this element, so
+  // replacing its children can never remove a node React still owns (like the popover anchor).
+  const textContentRef = useRef<HTMLDivElement>(null)
+  // the parsed text once it is in the document, together with the source it was loaded from - the
+  // annotations layer starts working on it then. Both are handed over at once: the source prop
+  // changes a render before the new text is attached, and the layer must never match the
+  // annotations of the new source against the old text.
+  const [attached, setAttached] = useState<{ dom: Element, source: string } | null>(null)
 
-  // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
+  // Document object that is recreated when the text or its source changes - e.g. on item change or
+  // content type change, also when the text of the new source is the same as the previous one
   const parsedDom: Element = useMemo(() => {
     if (htmlString === '') return
     const doc = new DOMParser().parseFromString(`${htmlString}`, 'text/html')
@@ -43,14 +52,14 @@ const GenericTextRenderer: FC<Props> = memo(({
     const div = doc.createElement('div')
     div.replaceChildren(...body.childNodes)
     return div
-  }, [htmlString])
+  }, [source])
 
-  // Attach the content of the Document object as children of textWrapperRef.
+  // Attach the content of the Document object as the only child of textContentRef.
   useEffect(() => {
     if (!parsedDom) return
 
-    textWrapperRef.current.replaceChildren(parsedDom)
-    setAttachedDom(parsedDom)
+    textContentRef.current.replaceChildren(parsedDom)
+    setAttached({ dom: parsedDom, source })
     if (onReady) onReady()
   }, [parsedDom])
 
@@ -60,14 +69,15 @@ const GenericTextRenderer: FC<Props> = memo(({
     ref={textWrapperRef}
     className="relative"
     style={{ paddingTop: `${paddingTop * 0.25}rem` }}>
-    {attachedDom && <ErrorBoundary
-      resetKeys={[attachedDom, annotations]}
-      fallbackRender={({ error }) => <AnnotationsLayerError error={error} source={source} />}>
+    <div data-text-content ref={textContentRef} />
+    {attached && <ErrorBoundary
+      resetKeys={[attached.dom, annotations]}
+      fallbackRender={({ error }) => <AnnotationsLayerError error={error} source={attached.source} />}>
       <TextAnnotationsLayer
-        parsedDom={attachedDom}
+        parsedDom={attached.dom}
         wrapperRef={textWrapperRef}
         onUpdateMatchedAnnotationsMap={onUpdateMatchedAnnotationsMap}
-        source={source}
+        source={attached.source}
         sourceType={sourceType}
         onSelect={onSelect}
         ignoreFilters={ignoreFilters}
