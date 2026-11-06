@@ -1,6 +1,6 @@
 import { request } from '@/utils/http.ts'
 import { CustomError } from '@/utils/custom-error.ts'
-import { hasItems, hasManifests, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
+import { hasItems, hasManifests } from '@/utils/api-validate.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { getFirstPageUrl } from '@/utils/annotation-data.ts'
 
@@ -56,9 +56,6 @@ async function getFirstManifest(collection: Collection) {
   }
 
   const first = getIdFromElement(collection.manifests[0])
-  if (!isManifestUrl(first)) {
-    throw new CustomError('panel_init_error', 'error_invalid_manifest_url', { url: first })
-  }
 
   return await useDataStore.getState().initManifest(first)
 }
@@ -70,7 +67,7 @@ async function getFirstItem(manifest: Manifest) {
 
   const first = manifest.items?.[0]
   const firstId = first ? getIdFromElement(first) : undefined
-  if (!firstId || !isItemUrl(firstId)) {
+  if (!firstId) {
     throw new CustomError('panel_init_error', 'error_invalid_item_url', { url: firstId })
   }
 

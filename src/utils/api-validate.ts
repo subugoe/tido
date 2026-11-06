@@ -16,6 +16,16 @@ function isItemUrl(url: string) {
   return url.includes('/items/')
 }
 
+// DTS and TextAPI urls have arbitrary shapes, so only well-formedness can be checked before a
+// url goes into fetch. Relative urls resolve against the current origin.
+function isValidUrl(url: string) {
+  try {
+    return Boolean(new URL(url, window.location.origin))
+  } catch {
+    return false
+  }
+}
+
 function hasManifests(collection: Collection): boolean {
   return Array.isArray(collection.manifests) && collection.manifests.length > 0
 }
@@ -71,6 +81,7 @@ export {
   isCollectionUrl,
   isManifestUrl,
   isItemUrl,
+  isValidUrl,
   hasManifests,
   hasItems,
   validateItem,

@@ -1,0 +1,14 @@
+{
+  "@context": "https://dtsapi.org/context/v1.0.json",
+  "dtsVersion": "1.0",
+  "@id": "urn:cts:dtsTest:poems.rosa.lat1",
+  "@type": "Resource",
+  "title": "Rosa",
+  "totalParents": 1,
+  "totalChildren": 0,
+  "collection": "/dts/api/dts/collection/rosa.json{?nav}",
+  "document": "/dts/api/dts/document/rosa.xml{?ref,start,end,tree,mediaType}",
+  "dublinCore": {
+    "creator": "Anonymous"
+  }
+}
