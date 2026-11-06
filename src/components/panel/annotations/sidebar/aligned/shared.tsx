@@ -1,7 +1,8 @@
 import { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { getAnnotationType, getTextualBody } from '@/utils/annotation-data.ts'
-import { AlignedEntry, getTextLetter } from '@/utils/aligned-layout.ts'
+import { AlignedEntry, getTextLetter, OffsetDirection } from '@/utils/aligned-layout.ts'
 import { cn } from '@/lib/utils.ts'
 
 // Parts the entries of the aligned column and the cards of the workbench share.
@@ -35,10 +36,19 @@ export function countOrigins(entries: Pick<AlignedEntry, 'textIndex'>[]): { text
 
 // A small dot in the colour of the text plus its letter. Decorative: the accessible name of the
 // entry says the same in words.
-export const Origin: FC<{ textIndex: number, count?: number }> = ({ textIndex, count }) => (
-  <span className="flex shrink-0 items-center gap-1">
+// With a direction it also points to where the target of that text lies, when it stands off the
+// entry on screen.
+export const Origin: FC<{ textIndex: number, count?: number, direction?: OffsetDirection }> = ({ textIndex, count, direction }) => (
+  <span className="flex shrink-0 items-center gap-1" data-origin={getTextLetter(textIndex)} data-offset={direction}>
     <span className={cn('size-1.5 rounded-full', ORIGIN_DOT_CLASSES[textIndex % ORIGIN_DOT_CLASSES.length])} />
     {getTextLetter(textIndex)}{count !== undefined && ` ${count}`}
+    {direction && <span className="font-medium text-foreground">{direction === 'up' ? '↑' : '↓'}</span>}
   </span>
 )
+
+// The direction in words, for the accessible name of an entry or a group.
+export function useOffsetLabel() {
+  const { t } = useTranslation()
+  return (direction: OffsetDirection | undefined) => direction ? t(direction === 'up' ? 'target_above' : 'target_below') : ''
+}
 

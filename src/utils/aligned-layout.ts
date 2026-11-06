@@ -143,3 +143,53 @@ export function measureAligned(texts: AlignedText[], sidebar: HTMLElement): Alig
 
   return { entries, innerHeight }
 }
+
+// From this far off on, an entry tells which way its target lies.
+export const OFFSET_HINT_THRESHOLD = 30
+
+export type OffsetDirection = 'up' | 'down'
+
+// Which way the targets of a slot's texts lie from the slot on screen, for the texts where that is
+// more than the threshold - per text the member closest to the slot counts. The result is a string
+// per slot ("1:down;2:up"), so a slot whose hints did not change gets the same value again.
+//
+// An entry stands at entry.top - slot.y above its target in the coordinates of its own text; the
+// sidebar and the text scroll apart by sidebarScrollTop - textScrollTop on top of that.
+export function getOffsetHints(
+  slots: AlignedSlot[],
+  textScrollTops: Record<string, number>,
+  sidebarScrollTop: number,
+  threshold = OFFSET_HINT_THRESHOLD
+): Map<string, string> {
+  const hints = new Map<string, string>()
+
+  slots.forEach((slot) => {
+    const closest = new Map<number, number>()
+    slot.members.forEach((entry) => {
+      const textScrollTop = textScrollTops[entry.contentUrl]
+      if (textScrollTop === undefined) return
+      const offset = entry.top - slot.y + sidebarScrollTop - textScrollTop
+      const current = closest.get(entry.textIndex)
+      if (current === undefined || Math.abs(offset) < Math.abs(current)) closest.set(entry.textIndex, offset)
+    })
+
+    const hint = [...closest.entries()]
+      .filter(([, offset]) => Math.abs(offset) > threshold)
+      .sort((a, b) => a[0] - b[0])
+      .map(([textIndex, offset]) => `${textIndex}:${offset > 0 ? 'down' : 'up'}`)
+      .join(';')
+
+    if (hint) hints.set(slot.id, hint)
+  })
+
+  return hints
+}
+
+export function parseOffsetHint(hint: string | undefined): Map<number, OffsetDirection> {
+  const directions = new Map<number, OffsetDirection>()
+  hint?.split(';').filter(Boolean).forEach((part) => {
+    const [textIndex, direction] = part.split(':')
+    directions.set(Number(textIndex), direction as OffsetDirection)
+  })
+  return directions
+}

@@ -5,7 +5,7 @@ import { useAnnotations, getVisibleContentUrls } from '@/contexts/AnnotationsCon
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { getFilteredAnnotations, getSource } from '@/utils/annotations.ts'
 import { getAnnotationTargets, getAnnotationType } from '@/utils/annotation-data.ts'
-import { AlignedEntry, AlignedSlot, layoutAligned, measureAligned } from '@/utils/aligned-layout.ts'
+import { AlignedEntry, AlignedSlot, getOffsetHints, layoutAligned, measureAligned } from '@/utils/aligned-layout.ts'
 import { isProgrammaticScroll, markProgrammaticScroll } from '@/utils/dom.ts'
 import { SYNC_SCROLL_THRESHOLD_TOP } from '@/utils/scroller.ts'
 import * as wb from '@/utils/workbench.ts'
@@ -149,6 +149,42 @@ const AlignAnnotationsList: FC<Props> = ({ overlayHost }) => {
   }, [layout])
 
   const layoutReady = layout !== null
+
+  // Which way the targets of the texts that do not lead lie from their entries on screen. Follows
+  // every scroll - at most once a frame, and only slots whose hint changed render again.
+  const [offsetHints, setOffsetHints] = useState<Map<string, string>>(() => new Map())
+  const hintFrame = useRef(0)
+  useEffect(() => {
+    if (!layout || !column.showOrigin) {
+      setOffsetHints((prev) => prev.size === 0 ? prev : new Map())
+      return
+    }
+    const scroller = getScroller()
+    const sidebar = scroller.getSidebar()
+    const texts = textAnnotations.map(({ contentUrl }) => ({ contentUrl, el: scroller.getText(contentUrl) })).filter((t) => t.el)
+
+    const update = () => {
+      hintFrame.current = 0
+      if (!sidebar) return
+      const scrollTops: Record<string, number> = {}
+      texts.forEach(({ contentUrl, el }) => { scrollTops[contentUrl] = el.scrollTop })
+      const next = getOffsetHints(layout.slots, scrollTops, sidebar.scrollTop)
+      setOffsetHints((prev) => prev.size === next.size && [...next].every(([id, hint]) => prev.get(id) === hint) ? prev : next)
+    }
+    const schedule = () => {
+      if (!hintFrame.current) hintFrame.current = requestAnimationFrame(update)
+    }
+
+    const elements = [sidebar, ...texts.map((t) => t.el)].filter(Boolean)
+    elements.forEach((el) => el.addEventListener('scroll', schedule, { passive: true }))
+    update()
+
+    return () => {
+      elements.forEach((el) => el.removeEventListener('scroll', schedule))
+      cancelAnimationFrame(hintFrame.current)
+      hintFrame.current = 0
+    }
+  }, [layout, textAnnotations, column.showOrigin])
 
   // The entries of the column by annotation id - what the workbench opens cards for.
   const entriesById = useMemo(() => {
@@ -426,7 +462,14 @@ const AlignAnnotationsList: FC<Props> = ({ overlayHost }) => {
 
   return <>
     <div data-aligned-list className="relative" style={{ height: layout.innerHeight }} inert={workbenchOpen || undefined}>
-      {layout.slots.map((slot) => <AlignedSlotView key={slot.id} slot={slot} column={column} onSelect={onSelect} onOpenGroup={onOpenGroup} />)}
+      {layout.slots.map((slot) => <AlignedSlotView
+        key={slot.id}
+        slot={slot}
+        column={column}
+        onSelect={onSelect}
+        onOpenGroup={onOpenGroup}
+        offsetHint={offsetHints.get(slot.id)}
+      />)}
     </div>
     {overlayHost && createPortal(<Workbench
       state={workbench}

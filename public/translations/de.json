@@ -19,6 +19,8 @@
     "show_in_text": "Im Text zeigen",
     "found_in": "Fundstelle",
     "back_to_level": "Zurück zu Ebene {{level}}: {{label}}",
+    "target_above": "Target weiter oben",
+    "target_below": "Target weiter unten",
     "text_origin": "Text {{letter}}",
     "sub_annotations_count_one": "{{count}} Unterannotation",
     "sub_annotations_count_other": "{{count}} Unterannotationen",

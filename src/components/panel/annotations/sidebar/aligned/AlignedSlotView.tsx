@@ -1,10 +1,10 @@
-import { FC, useMemo } from 'react'
+import { FC, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useIsAnnotationHovered, useIsAnyAnnotationHovered, useSetHoveredAnnotations } from '@/contexts/TextContext.tsx'
-import { ALIGNED_ITEM_HEIGHT, AlignedEntry, AlignedSlot, getEntryKey, getTextLetter } from '@/utils/aligned-layout.ts'
+import { ALIGNED_ITEM_HEIGHT, AlignedEntry, AlignedSlot, getEntryKey, getTextLetter, OffsetDirection, parseOffsetHint } from '@/utils/aligned-layout.ts'
 import { cn } from '@/lib/utils.ts'
-import { countOrigins, getAnnotationLabel, Origin, useTypeLabel } from '@/components/panel/annotations/sidebar/aligned/shared.tsx'
+import { countOrigins, getAnnotationLabel, Origin, useOffsetLabel, useTypeLabel } from '@/components/panel/annotations/sidebar/aligned/shared.tsx'
 
 // What every slot needs to know about the column it stands in.
 export interface AlignedColumnInfo {
@@ -19,19 +19,23 @@ interface Props {
   column: AlignedColumnInfo
   onSelect: (entry: AlignedEntry, trigger: HTMLElement) => void
   onOpenGroup: (members: AlignedEntry[], trigger: HTMLElement) => void
+  // which way the targets of the slot's texts lie, where they stand off it (see getOffsetHints)
+  offsetHint?: string
 }
 
 interface EntryButtonProps {
   entry: AlignedEntry
   column: AlignedColumnInfo
   onSelect: (entry: AlignedEntry, trigger: HTMLElement) => void
+  direction?: OffsetDirection
 }
 
-const EntryButton: FC<EntryButtonProps> = ({ entry, column, onSelect }) => {
+const EntryButton: FC<EntryButtonProps> = ({ entry, column, onSelect, direction }) => {
   const { t } = useTranslation()
   const { selectedAnnotation } = usePanel()
   const setHoveredAnnotations = useSetHoveredAnnotations()
   const getTypeLabel = useTypeLabel()
+  const getOffsetLabel = useOffsetLabel()
 
   const { annotation, textIndex } = entry
   const isSelected = selectedAnnotation?.annotation?.id === annotation.id
@@ -43,7 +47,8 @@ const EntryButton: FC<EntryButtonProps> = ({ entry, column, onSelect }) => {
   const accessibleName = [
     `${typeLabel}: ${label}`,
     subCount > 0 && t('sub_annotations_count', { count: subCount }),
-    column.showOrigin && t('text_origin', { letter: getTextLetter(textIndex) })
+    column.showOrigin && t('text_origin', { letter: getTextLetter(textIndex) }),
+    column.showOrigin && getOffsetLabel(direction)
   ].filter(Boolean).join(', ')
 
   return <button
@@ -73,15 +78,17 @@ const EntryButton: FC<EntryButtonProps> = ({ entry, column, onSelect }) => {
     <span aria-hidden className="min-w-0 flex-1 truncate">{label}</span>
     <span aria-hidden className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
       {subCount > 0 && <span>↳ {subCount}</span>}
-      {column.showOrigin && <Origin textIndex={textIndex} />}
+      {column.showOrigin && <Origin textIndex={textIndex} direction={direction} />}
     </span>
   </button>
 }
 
 // One slot of the aligned column: a single entry, or a group of the entries that would have been
 // pushed away from their targets. A group opens as one card on the workbench.
-const AlignedSlotView: FC<Props> = ({ slot, column, onSelect, onOpenGroup }) => {
+const AlignedSlotView: FC<Props> = memo(({ slot, column, onSelect, onOpenGroup, offsetHint }) => {
   const { t } = useTranslation()
+  const getOffsetLabel = useOffsetLabel()
+  const directions = useMemo(() => parseOffsetHint(offsetHint), [offsetHint])
   const { selectedAnnotation } = usePanel()
   const setHoveredAnnotations = useSetHoveredAnnotations()
 
@@ -93,14 +100,17 @@ const AlignedSlotView: FC<Props> = ({ slot, column, onSelect, onOpenGroup }) => 
 
   if (!isGroup) {
     return <div className="absolute inset-x-0" style={{ top: slot.y }}>
-      <EntryButton entry={slot.members[0]} column={column} onSelect={onSelect} />
+      <EntryButton entry={slot.members[0]} column={column} onSelect={onSelect} direction={directions.get(slot.members[0].textIndex)} />
     </div>
   }
 
   const groupName = column.showOrigin
     ? t('annotations_from_texts', {
       count: slot.members.length,
-      origins: origins.map((o) => `${t('text_origin', { letter: getTextLetter(o.textIndex) })}: ${o.count}`).join(', ')
+      origins: origins.map((o) => [
+        `${t('text_origin', { letter: getTextLetter(o.textIndex) })}: ${o.count}`,
+        getOffsetLabel(directions.get(o.textIndex))
+      ].filter(Boolean).join(' ')).join(', ')
     })
     : `${slot.members.length} ${t('annotations')}`
 
@@ -129,7 +139,7 @@ const AlignedSlotView: FC<Props> = ({ slot, column, onSelect, onOpenGroup }) => 
       {column.showOrigin && <span aria-hidden className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
         {origins.map((o, i) => <span key={o.textIndex} className="flex items-center gap-1">
           {i > 0 && <span>·</span>}
-          <Origin textIndex={o.textIndex} count={o.count} />
+          <Origin textIndex={o.textIndex} count={o.count} direction={directions.get(o.textIndex)} />
         </span>)}
       </span>}
     </button>
@@ -141,6 +151,6 @@ const AlignedSlotView: FC<Props> = ({ slot, column, onSelect, onOpenGroup }) => 
       </li>)}
     </ul>
   </div>
-}
+})
 
 export default AlignedSlotView
