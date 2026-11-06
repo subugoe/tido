@@ -47,11 +47,11 @@
     }, {
       "label": "Transkription",
       "view": "text",
-      "contentTypes": ["facsimile"]
+      "activeContentType": "facsimile"
     }, {
       "label": "Vokalisation & Übersetzung",
       "view": "text",
-      "contentTypes": ["philology"]
+      "activeContentType": "philology"
     }
   ],
   "showSynopsisNavigation": false,
