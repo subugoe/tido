@@ -173,6 +173,32 @@ describe('Aligned annotations workbench', () => {
     note().should(($note) => expect($note[0].scrollHeight).to.equal($note[0].clientHeight))
   })
 
+  it('Points to where the target of a text that does not lead lies', () => {
+    open()
+    const diplomatic = annotationId('annotation-diplomatic-3')
+    // the origin "B" of the diplomatic entry - in the entry itself, or in the group it stands in
+    const originB = () => cy.get(`[data-aligned-list] [data-annotation="${diplomatic}"]`)
+      .then(($entry) => cy.wrap(slotOf($entry[0])).find('[data-origin="B"]').first())
+
+    // both texts at their top: the entry stands at its target, no hint
+    originB().should('not.have.attr', 'data-offset')
+
+    // the transcription leads further down - the diplomatic target stays below its entry
+    cy.get(selectors.textContainer).eq(0).scrollTo(0, 600, { duration: 300 })
+    originB().should('have.attr', 'data-offset', 'down').and('contain.text', '↓')
+    cy.get(`[data-aligned-list] [data-annotation="${diplomatic}"]`).then(($entry) => {
+      const label = isGrouped($entry[0]) ? slotOf($entry[0]).querySelector(':scope > button').getAttribute('aria-label') : $entry.attr('aria-label')
+      expect(label).to.contain('target further down')
+    })
+
+    // scrolled along, the diplomatic text leads itself: its entry stands at its target again
+    cy.get(selectors.textContainer).eq(1).scrollTo(0, 600, { duration: 300, ensureScrollable: false })
+    cy.get(selectors.textContainer).eq(1).then(($text) => {
+      cy.get(selectors.sidebarScroll).its('0.scrollTop').should('be.closeTo', $text[0].scrollTop, 1)
+    })
+    originB().should('not.have.attr', 'data-offset')
+  })
+
   describe('Sub-annotations', () => {
     // The Great Gatsby, Page 2: annotation-1 targets #valley in the transcription, and a chain of
     // annotations hangs off it, each one targeting the note of the one before.
