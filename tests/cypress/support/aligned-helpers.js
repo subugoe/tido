@@ -25,6 +25,23 @@ export function isGrouped(entryEl) {
 }
 
 /**
+ * Opens the annotation's card on the workbench: through its entry, or - for a member of a group -
+ * through the group's card, where its row is expanded. Either way the annotation is selected after.
+ * @param {string} annotationId
+ */
+export function openEntry(annotationId) {
+  cy.get(`[data-aligned-list] [data-annotation="${annotationId}"]`).then(($entry) => {
+    // Cypress scrolls the sidebar to the entry first - the leading text comes along
+    if (!isGrouped($entry[0])) {
+      cy.wrap($entry).click({ scrollBehavior: 'center' })
+      return
+    }
+    cy.wrap(slotOf($entry[0])).children('button').first().click({ scrollBehavior: 'center' })
+    cy.get(`[data-workbench-row="${annotationId}"] > button`).click()
+  })
+}
+
+/**
  * Asserts, synchronously (use inside a `.should` callback), that the entry is shown at its target:
  * on its own at the target's height, in a group above it otherwise - and that what shows it lies
  * inside the visible part of the sidebar.

@@ -104,6 +104,15 @@ describe('Annotation scrolling and alignment', () => {
     viewsMenu: '[data-cy="panel-menu-dropdown"]',
     viewsMenuToggle: '[data-cy="panel-menu"]',
     viewSwitch: '[data-cy="panel-view-toggle"]',
+    workbench: '[data-workbench]',
+    workbenchCloseAll: '[data-workbench-close-all]',
+  }
+
+  // Selections open cards on the workbench, and the list behind it stands still while it is open.
+  // Closing it lets the sidebar take up the leading text's scroll position again.
+  const closeWorkbench = (panel = () => cy.get(selectors.panel).first()) => {
+    panel().find(selectors.workbenchCloseAll).click()
+    panel().find(selectors.workbench).should('not.exist')
   }
 
   // Vertical distance from the top of the panel - the frame both the text and the sidebar live in.
@@ -213,9 +222,14 @@ describe('Annotation scrolling and alignment', () => {
   // reached through the group, which lists its members when clicked.
   const clickEntry = (annotationCard) => {
     cy.get(annotationCard).then(($card) => {
-      if (isGrouped($card[0])) cy.wrap(slotOf($card[0])).find('button[aria-expanded]').first().click({ scrollBehavior: false })
+      if (!isGrouped($card[0])) {
+        cy.wrap($card).click({ scrollBehavior: false })
+        return
+      }
+      // a group opens as one card on the workbench, where the annotation's row is expanded
+      cy.wrap(slotOf($card[0])).children('button').first().click({ scrollBehavior: false })
+      cy.get(`[data-workbench-row="${$card.attr('data-annotation')}"] > button`).click()
     })
-    cy.get(annotationCard).click({ scrollBehavior: false })
   }
 
   const expectNoOverlappingCards = () => {
@@ -296,6 +310,10 @@ describe('Annotation scrolling and alignment', () => {
     // selected and aligned in the middle of the panel.
     selectFirstAnnotationInText()
 
+    // The selection opened its card on the workbench, so the list behind it stands still from here.
+    cy.get(selectors.workbench).should('be.visible')
+    cy.get(selectors.sidebarScroll).its('0.scrollTop').as('frozenScrollTop')
+
     // Move on to "Narcissus", a few paragraphs below, and leave it at 75% of the text height so
     // the click happens well away from where the previous selection sat.
     scrollTargetTo(secondTargetSelector, 0.75)
@@ -307,17 +325,27 @@ describe('Annotation scrolling and alignment', () => {
       .wait(100)
     cy.get(card).should('not.have.attr', 'data-selected', 'true')
 
+    // Its card is the one on top now - and the list still has not moved.
+    cy.get(selectors.workbench).find('[data-workbench-card]').first()
+      .find(`[data-workbench-row="${apiUrl}/example/book2/page1/rev1/annotation-29"]`).should('exist')
+    cy.get('@frozenScrollTop').then((frozenScrollTop) => {
+      cy.get(selectors.sidebarScroll).its('0.scrollTop').should('equal', frozenScrollTop)
+    })
+
+    // Closing the workbench lets the sidebar follow the text again, with the entry at its target.
+    closeWorkbench()
     expectSidebarToFollowText()
     expectCardAlignedWithTarget(secondCard, secondTargetSelector)
 
-    // Now select the target sitting just above it, without scrolling the text first: the card has
-    // to land on exactly the same y position as the target, not merely close to it.
+    // Now select the target sitting just above it, without scrolling the text first: once the
+    // workbench is closed again, the entry stands on exactly the same y position as the target.
     cy.get(selectors.textContainer).find(thirdTargetSelector).click({ scrollBehavior: false })
 
     cy.get(thirdCard).should('have.attr', 'data-selected', 'true')
       .wait(100)
     cy.get(secondCard).should('not.have.attr', 'data-selected', 'true')
 
+    closeWorkbench()
     expectSidebarToFollowText()
     expectCardAlignedWithTarget(thirdCard, thirdTargetSelector, 0)
   })
@@ -453,35 +481,25 @@ describe('Annotation scrolling and alignment', () => {
     visitItem(chapter2, twoTextViewsConfig + preselectedLazarusConfig)
     waitForSidebar()
 
-    // 1. The sidebar scrolled down the list to the card instead of staying at the top.
-    cy.get(selectors.sidebarScroll).should(($sidebar) => {
-      const sidebar = $sidebar[0]
-      const cardEl = sidebar.querySelector(lazarusCard)
-      const cardOffsetTop = cardEl.getBoundingClientRect().top - sidebar.getBoundingClientRect().top + sidebar.scrollTop
-
-      expect(sidebar.scrollTop, 'sidebar scrollTop reached the card').to.be.greaterThan(0)
-      expect(sidebar.scrollTop, 'sidebar scrollTop sits within a viewport of the card')
-        .to.be.closeTo(cardOffsetTop, sidebar.clientHeight)
-    })
-
-    // 2. The card is the selected one.
+    // 1. The annotation is the selected one, and its card is open on the workbench.
     cy.get(lazarusCard).should('have.attr', 'data-selected', 'true')
-      .wait(100)
+    cy.get(selectors.workbench).find(`[data-workbench-row="${lazarusAnnotationId}"]`).should('exist')
 
-    // 3. The transcription - the view the target lives in - scrolled down to it.
+    // 2. The transcription - the view the target lives in - scrolled down to it.
     cy.get(selectors.textContainer).eq(0).its('0.scrollTop').should('be.greaterThan', 0)
 
-    // 4. The target itself is marked as selected in the text.
+    // 3. The target itself is marked as selected in the text.
     cy.get(selectors.textContainer).eq(0).find(lazarusTargetSelector)
       .should('have.attr', 'data-annotation-selected', 'true')
 
-    // 5. Card and target sit on exactly the same y position.
+    // 4. Once the workbench is closed, the sidebar follows the text down to the entry, which sits on
+    // exactly the same y position as its target.
+    closeWorkbench()
+    cy.get(selectors.sidebarScroll).its('0.scrollTop').should('be.greaterThan', 0)
     expectCardAlignedWithTarget(lazarusCard, lazarusTargetSelector, 0)
   })
 
-  // The cross reference is clicked inside the annotation body. The aligned column shows one line per
-  // annotation, the body comes back with the workbench - until then the list mode test below covers it.
-  it.skip('Should open a cross reference from annotation pointing to another annotation in a new panel, scrolledIntoView ' +
+  it('Should open a cross reference from annotation pointing to another annotation in a new panel, scrolledIntoView ' +
     '+ scroll its target and align it with its annotation', () => {
     // The collection on its own opens its first manifest and first item: Pride and Prejudice,
     // Chapter 1.
@@ -492,9 +510,10 @@ describe('Annotation scrolling and alignment', () => {
     cy.get(selectors.sidebarToggle).click()
     waitForSidebar()
 
-    // The cross reference hangs off a span inside the annotation body in the sidebar, not off a
-    // target in the text - so the click happens on the card.
-    cy.get(crossRefSourceCard).find(crossRefSpan).click()
+    // The cross reference hangs off a span inside the annotation body, not off a target in the text -
+    // so the click happens in the note of the annotation's card on the workbench.
+    clickEntry(crossRefSourceCard)
+    cy.get(selectors.workbench).find(crossRefSpan).click()
 
     // The reference names where it points: the Moby-Dick manifest, item "1".
     cy.get(selectors.popover).should('be.visible').within(() => {
@@ -506,7 +525,7 @@ describe('Annotation scrolling and alignment', () => {
     })
 
     // The popover opens directly below the span it belongs to.
-    cy.get(crossRefSourceCard).find(crossRefSpan).then(($span) => {
+    cy.get(selectors.workbench).find(crossRefSpan).then(($span) => {
       cy.get(selectors.popover).should(($popover) => {
         expect($popover[0].getBoundingClientRect().top, 'popover opens below the span')
           .to.be.greaterThan($span[0].getBoundingClientRect().bottom)
@@ -534,18 +553,17 @@ describe('Annotation scrolling and alignment', () => {
     secondPanel().find(selectors.textContainer).eq(0).find(ishmaelTargetSelector)
       .should('have.attr', 'data-annotation-selected', 'true')
 
-    // f. Both areas left their top, and card and target sit on exactly the same y position.
+    // f. The referenced annotation is open on the new panel's workbench. Once that is closed, both
+    // areas have left their top and the entry sits at its target.
+    secondPanel().find(selectors.workbench).find(`[data-workbench-row="${apiUrl}/example/book2/page1/rev1/annotation-1"]`).should('exist')
+    closeWorkbench(secondPanel)
     secondPanel().find(selectors.sidebarScroll).its('0.scrollTop').should('be.greaterThan', 100)
     secondPanel().find(selectors.textContainer).eq(0).its('0.scrollTop').should('be.greaterThan', 100)
 
     secondPanel().should(($panel) => {
       const panel = $panel[0]
       const targetEl = panel.querySelectorAll(selectors.textContainer)[0].querySelector(ishmaelTargetSelector)
-      const cardEl = panel.querySelector(ishmaelCard)
-      const targetY = yInPanel(targetEl, panel)
-      const cardY = yInPanel(cardEl, panel)
-
-      expect(cardY, `card y ${cardY} vs target y ${targetY}`).to.be.closeTo(targetY, 0)
+      assertEntryAtTarget(panel.querySelector(ishmaelCard), targetEl, panel.querySelector(selectors.sidebarScroll))
     })
   })
 
