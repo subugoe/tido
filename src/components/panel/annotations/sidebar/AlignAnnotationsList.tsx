@@ -2,12 +2,12 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useAnnotations, getVisibleContentUrls } from '@/contexts/AnnotationsContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import { getFilteredAnnotations } from '@/utils/annotations.ts'
-import { getAnnotationType } from '@/utils/annotation-data.ts'
+import { getFilteredAnnotations, getSource } from '@/utils/annotations.ts'
+import { getAnnotationTargets, getAnnotationType } from '@/utils/annotation-data.ts'
 import { AlignedEntry, AlignedSlot, layoutAligned, measureAligned } from '@/utils/aligned-layout.ts'
 import { isProgrammaticScroll, markProgrammaticScroll } from '@/utils/dom.ts'
 import { SYNC_SCROLL_THRESHOLD_TOP } from '@/utils/scroller.ts'
-import AlignedSlotView from '@/components/panel/annotations/sidebar/aligned/AlignedSlotView.tsx'
+import AlignedSlotView, { AlignedColumnInfo } from '@/components/panel/annotations/sidebar/aligned/AlignedSlotView.tsx'
 
 interface Layout {
   slots: AlignedSlot[]
@@ -32,7 +32,7 @@ function findEntry(slots: AlignedSlot[], annotationId: string): AlignedEntry | u
 // the sidebar changes - not on scrolling and not on a selection. The sidebar follows the leading
 // text (see Scroller).
 const AlignAnnotationsList: FC = () => {
-  const { panelId, panelState, matchedAnnotationsMaps, selectedAnnotation, setSelectedAnnotation, getScroller } = usePanel()
+  const { panelId, panelState, annotations, matchedAnnotationsMaps, selectedAnnotation, setSelectedAnnotation, getScroller } = usePanel()
   const { annotations: annotationsConfig } = useConfig()
   const { setAlignmentLoading } = useAnnotations()
   const [layout, setLayout] = useState<Layout | null>(null)
@@ -50,6 +50,21 @@ const AlignAnnotationsList: FC = () => {
       : []
     return { contentUrl, annotations }
   }), [panelViews, contents, matchedAnnotationsMaps, tooltipTypes])
+
+  // The sub-annotations of an annotation are the ones targeting its body - counted the way the
+  // annotation card lists them, without cross references and tooltip types.
+  const crossRefType = annotationsConfig?.crossRefContentType
+  const column = useMemo<AlignedColumnInfo>(() => {
+    const subAnnotationCounts = new Map<string, number>()
+    ;(annotations ?? []).forEach((annotation) => {
+      const type = getAnnotationType(annotation)
+      if (type === 'CrossRef' || type === crossRefType || (tooltipTypes ?? []).includes(type)) return
+      const target = getAnnotationTargets(annotation)[0]
+      const parentId = target ? getSource(target).id : null
+      if (parentId) subAnnotationCounts.set(parentId, (subAnnotationCounts.get(parentId) ?? 0) + 1)
+    })
+    return { subAnnotationCounts, showOrigin: textAnnotations.length > 1 }
+  }, [annotations, crossRefType, tooltipTypes, textAnnotations.length])
 
   useEffect(() => {
     const scroller = getScroller()
@@ -180,7 +195,7 @@ const AlignAnnotationsList: FC = () => {
   if (!layout) return null
 
   return <div data-aligned-list className="relative" style={{ height: layout.innerHeight }}>
-    {layout.slots.map((slot) => <AlignedSlotView key={slot.id} slot={slot} onSelect={onSelect} />)}
+    {layout.slots.map((slot) => <AlignedSlotView key={slot.id} slot={slot} column={column} onSelect={onSelect} />)}
   </div>
 }
 

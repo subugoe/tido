@@ -40,6 +40,12 @@ export interface AlignedLayoutOptions {
   tolerance?: number
 }
 
+// The letter a text of the panel is referred to by in the aligned column: A for the first visible
+// text, B for the second and so on.
+export function getTextLetter(textIndex: number): string {
+  return String.fromCharCode(65 + textIndex)
+}
+
 export function getEntryKey(entry: Pick<AlignedEntry, 'contentUrl' | 'annotation'>): string {
   return `${entry.contentUrl}|${entry.annotation.id}`
 }

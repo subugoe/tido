@@ -17,6 +17,10 @@
   --color-synopsis-highlight: var(--synopsis-highlight);
   --color-synopsis-selected: var(--synopsis-selected);
   --color-synopsis-hover: var(--synopsis-hover);
+  --color-text-origin-1: var(--text-origin-1);
+  --color-text-origin-2: var(--text-origin-2);
+  --color-text-origin-3: var(--text-origin-3);
+  --color-text-origin-4: var(--text-origin-4);
 
   --color-gray-50: var(--color-zinc-50);
   --color-gray-100: var(--color-zinc-100);
@@ -72,6 +76,13 @@ Elevation hierarchy:
   --synopsis-selected: var(--color-yellow-300);
   --synopsis-hover: var(--color-yellow-100);
 
+  /* the dot marking which text of the panel an aligned annotation entry belongs to - always shown
+     next to the text's letter, so the colour never carries the information alone */
+  --text-origin-1: var(--color-sky-600);
+  --text-origin-2: var(--color-amber-600);
+  --text-origin-3: var(--color-emerald-600);
+  --text-origin-4: var(--color-rose-600);
+
   --radius: 0.625rem;
   --background: var(--color-white);
   --foreground: oklch(0.145 0 0);
@@ -122,6 +133,11 @@ Elevation hierarchy:
 
   --synopsis-selected: var(--color-yellow-700);
   --synopsis-hover: var(--color-yellow-900);
+
+  --text-origin-1: var(--color-sky-400);
+  --text-origin-2: var(--color-amber-400);
+  --text-origin-3: var(--color-emerald-400);
+  --text-origin-4: var(--color-rose-400);
 
   --background: var(--color-gray-900);
   --foreground: var(--color-gray-100);
