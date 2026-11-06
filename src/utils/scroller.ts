@@ -48,6 +48,8 @@ class Scroller {
   private syncEnabled = false
   private leadUrl: string | null = null
   private originSelection: 'text' | 'annotation' | 'config' = 'text'
+  // while the workbench covers the sidebar it stands still: not scrollable, not following any text
+  private frozen = false
   // scrollTops we set ourselves, per element, with the time until which their event is ignored
   private muted = new WeakMap<Element, { top: number, until: number }>()
   private handleSidebarScrollBound: EventListener
@@ -86,6 +88,19 @@ class Scroller {
     return this.originSelection
   }
 
+  // Freezes the sidebar behind the workbench, or lets it follow the leading text again - from the
+  // scrollTop that text has reached in the meantime.
+  setFrozen(value: boolean) {
+    if (this.frozen === value) return
+    this.frozen = value
+    if (this.sidebar) this.sidebar.style.overflowY = value ? 'hidden' : ''
+    if (!value) this.syncSidebarToLead()
+  }
+
+  isFrozen() {
+    return this.frozen
+  }
+
   getLead() {
     return this.leadUrl
   }
@@ -116,7 +131,7 @@ class Scroller {
   // changed, so the entries visibly travel to their targets instead of jumping.
   syncSidebarToLead(behavior: ScrollBehavior = 'instant') {
     const lead = this.leadUrl ? this.texts[this.leadUrl] : null
-    if (!this.sidebar || !lead) return
+    if (!this.sidebar || !lead || this.frozen) return
 
     if (behavior === 'smooth') {
       if (Math.abs(this.sidebar.scrollTop - lead.scrollTop) < 1) return
@@ -131,7 +146,7 @@ class Scroller {
   private handleSidebarScroll() {
     const sidebar = this.sidebar
     const lead = this.leadUrl ? this.texts[this.leadUrl] : null
-    if (!sidebar || !lead) return
+    if (!sidebar || !lead || this.frozen) return
     if (this.isMuted(sidebar) || isProgrammaticScroll(sidebar)) return
 
     // Not marked as programmatic on purpose: for the synopsis this is the user scrolling the text,
@@ -152,7 +167,7 @@ class Scroller {
     }
 
     // The leading text is followed whoever scrolled it, so the entries stay at their targets.
-    if (this.sidebar) this.setScrollTop(this.sidebar, text.scrollTop)
+    if (this.sidebar && !this.frozen) this.setScrollTop(this.sidebar, text.scrollTop)
   }
 
   // Sidebar and texts are coupled only while the aligned annotation list is mounted - it positions
@@ -165,6 +180,7 @@ class Scroller {
   }
 
   stopSync() {
+    this.setFrozen(false)
     this.syncEnabled = false
     this.stopSidebar()
     Object.keys(this.texts).forEach(contentUrl => this.stopText(contentUrl))

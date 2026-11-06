@@ -17,6 +17,7 @@
   --color-synopsis-highlight: var(--synopsis-highlight);
   --color-synopsis-selected: var(--synopsis-selected);
   --color-synopsis-hover: var(--synopsis-hover);
+  --color-workbench: var(--workbench);
   --color-text-origin-1: var(--text-origin-1);
   --color-text-origin-2: var(--text-origin-2);
   --color-text-origin-3: var(--text-origin-3);
@@ -78,6 +79,9 @@ Elevation hierarchy:
 
   /* the dot marking which text of the panel an aligned annotation entry belongs to - always shown
      next to the text's letter, so the colour never carries the information alone */
+  /* the workbench lies over the annotation list - see-through, so the list stays guessable */
+  --workbench: color-mix(in oklab, var(--muted) 78%, transparent);
+
   --text-origin-1: var(--color-sky-600);
   --text-origin-2: var(--color-amber-600);
   --text-origin-3: var(--color-emerald-600);

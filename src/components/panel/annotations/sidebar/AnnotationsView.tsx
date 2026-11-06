@@ -1,4 +1,4 @@
-import { FC, forwardRef, ReactNode, useEffect, useRef } from 'react'
+import { FC, forwardRef, ReactNode, useEffect, useRef, useState } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
@@ -26,6 +26,8 @@ const AnnotationsView: FC = () => {
   const { annotationsError, annotationsMode, getScroller } = usePanel()
   const { filteredAnnotations } = useAnnotations()
   const scrollContainer = useRef<HTMLDivElement>(null)
+  // where the aligned list puts its workbench: over the list, outside of what scrolls
+  const [overlayHost, setOverlayHost] = useState<HTMLDivElement | null>(null)
   const { showBoundary } = useErrorBoundary()
 
   if (annotationsError) showBoundary(annotationsError)
@@ -39,13 +41,16 @@ const AnnotationsView: FC = () => {
 
   function getContent() {
     if (filteredAnnotations.length === 0) return <EmptyAnnotations />
-    if (annotationsMode === 'aligned') return <AlignAnnotationsList />
+    if (annotationsMode === 'aligned') return <AlignAnnotationsList overlayHost={overlayHost} />
     if (annotationsMode === 'list') return <AnnotationsList />
   }
 
-  return <Container ref={scrollContainer}>
-    { getContent() }
-  </Container>
+  return <div className="relative flex min-h-0 flex-1 flex-col">
+    <Container ref={scrollContainer}>
+      { getContent() }
+    </Container>
+    <div ref={setOverlayHost} data-sidebar-overlay-host className="pointer-events-none absolute inset-0" />
+  </div>
 }
 
 export default AnnotationsView
