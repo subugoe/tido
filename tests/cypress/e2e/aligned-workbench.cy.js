@@ -182,6 +182,14 @@ describe('Aligned annotations workbench', () => {
     const level3 = gatsby('annotation-L3-1')
 
     beforeEach(() => {
+      // The page is short enough to fit its view. Paragraphs around it make it scroll, so a text
+      // that has to keep its place while columns open has room to be scrolled back to it.
+      const filler = '<p>Filler paragraph that makes the transcription long enough to scroll. </p>'.repeat(30)
+      cy.intercept('GET', '**/html/book3-page2_transcription.html', (req) => {
+        req.continue((res) => {
+          res.body = res.body.replace('<body>', `<body>${filler}`).replace('</body>', `${filler}</body>`)
+        })
+      })
       const view = encodeURIComponent(JSON.stringify({ label: 'Text', view: 'text', activeContentType: 'transcription' }))
       cy.request(collection).its('body.manifests').then((manifests) => {
         cy.request(manifests[2]).its('body.items').then((items) => {
@@ -194,33 +202,85 @@ describe('Aligned annotations workbench', () => {
       openEntry(root)
     })
 
-    it('Lists the sub-annotations under the note and opens them down the chain', () => {
+    const level4 = gatsby('annotation-L4-1')
+    const column = (level) => cy.get(`[data-sub-annotation-column="${level}"]`)
+    const strip = (level) => cy.get(`[data-sub-annotation-strip="${level}"]`)
+    const link = (id) => cards().first().find(`[data-sub-annotation-link="${id}"] > button`)
+    const columnRow = (level, id) => column(level).find(`${row(id)} > button`)
+
+    it('Lists the sub-annotations under the note and opens them as columns', () => {
       cards().first().find(row(root)).contains('h4', 'Sub-annotations (1)')
+      cy.get('[data-sub-annotation-columns]').should('not.exist')
 
-      cards().first().find(row(level2)).find('> button').click()
-      cards().first().find(row(level2)).find('> button').should('have.attr', 'aria-expanded', 'true')
-      cy.get(selectors.workbench).find(row(level2)).find(selectors.note).should('contain.text', 'post-war wasteland tradition')
+      link(level2).click()
+      link(level2).should('have.attr', 'aria-expanded', 'true')
 
-      cards().first().find(row(level3)).find('> button').click()
-      cards().first().find(row(level3)).find('> button').should('have.attr', 'aria-expanded', 'true')
+      // level 1 lists the sub-annotations of the annotation, the chosen one expanded with its note
+      column(1).should('be.visible')
+      columnRow(1, level2).should('have.attr', 'aria-expanded', 'true')
+      column(1).find(row(level2)).find(selectors.note).should('contain.text', 'post-war wasteland tradition')
+      // where it sits in the note of the annotation above it
+      column(1).find('[data-column-found-in] mark').invoke('text').should('not.be.empty')
+      // and its own sub-annotation opens the next level
+      column(2).find(row(level3)).should('exist')
+      column(2).find('nav').should('contain.text', 'Show in text')
+    })
+
+    it('Folds older levels to strips and goes back to them', () => {
+      link(level2).click()
+      columnRow(2, level3).click()
+      column(3).find(row(level4)).should('exist')
+
+      // three levels in a panel with room for one full column next to the text
+      cy.get('[data-sub-annotation-columns]').then(($columns) => {
+        const full = $columns[0].querySelectorAll('[data-sub-annotation-column]').length
+        const strips = $columns[0].querySelectorAll('[data-sub-annotation-strip]').length
+        expect(full + strips, 'one column or strip per level').to.equal(3)
+        expect(full, 'at least one full column').to.be.at.least(1)
+      })
+      column(3).should('exist')
+
+      // the deepest level stands furthest left, level 1 next to the sidebar
+      cy.get('[data-sub-annotation-columns]').children().first().should('have.attr', 'data-sub-annotation-column', '3')
+
+      // a strip goes back to its level
+      cy.get('[data-sub-annotation-strip]').first().then(($strip) => {
+        const level = Number($strip.attr('data-sub-annotation-strip'))
+        cy.wrap($strip).click()
+        // that level is the deepest now, with its choice open again
+        column(level).find(`${row(level === 1 ? level2 : level3)} > button`).should('have.attr', 'aria-expanded', 'false')
+        cy.get(`[data-sub-annotation-column="${level + 1}"]`).should('not.exist')
+      })
     })
 
     it('Opens a sub-annotation when its target is clicked in the note', () => {
       cards().first().find(row(root)).find(selectors.note).find('#ash-valley-decay').click()
-      cards().first().find(row(level2)).find('> button').should('have.attr', 'aria-expanded', 'true')
+      columnRow(1, level2).should('have.attr', 'aria-expanded', 'true')
     })
 
-    it('Closes the deepest open sub-annotation on Escape, then the card', () => {
-      cards().first().find(row(level2)).find('> button').click()
-      cards().first().find(row(level3)).find('> button').click()
-      cards().first().find(row(level3)).find('> button').should('have.attr', 'aria-expanded', 'true')
+    it('Keeps the annotation in its text where it stood when a column opens', () => {
+      cy.get(selectors.textContainer).find('#valley').then(($target) => {
+        const before = $target[0].getBoundingClientRect().top
+        link(level2).click()
+        column(1).should('be.visible')
+        cy.get(selectors.textContainer).find('#valley').should(($after) => {
+          expect($after[0].getBoundingClientRect().top).to.be.closeTo(before, 1)
+        })
+      })
+    })
+
+    it('Closes the deepest open level on Escape, then the card', () => {
+      link(level2).click()
+      columnRow(2, level3).click()
+      column(3).should('exist')
 
       cy.focused().type('{esc}')
-      cards().first().find(row(level3)).find('> button').should('have.attr', 'aria-expanded', 'false')
-      cards().first().find(row(level2)).find('> button').should('have.attr', 'aria-expanded', 'true')
+      column(3).should('not.exist')
+      columnRow(1, level2).should('have.attr', 'aria-expanded', 'true')
 
       cy.focused().type('{esc}')
-      cards().first().find(row(level2)).find('> button').should('have.attr', 'aria-expanded', 'false')
+      cy.get('[data-sub-annotation-columns]').should('not.exist')
+      link(level2).should('have.attr', 'aria-expanded', 'false')
 
       cy.focused().type('{esc}')
       workbench().should('not.exist')
