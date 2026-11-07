@@ -239,7 +239,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
       // 4. We discover the correct "views" config. This can come from a global config (root key "panelViews")
       // or local config (key "views" in the panel config).
-      const enhanceView = (view: PanelView, contentTypes: string[], oldView?: PanelView): PanelView => {
+      const enhanceView = (view: PanelView, oldView?: PanelView): PanelView => {
         const oldActiveContentType = oldView?.activeContentType ?? null
         let activeContentType = null
         if (contentTypes?.length > 0) {
@@ -250,8 +250,12 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
           }
         }
 
+        const isSubsetOfContentTypes = view.contentTypes?.every((contentType) => contentTypes?.includes(contentType)) ?? false
+        const newContentTypes = isSubsetOfContentTypes ? view.contentTypes : contentTypes
+
         return {
           ...view,
+          ...(view.view !== 'image' && { contentTypes: newContentTypes }),
           ...(view.view !== 'image' && { activeContentType }),
           visible: view.visible ?? true,
         }
@@ -273,7 +277,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         // We prioritize the views changed from the user on the current panel. I.e toggle off views and navigate to a new item on same panel
         // we should preserve the selected views from user for this panel
         const baseViews = panelState.panelViews && panelState.panelViews.length > 0 ? panelState.panelViews : configuredViews
-        resultPanelViews = baseViews.map((view, i) => enhanceView(view, contentTypes, panelState.panelViews[i]))
+        resultPanelViews = baseViews.map((view, i) => enhanceView(view, panelState.panelViews[i]))
       } else {
         // Without a views config, the item decides on every navigation: an image view is only shown when the item has images.
         // No images key, an empty images array or an image without url count as no images. Broken images are still shown in the image view with an error.
@@ -282,7 +286,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         // Keep what the user changed on the matching views of the previous item, i.e. a toggled off view or the active content type
         resultPanelViews = itemViews.map((view) => {
           const oldView = panelState.panelViews.find(v => v.view === view.view && v.label === view.label)
-          return enhanceView(oldView ?? view, contentTypes, oldView)
+          return enhanceView(oldView ?? view, oldView)
         })
       }
 
@@ -291,7 +295,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         collectionId: collection?.id ?? null,
         manifest,
         item,
-        contentTypes,
         panelViews: resultPanelViews,
         showSidebar: config.showSidebar ?? panelState.showSidebar,
       })

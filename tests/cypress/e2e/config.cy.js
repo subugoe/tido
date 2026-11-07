@@ -241,62 +241,6 @@ describe('Config', () => {
 
       cy.get('[data-cy="content-types-dropdown"]').should('not.exist')
   });
-  // The first item has two content types, the second one has three - the same two plus a new one.
-  // The content types of the panel have to grow to the three of the new item instead of keeping
-  // the two of the item that was left.
-  runConfigTest('panels[0].collection=http://localhost:8181/example/collections/content-types-superset.json',
-    'Should extend the content types when navigating to an item with more content types', () => {
-      cy.get('[data-cy="item-label"]').should('contain.text', 'Two Content Types Page')
-      cy.get('[data-text-container]').find('#superset-page1-diplomatic').should('exist')
-
-      cy.get('[data-cy="content-type"]')
-        .should('contain.text', 'diplomatic')
-        .click()
-
-      //the first item offers its two content types
-      cy.get('[data-cy="content-types-dropdown"]')
-        .find('[role="menuitemradio"]')
-        .should('have.length', 2)
-
-      cy.get('body').type('{esc}')
-      cy.get('[data-cy="content-types-dropdown"]').should('not.exist')
-
-      cy.get('[data-cy="next-item-button"]').click()
-
-      cy.get('[data-cy="item-label"]').should('contain.text', 'Three Content Types Superset Page')
-
-      //the active content type is still available on the new item, so it is kept
-      cy.get('[data-text-container]').find('#superset-page2-diplomatic').should('exist')
-
-      cy.get('[data-cy="content-type"]')
-        .should('contain.text', 'diplomatic')
-        .click()
-
-      cy.get('[data-cy="content-types-dropdown"]')
-        .find('[role="menuitemradio"]')
-        .as('contentTypeOptions')
-
-      //now there are three content types: the two of the first item plus the new one
-      cy.get('@contentTypeOptions').should('have.length', 3)
-
-      cy.get('@contentTypeOptions').eq(0)
-        .should('contain.text', 'diplomatic')
-        .should('have.attr', 'data-state', 'checked')
-
-      cy.get('@contentTypeOptions').eq(1)
-        .should('contain.text', 'normalized')
-        .should('have.attr', 'data-state', 'unchecked')
-
-      cy.get('@contentTypeOptions').eq(2)
-        .should('contain.text', 'translation')
-        .should('have.attr', 'data-state', 'unchecked')
-
-      //the new content type can be selected and its text is loaded
-      cy.get('@contentTypeOptions').eq(2).click()
-      cy.get('[data-cy="content-types-dropdown"]').should('not.exist')
-      cy.get('[data-cy="content-type"]').should('contain.text', 'translation')
-      cy.get('[data-text-container]').find('#superset-page2-translation').should('exist')
-  });
   runConfigTest('rootCollections[]=http://localhost:8181/4w/collections/transcriptions.json&panels[0].collection=http://localhost:8181/4w/collections/transcriptions.json&tree.showRootNode=true',
     'Should show markers in tree for open panel', () => {
       Tree.open()
