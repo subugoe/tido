@@ -1,0 +1,34 @@
+{
+  "@context": "https://dtsapi.org/context/v1.0.json",
+  "dtsVersion": "1.0",
+  "@id": "root",
+  "@type": "Collection",
+  "title": "DTS Test Collection",
+  "totalParents": 0,
+  "totalChildren": 2,
+  "member": [
+    {
+      "@id": "poems",
+      "@type": "Collection",
+      "title": "Poems",
+      "description": "A work collection containing two readable resources",
+      "totalParents": 1,
+      "totalChildren": 2,
+      "collection": "/dts/api/dts/collection/poems.json{?id,nav}"
+    },
+    {
+      "@id": "urn:cts:dtsTest:letters.lat1",
+      "@type": "Resource",
+      "title": "Letters",
+      "description": "A readable resource directly under the root collection",
+      "totalParents": 1,
+      "totalChildren": 0,
+      "collection": "/dts/api/dts/collection/letters.json{?nav}",
+      "document": "/dts/api/dts/document/letters.xml{?ref,start,end,tree,mediaType}",
+      "dublinCore": {
+        "creator": "Anonymous",
+        "language": "lat"
+      }
+    }
+  ]
+}

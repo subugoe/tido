@@ -41,7 +41,7 @@ export const SUPPORTED_MIME_TYPES = [
 export const NODE_KEY_DELIMITER = '>>>>'
 
 export const BLOB_CONTENT_TYPES = ['application/pdf', 'image/png', 'image/jpeg', 'audio/mpeg', 'video/mp4']
-export const TEXT_CONTENT_TYPES = ['text/xhtml+xml', 'text/plain', 'text/html', 'text/css']
+export const TEXT_CONTENT_TYPES = ['text/xhtml+xml', 'text/plain', 'text/html', 'text/css', 'text/xml', 'application/xml', 'application/tei+xml']
 
 export const FORBID_TAGS = ['input', 'script', 'noscript', 'iframe', 'frame', 'frameset', 'noframes', 'applet', 'base', 'meta', 'form']
 export const ADD_ATTR = ['target', 'rel']

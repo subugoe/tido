@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { apiRequest } from '@/utils/api.ts'
-import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
-import { CustomError } from '@/utils/custom-error.ts'
+import { detectDtsResponse, expandTemplate, normalizeDtsCollection, normalizeDtsResource, resolveUrl } from '@/utils/dts.ts'
+import { DtsCollectionResponse, DtsEntryPoint } from '@/utils/dts.ts'
 import { createCollectionNodes } from '@/utils/tree.ts'
 import { getFirstPageUrl, getPageAnnotations } from '@/utils/annotation-data.ts'
 
@@ -86,12 +86,34 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   initCollection: async (url: string) => {
     if (url in get().collections) return get().collections[url]
 
-    if (!isCollectionUrl(url)) throw new CustomError(null, 'error_collection_url', { url })
-
     if (inflightCollections.has(url)) return inflightCollections.get(url)!
 
     const promise = (async () => {
-      const collection = await apiRequest<Collection>(url)
+      let raw = await apiRequest<unknown>(url)
+      let collectionTemplate: string | undefined
+
+      // DTS entry points only hand out endpoint templates, so follow them to the root collection.
+      if (detectDtsResponse(raw) === 'entry') {
+        collectionTemplate = (raw as DtsEntryPoint).collection
+        raw = await apiRequest<unknown>(resolveUrl(expandTemplate(collectionTemplate), url))
+      }
+
+      const kind = detectDtsResponse(raw)
+
+      // A readable document at the collection endpoint: normalize as manifest, but also cache it
+      // as a collection so a root url pointing at a Resource resolves in the tree.
+      if (kind === 'resource') {
+        const manifest = normalizeDtsResource(raw as Parameters<typeof normalizeDtsResource>[0], url)
+        set({
+          manifests: { ...get().manifests, [manifest.id]: manifest },
+          collections: { ...get().collections, [url]: manifest as unknown as Collection }
+        })
+        return manifest as unknown as Collection
+      }
+
+      const collection = kind === 'collection'
+        ? await normalizeDtsCollection(raw as DtsCollectionResponse, url, collectionTemplate)
+        : raw as Collection
 
       const collections: CollectionMap = { ...get().collections }
       collections[collection.id] = collection
@@ -114,12 +136,14 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   initManifest: async (url: string) => {
     if (url in get().manifests) return get().manifests[url]
 
-    if (!isManifestUrl(url)) throw new CustomError(null, 'error_invalid_manifest_url', { url })
-
     if (inflightManifests.has(url)) return inflightManifests.get(url)!
 
     const promise = (async () => {
-      const manifest = await apiRequest<Manifest>(url)
+      const raw = await apiRequest<unknown>(url)
+      const kind = detectDtsResponse(raw)
+      const manifest = kind === 'resource'
+        ? normalizeDtsResource(raw as Parameters<typeof normalizeDtsResource>[0], url)
+        : raw as Manifest
 
       const manifests = { ...get().manifests }
       manifests[manifest.id] = manifest
@@ -142,12 +166,30 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   initItem: async (url: string) => {
     if (url in get().items) return get().items[url]
 
-    if (!isItemUrl(url)) throw new CustomError(null, 'error_invalid_item_url', { url })
-
     if (inflightItems.has(url)) return inflightItems.get(url)!
 
     const promise = (async () => {
-      const item = await apiRequest<Item>(url)
+      const raw = await apiRequest<unknown>(url)
+
+      // DTS document endpoints answer with the text itself when accessed cold (e.g. a restored
+      // bookmark without its manifest): wrap it in a minimal item instead of failing.
+      if (typeof raw === 'string') {
+        const item = {
+          id: url,
+          textapiType: 'TextApiItem',
+          textItemType: 'full',
+          contents: [{ id: url, contentType: 'text/html' }],
+          created: '',
+          modified: '',
+          revision: '',
+          textapiVersion: '2.0.0'
+        } as unknown as Item
+        const items = { ...get().items, [url]: item }
+        set({ items })
+        return item
+      }
+
+      const item = raw as Item
 
       const items = { ...get().items }
       items[item.id] = item
