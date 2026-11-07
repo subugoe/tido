@@ -4,6 +4,7 @@ import { CustomError } from '@/utils/custom-error.ts'
 import CrossRefLink from '@/components/panel/annotations/popover/cross-ref/CrossRefLink.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { getCrossRefInfo } from '@/utils/annotations.ts'
+import { findContentByType } from '@/utils/panel.ts'
 
 interface Props {
   annotation: Annotation
@@ -35,9 +36,9 @@ const CrossRefItem: FC<Props> = ({ annotation, onSelect }) => {
           }
           if (crossRefInfo.textType === 'text') {
             // for cross ref referring to text part. Throw error when referenced el cannot be found due to a false selector
-            const contentIndex = itemData.contents?.findIndex(c => c.contentType.split('=')[1] === crossRefInfo.contentType)
+            const content = findContentByType(itemData.contents, crossRefInfo.contentType)
             const parser = new DOMParser()
-            const referencedText: string = await apiRequest(itemData.contents[contentIndex].id)
+            const referencedText: string = await apiRequest(content.id)
             const textEl = parser.parseFromString(referencedText, 'text/html')
             const targetExists = textEl.querySelector(crossRefInfo.selector)
             if (!targetExists) setError(new CustomError('cross_ref_error_title', 'referenced_element_not_found'))

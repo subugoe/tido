@@ -3,7 +3,7 @@ import React, { FC } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { CustomError, logError } from '@/utils/custom-error.ts'
 
-import { createNewPanel, setNewActiveContentType } from '@/utils/panel.ts'
+import { createNewPanel, findTextViewIndexForContentType, getContentTypes, setNewActiveContentType, setPreferredContentType } from '@/utils/panel.ts'
 import { waitForElementInDom } from '@/utils/dom.ts'
 
 import Content from '@/components/panel/annotations/popover/cross-ref/Content.tsx'
@@ -26,6 +26,8 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
   const { updatePanel, panelId, usePanelTranslation, panelState } = usePanel()
   const { t } = usePanelTranslation()
   const isDifferentItem = crossRefInfo?.item !== panelState.item?.id
+  // the referenced content type is only worth naming when the referenced item has more than one
+  const namesContentType = !!crossRefInfo?.contentType && getContentTypes(crossRefInfo.refItemData?.contents ?? []).length > 1
 
   function openInThisPanel(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
@@ -45,8 +47,7 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
 
     // We need to open that content which contains the cross ref target. Since a panel can have multiple views,
     // we need to find out which view is able to display the content type. Because panel views can be configured freely,
-    // we cannot know which view is meant exactly. So we just take the first found.
-    const firstViewIndex = panelState.panelViews.findIndex(view => view.contentTypes?.includes(contentType))
+    // we cannot know which view is meant exactly. So we just take the first one offering it, else the first text view.
 
     try {
       const refManifest = await useDataStore.getState().initManifest(crossRefInfo.manifest)
@@ -58,18 +59,21 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
           crossRefInfo.collection,
           refManifest,
           refItem,
-          setNewActiveContentType(contentType, firstViewIndex, panelViewsConfig),
+          setNewActiveContentType(contentType, findTextViewIndexForContentType(panelViewsConfig, contentType), panelViewsConfig),
           newPanelId,
           !!crossRefInfo.selectedAnnotation
         )
       } else if (action === 'update') {
+        // The configured views stay as they are, the content type of the reference becomes the preferred
+        // one in this panel - the panel resolves the views of the referenced item from both.
         updatePanel({
           config: {
             collection: crossRefInfo.collection,
             manifest: crossRefInfo.manifest,
             item: crossRefInfo.item,
-            views: setNewActiveContentType(contentType, firstViewIndex, panelState.panelViews),
+            views: panelState.config.views,
           },
+          panelViews: setPreferredContentType(contentType, findTextViewIndexForContentType(panelState.panelViews, contentType), panelState.panelViews),
           showSidebar: !!crossRefInfo.selectedAnnotation,
         })
       }
@@ -99,7 +103,7 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
       error={error}
       itemLabel={crossRefInfo?.itemLabel}
       manifestLabel={crossRefInfo?.manifestLabel}
-      contentType={crossRefInfo?.contentType}
+      contentType={namesContentType ? crossRefInfo.contentType : undefined}
       actionLabelThisPanel={isDifferentItem ? t('open_in_this_panel') : t('jump_to')}
       actionNewPanel={openInNewPanel}
       actionThisPanel={openInThisPanel}
