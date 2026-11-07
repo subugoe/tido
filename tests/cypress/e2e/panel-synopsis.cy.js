@@ -33,6 +33,7 @@ const panelViews = [
   {
     label: 'Text',
     view: 'text',
+    activeContentType: 'transcription',
     contentTypes: ['diplomatic', 'transcription', 'translation']
   },
   {

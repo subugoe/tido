@@ -3,8 +3,8 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
-import { createNewPanel, getContentTypes, setNewActiveContentType, splitMIMEType } from '@/utils/panel.ts'
-import { PanelView } from '@/types'
+import { createNewPanel, findContentByType, findTextViewIndexForContentType, getContentType, getContentTypes, resolveActiveContentType, setNewActiveContentType } from '@/utils/panel.ts'
+import { PanelViewState } from '@/types'
 import { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import SynopsisContent from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContent.tsx'
 import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
@@ -20,7 +20,7 @@ function isWitnessOpened(source: AnnotationTargetSource, panels: PanelState[]): 
   const panel = source.item ? panels.find((p) => p.item?.id === source.item) : undefined
   return !!panel?.panelViews.some((view) => {
     if (view.view !== 'text' || (view.visible ?? true) === false || !view.activeContentType) return false
-    const content = panel.item?.contents.find((c) => c.contentType.includes(view.activeContentType!))
+    const content = findContentByType(panel.item?.contents, view.activeContentType)
     return content?.id === source.id
   })
 }
@@ -56,22 +56,24 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
   function findSyncedTextViewIndex(panel: PanelState, source: AnnotationTargetSource): number {
     return panel.panelViews.findIndex((view) => {
       if (view.view !== 'text' || !view.activeContentType) return false
-      const content = panel.item?.contents.find((c) => c.contentType.includes(view.activeContentType))
+      const content = findContentByType(panel.item?.contents, view.activeContentType)
       return content?.id === source.id
     })
   }
 
   // Build a text view that displays the synced content of the given panel's item.
-  function buildSyncedTextView(panel: PanelState, source: AnnotationTargetSource): PanelView {
+  function buildSyncedTextView(panel: PanelState, source: AnnotationTargetSource): PanelViewState {
     const contentTypes = panel.item ? getContentTypes(panel.item.contents) : []
     const content = panel.item?.contents?.find((c) => c.id === source.id)
-    const [, activeContentType] = content ? splitMIMEType(content.contentType) : []
+    const activeContentType = content ? getContentType(content) : undefined
 
     return {
       view: 'text',
       label: activeContentType ?? t('text'),
       contentTypes,
-      activeContentType: activeContentType ?? contentTypes[0],
+      activeContentType: resolveActiveContentType(contentTypes, activeContentType),
+      // the synced content type counts as chosen by the user, so it is kept on the following items
+      preferredContentType: activeContentType,
       visible: true
     }
   }
@@ -133,8 +135,8 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
       // find the content type that corresponds to the synced content (source.id), so the new
       // panel opens the text view that shows exactly that content instead of the default one.
       const content = item.contents?.find((c) => c.id === source.id)
-      const [, activeContentType] = content ? splitMIMEType(content.contentType) : []
-      const textViewIndex = panelViewsConfig.findIndex((view: PanelView) => view.view === 'text' && view.contentTypes?.includes(activeContentType))
+      const activeContentType = content ? getContentType(content) : undefined
+      const textViewIndex = findTextViewIndexForContentType(panelViewsConfig, activeContentType)
 
       const newPanelId = crypto.randomUUID()
       await createNewPanel(

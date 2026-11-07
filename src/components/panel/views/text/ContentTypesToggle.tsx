@@ -21,7 +21,7 @@ const ContentTypesToggle: FC = () => {
   }
 
   function renderButton(isTrigger: boolean) {
-    const buttonLabel = isTrigger ? t(label) + ': ' + t(activeContentType) : t(label ?? activeContentType)
+    const buttonLabel = isTrigger ? t(label) + ': ' + t(activeContentType) : t(label ?? activeContentType ?? '')
 
     return <Button
       variant="ghost"
@@ -33,7 +33,7 @@ const ContentTypesToggle: FC = () => {
 
   return (
     <>
-      { contentTypes.length === 1 && renderButton(false)}
+      { contentTypes.length <= 1 && renderButton(false)}
       { contentTypes.length > 1 && <DropdownMenu>
         <DropdownMenuTrigger asChild>
           { renderButton(true) }
