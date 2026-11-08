@@ -11,7 +11,8 @@ interface Props {
   error: CustomError,
   manifestLabel: string,
   itemLabel: string,
-  contentType: string
+  // the referenced content type, named in the title - undefined when there is no need to name it
+  contentType?: string
   actionLabelThisPanel: string
   actionNewPanel: (e: React.MouseEvent<HTMLButtonElement>) => void,
   actionThisPanel: (e: React.MouseEvent<HTMLButtonElement>) => void,
@@ -19,7 +20,7 @@ interface Props {
 
 const Content: FC<Props> = ({ error, manifestLabel, itemLabel, contentType, actionLabelThisPanel, actionNewPanel, actionThisPanel }) => {
 
-  const { usePanelTranslation, panelState } = usePanel()
+  const { usePanelTranslation } = usePanel()
   const { showCrossRefLabels } = useConfig()
   const { t } = usePanelTranslation()
 
@@ -27,7 +28,7 @@ const Content: FC<Props> = ({ error, manifestLabel, itemLabel, contentType, acti
     <CrossRefError error={error} />
     :  <>
       {showCrossRefLabels && <CrossRefTitle
-        contentType={panelState.contentTypes.length > 1 ? t(contentType) : ''}
+        contentType={contentType ? t(contentType) : ''}
         manifestLabel={manifestLabel}
         itemLabel={itemLabel}
       />}

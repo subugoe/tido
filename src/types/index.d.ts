@@ -119,8 +119,7 @@ declare global {
     config: PanelConfig
     showSidebar: boolean
     selectedAnnotation?: SelectedAnnotation
-    panelViews: PanelView[]
-    contentTypes: string[]
+    panelViews: PanelViewState[]
   }
 
 
@@ -213,6 +212,20 @@ export interface PanelView {
   visible?: boolean
   // set by the panel from its viewsWidthRatio config - the share of the panel width this view gets
   widthRatio?: number
+}
+
+// A view of a panel as it is shown on the current item - resolved from its configuration (PanelView)
+// on every item by resolveView, never written back into the configuration.
+// For a text view, contentTypes are the content types it offers on the current item (can be empty) and
+// activeContentType the one it shows (undefined when it offers none) - always decided by
+// resolveActiveContentType from the preferred and the configured one, read by everyone else.
+export interface PanelViewState extends PanelView {
+  // the last deliberate decision on the content type: the configured activeContentType at first, replaced
+  // by every choice of the user, never by a fallback - so it is kept on items that do not offer it.
+  // Only an input for the active content type, nothing else reads it.
+  preferredContentType?: string
+  // the configured content types of a text view when the current item offers none of them
+  missingContentTypes?: string[]
 }
 
 export interface TreeConfig {

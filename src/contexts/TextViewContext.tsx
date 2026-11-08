@@ -4,6 +4,7 @@ import { sanitize } from '@/utils/text-sanitize.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useErrorBoundary } from 'react-error-boundary'
 import { logError } from '@/utils/custom-error.ts'
+import { chooseContentType, findContentByType } from '@/utils/panel.ts'
 
 type State = {
   // translation keys of the problems found for this text, each one listed once
@@ -11,6 +12,9 @@ type State = {
   addTextWarning: (key: string) => void
   removeTextWarning: (key: string) => void
   clearTextWarnings: () => void
+  contentTypes: string[]
+  // the configured content types of a view that offers none of them on this item, otherwise empty
+  missingContentTypes: string[]
   activeContentType: string
   activeContentUrl: RefObject<string>
   setActiveContentType: (contentType: string) => void
@@ -33,8 +37,15 @@ export const TextViewProvider = ({
   children: ReactNode
 }) => {
   const { panelState, loading: loadingPanel, usePanelTranslation, updatePanel, annotationsError } = usePanel()
-  const { activeContentType, label } = panelState.panelViews[viewIndex] ?? {}
-  const { contentTypes } = panelState
+  const view = panelState.panelViews[viewIndex]
+  const { activeContentType, label } = view ?? {}
+  const contentTypes = useMemo(() => view?.contentTypes ?? [], [view?.contentTypes])
+  // A view restricted to content types the item does not offer shows a notice instead of a text
+  const missingContentTypes = useMemo(
+    () => loadingPanel ? [] : view?.missingContentTypes ?? [],
+    [loadingPanel, view?.missingContentTypes]
+  )
+  const hasMissingContentTypes = missingContentTypes.length > 0
   const { showBoundary } = useErrorBoundary()
   const { t } = usePanelTranslation()
 
@@ -62,7 +73,7 @@ export const TextViewProvider = ({
   // of only on the panel loading state) makes the text reload whenever the item actually changes -
   // the loading flag alone can miss a transition when two navigations overlap.
   const contentUrl = useMemo(
-    () => panelState?.item?.contents.find(c => c.contentType.includes(activeContentType))?.id,
+    () => findContentByType(panelState?.item?.contents, activeContentType)?.id,
     [panelState?.item, activeContentType]
   )
 
@@ -95,6 +106,14 @@ export const TextViewProvider = ({
       }
     }
 
+    if (hasMissingContentTypes) {
+      clearTextWarnings()
+      activeContentUrl.current = null
+      setText('')
+      setLoadingText(false)
+      return () => { stale = true }
+    }
+
     if (loadingPanel || !panelState || !activeContentType) {
       setLoadingText(true)
       return () => { stale = true }
@@ -110,7 +129,7 @@ export const TextViewProvider = ({
 
     return () => { stale = true }
 
-  }, [loadingPanel, activeContentType, contentUrl])
+  }, [loadingPanel, activeContentType, contentUrl, hasMissingContentTypes])
 
   // The text is shown without annotations when they could not be loaded - the sidebar shows the
   // error itself, this tells a visitor who has it closed. Listed again with every new text, as
@@ -119,23 +138,9 @@ export const TextViewProvider = ({
     if (annotationsError) addTextWarning('annotations_loading_error')
   }, [annotationsError, text, addTextWarning])
 
-  useEffect(() => {
-    if (contentTypes.length === 0) {
-      showBoundary(t('no_content_found'))
-      return
-    }
-    if (!activeContentType || !contentTypes.includes(activeContentType)) {
-      setActiveContentType(contentTypes[0])
-    }
-  }, [contentTypes])
-
-  function setActiveContentType(type: string | null) {
-    updatePanel({
-      panelViews: panelState.panelViews.map((v, i) => {
-        if (i === viewIndex) v.activeContentType = type
-        return v
-      })
-    })
+  // A choice of the user: it becomes the preferred content type of the view, kept on every following item
+  function setActiveContentType(type: string) {
+    updatePanel({ panelViews: chooseContentType(type, viewIndex, panelState.panelViews) })
   }
 
   return (
@@ -144,6 +149,8 @@ export const TextViewProvider = ({
       addTextWarning,
       removeTextWarning,
       clearTextWarnings,
+      contentTypes,
+      missingContentTypes,
       activeContentType,
       activeContentUrl,
       setActiveContentType,

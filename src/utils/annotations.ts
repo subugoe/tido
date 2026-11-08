@@ -5,6 +5,7 @@ import { CustomError } from '@/utils/custom-error.ts'
 import type { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { ANNOTATION_TARGET_JSON_FORMAT } from '@/utils/constants.ts'
+import { getContentType } from '@/utils/panel.ts'
 import {
   getAnnotationTargets,
   getAnnotationType,
@@ -143,7 +144,8 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
     throw new CustomError(`Error loading data in Cross Ref. Failed request: ${failedRequestUrl}`, e.message || String(e), e.options)
   }
 
-  const refContentType = refItemData?.contents?.find(c => c.id === contentUrl)?.contentType?.split('type=')[1]
+  const refContent = refItemData?.contents?.find(c => c.id === contentUrl)
+  const refContentType = refContent ? getContentType(refContent) : undefined
 
   return {
     collection: source.collection,

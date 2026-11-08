@@ -63,6 +63,8 @@
     "error_occurred": "Ein Fehler ist aufgetreten",
     "enable_select_panel_mode_dialog": "Panelmodusauswahl immer anzeigen",
     "no_content_found": "Keinen passenden Inhalt gefunden.",
+    "no_content_for_content_types_title": "Kein passender Text auf dieser Seite",
+    "no_content_for_content_types": "Diese Seite enthält keinen Text vom Typ {{contentTypes}}.",
     "unknown_error": "Unbekannter Fehler",
     "metadata": "Metadaten",
     "please_click_to_view_metadata": "Bitte klicken Sie auf die folgenden Überschriften, um die Metadaten anzuzeigen",

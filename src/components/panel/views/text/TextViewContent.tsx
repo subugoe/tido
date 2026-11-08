@@ -6,10 +6,11 @@ import TextOptions from '@/components/panel/views/text/TextOptions.tsx'
 import TextViewWarning from '@/components/panel/views/text/TextViewWarning.tsx'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import MissingContentTypes from '@/components/panel/views/text/MissingContentTypes.tsx'
 
 const TextViewContent: FC = () => {
   const { panelState, getScroller } = usePanel()
-  const { text, activeContentUrl, loadingText, setLoadingText } = useTextView()
+  const { text, activeContentUrl, loadingText, setLoadingText, missingContentTypes } = useTextView()
   const { showContentTypeToggle } = useConfig()
   const scrollContainer = useRef<HTMLDivElement>(null)
   const [scrolled, setScrolled] = useState(false)
@@ -41,7 +42,8 @@ const TextViewContent: FC = () => {
     {showContentTypeToggle && <div data-text-options className="absolute w-full top-0 z-10 flex flex-col items-center justify-center">
       <TextOptions scrolled={scrolled} />
     </div>}
-    <div data-text-container ref={scrollContainer} tabIndex={-1} onScroll={onScroll} className="h-full w-full overflow-auto [overflow-anchor:none] px-3 focus:outline-none">
+    { missingContentTypes.length > 0 && <MissingContentTypes /> }
+    <div data-text-container ref={scrollContainer} hidden={missingContentTypes.length > 0} tabIndex={-1} onScroll={onScroll} className="h-full w-full overflow-auto [overflow-anchor:none] px-3 focus:outline-none">
       <TextRenderer htmlString={text} onReady={onReady} />
     </div>
     <div data-text-warning className="absolute w-full bottom-0 z-10 flex flex-col items-center justify-center">

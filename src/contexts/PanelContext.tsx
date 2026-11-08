@@ -4,10 +4,10 @@ import { useDataStore } from '@/store/DataStore.tsx'
 
 import { getSelectedTypes } from '@/utils/annotations.ts'
 import { getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
-import { getContentTypes, getViewsWidthRatio, hasImage, isNewManifest } from '@/utils/panel.ts'
+import { getContentTypes, getViewsWidthRatio, hasImage, isNewManifest, resolveView } from '@/utils/panel.ts'
 import { getAssets } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
-import { FilterNodeWithSelection, PanelConfig, PanelView, SelectedAnnotation } from '@/types'
+import { FilterNodeWithSelection, PanelConfig, PanelView, PanelViewState, SelectedAnnotation } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
@@ -237,42 +237,36 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       }
 
       // 4. We discover the correct "views" config. This can come from a global config (root key "panelViews")
-      // or local config (key "views" in the panel config).
-      const enhanceView = (view: PanelView, contentTypes: string[], oldView?: PanelView): PanelView => {
-        const oldActiveContentType = oldView?.activeContentType ?? null
-        let activeContentType = null
-        if (contentTypes?.length > 0) {
-          if (oldActiveContentType) {
-            activeContentType = contentTypes.includes(oldActiveContentType) ? oldActiveContentType : contentTypes[0]
-          } else {
-            activeContentType = view.activeContentType ?? contentTypes[0]
-          }
-        }
+      // or local config (key "views" in the panel config). On every item each view is resolved from this
+      // configuration - the views of the previous item only hand over what the user changed (see resolveView).
+      // The navigation only hands over where to go, so without views in the given config the panel keeps
+      // the views it was opened with.
+      const viewsConfig = config.views ?? panelState.config?.views
+      const viewsWidthRatioConfig = config.viewsWidthRatio ?? panelState.config?.viewsWidthRatio
 
-        return {
-          ...view,
-          ...(view.view !== 'image' && { activeContentType }),
-          visible: view.visible ?? true,
-        }
-      }
-
-      const views: PanelView[] = config.views && config.views.length > 0
-        ? config.views.map((view, i) => ({ ...(globalPanelViewsConfig[i] ?? {}), ...view }))
+      const views: PanelView[] = viewsConfig && viewsConfig.length > 0
+        ? viewsConfig.map((view, i) => ({ ...(globalPanelViewsConfig[i] ?? {}), ...view }))
         : globalPanelViewsConfig
 
       // Every view carries its own width ratio, so the ratio stays with its view on every item -
       // also when a view is left out, like the image view of an item without images.
-      const viewsWidthRatio = getViewsWidthRatio(config.viewsWidthRatio, views.length)
+      const viewsWidthRatio = getViewsWidthRatio(viewsWidthRatioConfig, views.length)
       const configuredViews: PanelView[] = views.map((view, i) => ({ ...view, widthRatio: viewsWidthRatio?.[i] }))
 
-      let resultPanelViews: PanelView[]
+      let resultPanelViews: PanelViewState[]
 
-      if (isPanelViewsUserExplicit() || config.views?.length > 0) {
+      if (isPanelViewsUserExplicit() || viewsConfig?.length > 0) {
         // The views are configured explicitly, so they are kept as they are on every item.
         // We prioritize the views changed from the user on the current panel. I.e toggle off views and navigate to a new item on same panel
         // we should preserve the selected views from user for this panel
-        const baseViews = panelState.panelViews && panelState.panelViews.length > 0 ? panelState.panelViews : configuredViews
-        resultPanelViews = baseViews.map((view, i) => enhanceView(view, contentTypes, panelState.panelViews[i]))
+        const previousViews = panelState.panelViews ?? []
+        const viewsCount = previousViews.length > 0 ? previousViews.length : configuredViews.length
+        resultPanelViews = Array.from({ length: viewsCount }, (_, i) => {
+          const previous = previousViews[i]
+          // A view the synopsis appended to the panel has no configuration: it offers every content type
+          const configured = configuredViews[i] ?? { view: previous.view, label: previous.label, widthRatio: previous.widthRatio }
+          return resolveView(configured, contentTypes, previous)
+        })
       } else {
         // Without a views config, the item decides on every navigation: an image view is only shown when the item has images.
         // No images key, an empty images array or an image without url count as no images. Broken images are still shown in the image view with an error.
@@ -281,7 +275,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         // Keep what the user changed on the matching views of the previous item, i.e. a toggled off view or the active content type
         resultPanelViews = itemViews.map((view) => {
           const oldView = panelState.panelViews.find(v => v.view === view.view && v.label === view.label)
-          return enhanceView(oldView ?? view, contentTypes, oldView)
+          return resolveView(view, contentTypes, oldView)
         })
       }
 
@@ -290,7 +284,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         collectionId: collection?.id ?? null,
         manifest,
         item,
-        contentTypes,
         panelViews: resultPanelViews,
         showSidebar: config.showSidebar ?? panelState.showSidebar,
       })
