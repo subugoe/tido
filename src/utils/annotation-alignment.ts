@@ -1,4 +1,4 @@
-import { getSource } from '@/utils/annotations.ts'
+import { getSelectorValue, getSource } from '@/utils/annotations.ts'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 
@@ -30,20 +30,64 @@ function scrollBy(container: HTMLElement, delta: number): number {
   return top
 }
 
-// The card in the sidebar and the target in whichever text view holds it. Null when either is
+interface TargetEl {
+  targetEl: HTMLElement
+  // the scroll container of the text view the target lies in
+  textEl: HTMLElement
+  contentUrl: string
+}
+
+// Every element the targets of an annotation resolve to in the open text views. Scoped to each text like
+// in matchAnnotations, so a target that is not matched there is not aligned either. A target whose text
+// view is not open, or whose selector is empty or invalid, resolves to nothing.
+function getTargetEls(panelEl: HTMLElement, annotation: Annotation): TargetEl[] {
+  return getAnnotationTargets(annotation).flatMap(target => {
+    if (!target) return []
+    const contentUrl = getSource(target).id
+    const textEl = getTextEl(panelEl, contentUrl)
+    const selector = getSelectorValue(target)
+    if (!textEl || !selector) return []
+
+    try {
+      return Array.from(textEl.querySelectorAll<HTMLElement>(`:scope ${selector}`))
+        .map(targetEl => ({ targetEl, textEl, contentUrl }))
+    } catch {
+      return []
+    }
+  })
+}
+
+// The top of a target within its text, the scrolled distance included. Null when the target has no top
+// it can be aligned with: it is no longer in the document, or it is not rendered (display: none gives an
+// empty rect at 0).
+function getTargetTop({ targetEl, textEl }: TargetEl): number | null {
+  if (!targetEl.isConnected) return null
+
+  const rect = targetEl.getBoundingClientRect()
+  if (rect.width === 0 && rect.height === 0) return null
+
+  const top = rect.top - textEl.getBoundingClientRect().top + textEl.scrollTop
+  return Number.isFinite(top) ? top : null
+}
+
+// The target an annotation is aligned with: the top most of all its targets. A target whose top is not
+// valid is skipped, so the annotation is aligned with the next one. Null when no target has a valid top.
+function getTopTarget(panelEl: HTMLElement, annotation: Annotation): (TargetEl & { top: number }) | null {
+  return getTargetEls(panelEl, annotation).reduce<(TargetEl & { top: number }) | null>((topMost, cur) => {
+    const top = getTargetTop(cur)
+    if (top === null || (topMost && topMost.top <= top)) return topMost
+    return { ...cur, top }
+  }, null)
+}
+
+// The card in the sidebar and the top most target in whichever text view holds it. Null when either is
 // missing - the view showing that content type may not be open, or the card may be filtered out.
 function getAlignmentPair(panelEl: HTMLElement, annotation: Annotation) {
-  const target = getAnnotationTargets(annotation)[0]
-  const targetSourceUrl = getSource(target).id
-  const textScrollContainer = getTextEl(panelEl, targetSourceUrl)
-  if (!textScrollContainer) return null
-
-  // scoped to the text like in matchAnnotations, so a target that is not matched there is not aligned either
-  const targetEl = textScrollContainer.querySelector(`:scope ${(target.selector as CssSelector).value}`) as HTMLElement
+  const topTarget = getTopTarget(panelEl, annotation)
   const annotationEl = getAnnotationEl(panelEl, annotation)
-  if (!targetEl || !annotationEl) return null
+  if (!topTarget || !annotationEl) return null
 
-  return { targetEl, annotationEl, targetSourceUrl }
+  return { targetEl: topTarget.targetEl, annotationEl, targetSourceUrl: topTarget.contentUrl }
 }
 
 // Scrolls the text so the target ends up at the same height as its card in the sidebar.
@@ -92,6 +136,8 @@ export {
   getTextEl,
   getSidebarEl,
   getAlignmentPair,
+  getTargetEls,
+  getTopTarget,
   alignTextToAnnotation,
   alignSidebarToAnnotation,
   handleExternalSelection
