@@ -2,9 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/sidebar/Annotation.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
-import { getSource } from '@/utils/annotations.ts'
-import { alignTextToAnnotation, handleExternalSelection } from '@/utils/annotation-alignment.ts'
-import { getAnnotationTargets } from '@/utils/annotation-data.ts'
+import { alignTextToAnnotation, getTargetEls, getTopTarget, handleExternalSelection } from '@/utils/annotation-alignment.ts'
 
 const ANNOTATION_GAP = 5
 
@@ -129,20 +127,13 @@ const AlignAnnotationsList: FC = () => {
 
     if (elements.length === 0) return
 
-    // Set the desiredY according to current target clean positions (clean = actual position in the text + scrolled distance)
+    // Set the desiredY according to current target clean positions (clean = actual position in the text + scrolled distance).
+    // An annotation is aligned with its top most target - in whichever text view it lies - and with the next one
+    // when the top of that target is not valid. Without any valid target its card keeps its last position.
+    const panelEl = document.getElementById(panelId)
     for (let i = 0; i < elements.length; i++) {
-      // a target of an annotation may lie in different panel views, i.e when 2 panel view are opened and target lies in 2 pane
-      // we should be able to locate the textContainer in the 2nd pane
-      const contentUrl = getSource(elements[i].annotation.target[0]).id
-      const scrollParent = document.getElementById(panelId).querySelector(`[data-content-url="${contentUrl}"]`) as HTMLElement
-      if (!scrollParent) continue
-
-      const parentRect = scrollParent.getBoundingClientRect()
-      const el = elements[i].target
-      const elRect = el.getBoundingClientRect()
-
-      // Distance from span to parent's visible top, plus how far parent has scrolled
-      elements[i].desiredY = (elRect.top - parentRect.top) + scrollParent.scrollTop
+      const topTarget = getTopTarget(panelEl, elements[i].annotation)
+      if (topTarget) elements[i].desiredY = topTarget.top
     }
 
     elements.sort((a, b) => a.desiredY - b.desiredY)
@@ -211,24 +202,17 @@ const AlignAnnotationsList: FC = () => {
       const _elements = annotationEls.map(el => {
         const annotation = filteredAnnotations.find(a => a.id === (el as HTMLElement).getAttribute('data-annotation'))
         if (!annotation) return
-        // The same selector can match in several texts of the item, so the target has to be looked
-        // up in the text the annotation points at - the one carrying its content url - and not
-        // panel wide.
-        const annotationTarget = getAnnotationTargets(annotation)[0]
-        const contentUrl = getSource(annotationTarget).id
-        const textEl = document.getElementById(panelId).querySelector(`[data-content-url="${contentUrl}"]`) as HTMLElement
-        if (!textEl) return
-
-        const target = textEl.querySelector((annotationTarget.selector as CssSelector).value) as HTMLElement
-        if (!target) {
-          console.error('There exists no target in text from the selector value of this annotation', annotation)
+        // The same selector can match in several texts of the item, so the targets are looked up in
+        // the texts the annotation points at - the ones carrying its content urls - and not panel wide.
+        const panelEl = document.getElementById(panelId)
+        if (getTargetEls(panelEl, annotation).length === 0) {
+          console.error('There exists no target in text from the selector values of this annotation', annotation)
           return
         }
 
         return {
-          target,
           el,
-          desiredY: target.offsetTop,
+          desiredY: getTopTarget(panelEl, annotation)?.top ?? 0,
           annotation
         }
       })

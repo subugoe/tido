@@ -11,18 +11,17 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 import GenericTextRenderer from '@/components/panel/renderers/text/GenericTextRenderer.tsx'
 
 interface Props {
-  htmlString: string
   onReady?: () => void
 }
 
-const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
+const TextRenderer: FC<Props> = memo(({ onReady }) => {
   const { showContentTypeToggle } = useConfig()
   const {
     updatePanel,
     annotationsMode
   } = usePanel()
 
-  const { activeContentUrl } = useTextView()
+  const { text, activeContentUrl } = useTextView()
 
   const annotationsModeRef = useRef<'aligned' | 'list'>(null)
 
@@ -37,9 +36,9 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   return <div className="relative flex">
     <GenericTextRenderer
-      htmlString={htmlString}
+      htmlString={text}
       onReady={onReady}
-      source={activeContentUrl.current}
+      source={activeContentUrl}
       sourceType="text"
       onSelect={onSelect}
       paddingTop={showContentTypeToggle ? 16 : 2}

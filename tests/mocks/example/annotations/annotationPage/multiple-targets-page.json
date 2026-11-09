@@ -1,0 +1,54 @@
+{
+ "@context": "http://www.w3.org/ns/anno.jsonld",
+ "id": "http://localhost:8181/example/annotations/annotationPage/multiple-targets-page.json",
+ "type": "AnnotationPage",
+ "partOf": {
+  "id": "http://localhost:8181/example/annotations/annotationCollection/multiple-targets-page.json",
+  "label": "Multiple targets",
+  "total": 1
+ },
+ "next": null,
+ "prev": null,
+ "startIndex": 0,
+ "items": [
+  {
+   "id": "http://localhost:8181/example/multiple-targets/annotation-1",
+   "type": "Annotation",
+   "body": {
+    "type": "TextualBody",
+    "value": "An annotation with three targets: the first is not in the text, the second lies below the third.",
+    "format": "text/html",
+    "annotationType": "Literary Analysis"
+   },
+   "target": [
+    {
+     "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+     "selector": {
+      "type": "CssSelector",
+      "value": "#does-not-exist"
+     },
+     "format": "text/html",
+     "language": "eng"
+    },
+    {
+     "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+     "selector": {
+      "type": "CssSelector",
+      "value": "#mrs-long"
+     },
+     "format": "text/html",
+     "language": "eng"
+    },
+    {
+     "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+     "selector": {
+      "type": "CssSelector",
+      "value": "#neighbourhood"
+     },
+     "format": "text/html",
+     "language": "eng"
+    }
+   ]
+  }
+ ]
+}

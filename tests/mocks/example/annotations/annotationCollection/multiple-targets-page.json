@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/annotations/annotationCollection/multiple-targets-page.json",
+  "type": "AnnotationCollection",
+  "label": "Multiple targets",
+  "total": 1,
+  "first": "http://localhost:8181/example/annotations/annotationPage/multiple-targets-page.json",
+  "last": "http://localhost:8181/example/annotations/annotationPage/multiple-targets-page.json"
+}

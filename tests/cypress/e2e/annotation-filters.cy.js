@@ -126,10 +126,11 @@ describe('Annotation filters derived from the rendered texts', () => {
     sidebar().contains('button', /filters/i).should('not.be.disabled').click();
     cy.get(selectors.popover).should('be.visible');
 
-    // 9 types: transcription contributes Character, Artistic Object, Historical Context, Setting;
-    // diplomatic contributes Place, Textual Variant, Editorial Note, Orthographic Feature and Descriptive
-    // Detail (its target #dipl-gable is not present in the diplomatic text, but the annotation is kept).
-    cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 9);
+    // 8 types: transcription contributes Character, Artistic Object, Historical Context, Setting;
+    // diplomatic contributes Place, Textual Variant, Editorial Note, Orthographic Feature. Not Descriptive
+    // Detail: its only annotation targets #dipl-gable, which is not in the diplomatic text, so it is hidden.
+    cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 8);
+    filterRow('Descriptive Detail').should('not.exist');
 
     ['Place', 'Textual Variant', 'Historical Context', 'Setting'].forEach((label) => {
       filterRow(label).should('exist');
@@ -156,8 +157,8 @@ describe('Annotation filters derived from the rendered texts', () => {
 
     openFilters();
 
-    // Only the diplomatic text remains, so only its 5 types are derived.
-    expectFilters(5, ['Place', 'Textual Variant', 'Editorial Note', 'Orthographic Feature', 'Descriptive Detail']);
+    // Only the diplomatic text remains, so only its 4 types are derived (Descriptive Detail has no target in it).
+    expectFilters(4, ['Place', 'Textual Variant', 'Editorial Note', 'Orthographic Feature']);
   });
 
   it('restores the hidden view\'s types once it is shown again', () => {
@@ -168,9 +169,9 @@ describe('Annotation filters derived from the rendered texts', () => {
 
     openFilters();
 
-    // Both texts contribute again: the 5 diplomatic types plus the 4 transcription types.
-    expectFilters(9, [
-      'Place', 'Textual Variant', 'Editorial Note', 'Orthographic Feature', 'Descriptive Detail',
+    // Both texts contribute again: the 4 diplomatic types plus the 4 transcription types.
+    expectFilters(8, [
+      'Place', 'Textual Variant', 'Editorial Note', 'Orthographic Feature',
       'Character', 'Artistic Object', 'Historical Context', 'Setting',
     ]);
   });
