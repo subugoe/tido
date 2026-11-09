@@ -1,4 +1,4 @@
-import { createContext, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react'
 import { apiRequest } from '@/utils/api.ts'
 import { sanitize } from '@/utils/text-sanitize.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
@@ -16,7 +16,8 @@ type State = {
   // the configured content types of a view that offers none of them on this item, otherwise empty
   missingContentTypes: string[]
   activeContentType: string
-  activeContentUrl: RefObject<string>
+  // the url the current text was loaded from - always set together with text, so both describe the same content
+  activeContentUrl: string
   setActiveContentType: (contentType: string) => void
   label: string
   text: string
@@ -64,10 +65,13 @@ export const TextViewProvider = ({
 
   const clearTextWarnings = useCallback(() => setTextWarnings([]), [])
   // const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState<MatchedAnnotationsMap>(null)
-  const [text, setText] = useState<string>('')
+  // The loaded text and the url it was loaded from, kept in one state so they always change together:
+  // a renderer never gets the url of a new text with the html of the previous one, or the other way round.
+  const [content, setContent] = useState<{ url: string | null, text: string }>({ url: null, text: '' })
+  const contentRef = useRef(content)
+  contentRef.current = content
+  const { url: activeContentUrl, text } = content
   const [loadingText, setLoadingText] = useState(false)
-
-  const activeContentUrl = useRef(null)
 
   // The content url of the active item for the active content type. Depending on this value (instead
   // of only on the panel loading state) makes the text reload whenever the item actually changes -
@@ -88,12 +92,13 @@ export const TextViewProvider = ({
         const response = await apiRequest<string>(url)
         if (stale) return
         const { output, removed } = sanitize(response)
-        setText(output)
 
         // Normally the loading is set to false when a text has finished rendering in TextRenderer.
-        // When trying to load the same text again it won't rerender, so the loading is always true.
-        // This is a fix for that.
-        if (text === output) setLoadingText(false)
+        // When the same text is loaded again from the same url it won't rerender, so the loading
+        // would stay true. This is a fix for that.
+        const current = contentRef.current
+        if (current.url === url && current.text === output) setLoadingText(false)
+        else setContent({ url, text: output })
 
         if (removed.length > 0) {
           addTextWarning('text_not_displayed_correctly')
@@ -108,8 +113,7 @@ export const TextViewProvider = ({
 
     if (hasMissingContentTypes) {
       clearTextWarnings()
-      activeContentUrl.current = null
-      setText('')
+      setContent({ url: null, text: '' })
       setLoadingText(false)
       return () => { stale = true }
     }
@@ -124,7 +128,6 @@ export const TextViewProvider = ({
       return () => { stale = true }
     }
 
-    activeContentUrl.current = contentUrl
     updateText(contentUrl)
 
     return () => { stale = true }

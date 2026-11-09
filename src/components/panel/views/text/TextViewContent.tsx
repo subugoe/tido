@@ -10,19 +10,19 @@ import MissingContentTypes from '@/components/panel/views/text/MissingContentTyp
 
 const TextViewContent: FC = () => {
   const { panelState, getScroller } = usePanel()
-  const { text, activeContentUrl, loadingText, setLoadingText, missingContentTypes } = useTextView()
+  const { activeContentUrl, loadingText, setLoadingText, missingContentTypes } = useTextView()
   const { showContentTypeToggle } = useConfig()
   const scrollContainer = useRef<HTMLDivElement>(null)
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const url = activeContentUrl.current
+    const url = activeContentUrl
     if (!scrollContainer.current || !url) return
     const scroller = getScroller()
     scroller.setText(url, scrollContainer.current)
     scroller.startText(url)
     return () => scroller.stopText(url)
-  }, [scrollContainer.current, activeContentUrl.current])
+  }, [scrollContainer.current, activeContentUrl])
 
   useEffect(() => {
     if (!scrollContainer.current) return
@@ -44,7 +44,7 @@ const TextViewContent: FC = () => {
     </div>}
     { missingContentTypes.length > 0 && <MissingContentTypes /> }
     <div data-text-container ref={scrollContainer} hidden={missingContentTypes.length > 0} tabIndex={-1} onScroll={onScroll} className="h-full w-full overflow-auto px-3 focus:outline-none">
-      <TextRenderer htmlString={text} onReady={onReady} />
+      <TextRenderer onReady={onReady} />
     </div>
     <div data-text-warning className="absolute w-full bottom-0 z-10 flex flex-col items-center justify-center">
       <TextViewWarning />

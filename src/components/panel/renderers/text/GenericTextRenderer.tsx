@@ -43,7 +43,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     const div = doc.createElement('div')
     div.replaceChildren(...body.childNodes)
     return div
-  }, [htmlString])
+  }, [source])
 
   // Attach the content of the Document object as children of textWrapperRef.
   useEffect(() => {
@@ -52,7 +52,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     textWrapperRef.current.replaceChildren(parsedDom)
     setAttachedDom(parsedDom)
     if (onReady) onReady()
-  }, [parsedDom])
+  }, [source])
 
   return <div
     data-text-wrapper
