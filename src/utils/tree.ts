@@ -37,35 +37,41 @@ async function getChildren(node: TreeNode, showItemLevel = true): Promise<TreeNo
 
   let data: Collection | Manifest
 
-  if (!isCollectionUrl(id) && !isManifestUrl(id)) throw new CustomError('Error in TextAPI ' + node.type , 'Id "'+ id +'" is provided incorrectly')
-
-  if (isCollectionUrl(id)) {
+  // The node type wins over url sniffing: DTS resource urls are collection endpoints and do
+  // not match the TextAPI url patterns.
+  if (node.type === 'manifest') {
+    data = await useDataStore.getState().initManifest(id)
+  } else if (node.type === 'collection' || isCollectionUrl(id)) {
     // If parent node is a collection, we initialize it like all collections, so it becomes available for panel loading
     data = await useDataStore.getState().initCollection(id)
   } else if (isManifestUrl(id)) {
     data = await useDataStore.getState().initManifest(id)
+  } else {
+    throw new CustomError('Error in TextAPI ' + node.type, 'Id "' + id + '" is provided incorrectly')
   }
 
-  // Handle both Collection (manifests) and Manifest (items)
-  let sequenceKey
+  // Collections can mix sub-collections and manifests (DTS), so concatenate all sequences.
+  const members: (Collection | Manifest | MinimalResource | Item | string)[] = []
 
-  if ('collections' in data) sequenceKey = 'collections'
-  else if ('manifests' in data)  sequenceKey = 'manifests'
-  else if ('items' in data)  sequenceKey = 'items'
+  if ('collections' in data && Array.isArray(data.collections)) members.push(...data.collections)
+  if ('manifests' in data && Array.isArray(data.manifests)) members.push(...data.manifests)
+  if ('items' in data && Array.isArray(data.items)) members.push(...data.items)
 
-  if (!sequenceKey) return []
+  if (members.length === 0) return []
 
-  const sequence =
-    data[sequenceKey as keyof typeof data] as Collection[] | Manifest[] | MinimalResource[] | Item[] | string[] | undefined
-  if (!sequence) return []
-
-  const idsAndLabels = sequence.map(item => {
-
+  const nodes = members.map(item => {
     let id
     let label
+    let type = ''
 
     if (typeof item === 'object') {
       id = item.id
+      // MinimalResource members carry no textapi type, so guard the access for them
+      const memberType = 'textapiType' in item ? item.textapiType : undefined
+      if (memberType === 'TextApiCollection') type = 'collection'
+      else if (memberType === 'TextApiManifest') type = 'manifest'
+      else if (memberType === 'TextApiItem') type = 'item'
+
       if ('shortTitle' in item) label = item.shortTitle
       else if (item.textapiType === 'TextApiCollection') label = item.titles[0]
       else if (item.textapiType === 'TextApiManifest' || item.titles && item.titles.length > 0) label = item.titles?.[0]
@@ -75,23 +81,16 @@ async function getChildren(node: TreeNode, showItemLevel = true): Promise<TreeNo
       label = id.split('/').filter(Boolean).pop()
     }
 
-    return { id, label }
-  })
-
-  if (!idsAndLabels || idsAndLabels.length === 0) return []
-
-  // For both Collections and Manifests, the IDs are strings
-  return idsAndLabels.map(({ id, label }) => {
-    let type = ''
-
-    if (isCollectionUrl(id)) type = 'collection'
-    else if (isManifestUrl(id)) type = 'manifest'
-    else if (isItemUrl(id)) type = 'item'
+    if (!type) {
+      if (isCollectionUrl(id)) type = 'collection'
+      else if (isManifestUrl(id)) type = 'manifest'
+      else if (isItemUrl(id)) type = 'item'
+    }
 
     return {
       id,
       type,
-      label,
+      label: label ?? '',
       key: parentKey + NODE_KEY_DELIMITER + id,
       // without the item level, manifests are the last level and open the panel at their first item
       leaf: type === (showItemLevel ? 'item' : 'manifest'),
@@ -99,6 +98,8 @@ async function getChildren(node: TreeNode, showItemLevel = true): Promise<TreeNo
       children: [] as TreeNode[]
     }
   })
+
+  return nodes
 }
 
 async function getRootChildrenCollectionsIds(rootCollection: Collection) {

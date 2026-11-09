@@ -12,7 +12,6 @@ import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { Scroller } from '@/utils/scroller.ts'
 import { CustomError, logError } from '@/utils/custom-error.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
@@ -179,29 +178,19 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     try {
       let item: Item, manifest: Manifest, collection: Collection
 
-      // 1. Load anything we can see in the config.
-      if (config.item) {
-        if (isItemUrl(config.item)) item = await getItem(config.item)
-        else {
-          setError(new CustomError('panel_init_error', 'error_invalid_item_url', { url: config.item }))
-          return
-        }
+      // 1. Load anything we can see in the config. Collections and manifests load first, so
+      // their embedded items are available when the item url is not fetchable itself (DTS).
+      // The DataStore fetches and validates each url, so no url shape checks are needed here.
+      if (config.collection) {
+        collection = await getCollection(config.collection)
       }
 
       if (config.manifest) {
-        if (isManifestUrl(config.manifest)) manifest = await getManifest(config.manifest)
-        else {
-          setError(new CustomError('panel_init_error', 'error_invalid_manifest_url', { url: config.manifest }))
-          return
-        }
+        manifest = await getManifest(config.manifest)
       }
 
-      if (config.collection) {
-        if (isCollectionUrl(config.collection)) collection = await getCollection(config.collection)
-        else {
-          setError(new CustomError('panel_init_error', 'error_invalid_collection_url', { url: config.collection }))
-          return
-        }
+      if (config.item) {
+        item = await getItem(config.item)
       }
 
       // 2. Analyze the received data and try load as much as possible.

@@ -1,0 +1,39 @@
+{
+  "@context": "https://dtsapi.org/context/v1.0.json",
+  "dtsVersion": "1.0",
+  "@id": "poems",
+  "@type": "Collection",
+  "title": "Poems",
+  "totalParents": 1,
+  "totalChildren": 2,
+  "collection": "/dts/api/dts/collection/poems.json{?id,nav}",
+  "member": [
+    {
+      "@id": "urn:cts:dtsTest:poems.priapeia.lat1",
+      "@type": "Resource",
+      "title": "Priapeia",
+      "description": "Priapeia based on the edition of Aemilius Baehrens",
+      "totalParents": 1,
+      "totalChildren": 0,
+      "collection": "/dts/api/dts/collection/priapeia.json{?nav}",
+      "document": "/dts/api/dts/document/priapeia.xml{?ref,start,end,tree,mediaType}",
+      "mediaTypes": ["application/tei+xml", "text/html"],
+      "dublinCore": {
+        "creator": [{ "lang": "en", "value": "Anonymous" }],
+        "language": ["lat", "en"]
+      }
+    },
+    {
+      "@id": "urn:cts:dtsTest:poems.rosa.lat1",
+      "@type": "Resource",
+      "title": "Rosa",
+      "totalParents": 1,
+      "totalChildren": 0,
+      "collection": "/dts/api/dts/collection/rosa.json{?nav}",
+      "document": "/dts/api/dts/document/rosa.xml{?ref,start,end,tree,mediaType}",
+      "dublinCore": {
+        "creator": "Anonymous"
+      }
+    }
+  ]
+}
