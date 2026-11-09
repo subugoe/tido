@@ -82,32 +82,38 @@ describe('Annotation data errors', () => {
     cy.get(selectors.textContainer).find(selectors.selectedTarget).should('have.length', 1)
   })
 
-  it('Does not find the target of a nested selector whose outer part only matches outside the text', () => {
+  it('Lists only the annotations whose targets are found in the text', () => {
     openSidebar()
 
-    // Still listed in the sidebar, so the annotation does not disappear.
-    cy.get(outsideCard).should('be.visible')
-      .click({ scrollBehavior: false })
-      .should('have.attr', 'data-selected', 'true')
+    // annotation-1 (#truth) and annotation-5 (#para3 #bennet) are found in the text
+    cy.get(cardFor('annotation-1')).should('be.visible')
+    cy.get(nestedCard).should('be.visible')
+    cy.get(`[data-annotation^="${apiUrl}/example/broken-annotations/"]`).should('have.length', 2)
+
+    // the empty, the invalid and the non-matching selector find nothing, so their annotations are hidden
+    cy.get(cardFor('annotation-2')).should('not.exist')
+    cy.get(cardFor('annotation-3')).should('not.exist')
+    cy.get(cardFor('annotation-4')).should('not.exist')
+  })
+
+  it('Hides the annotation of a nested selector whose outer part only matches outside the text', () => {
+    openSidebar()
+    cy.get(nestedCard).should('be.visible')
+
+    cy.get(outsideCard).should('not.exist')
 
     // Not matched at all - neither highlighted as a target nor marked as selected.
     cy.get(selectors.textContainer).find(outsideTargetSelector).should('not.have.attr', 'data-annotation-ids')
     cy.get(selectors.textContainer).find(outsideTargetSelector).should('not.have.attr', 'data-annotation-selected')
-    cy.get(selectors.textContainer).find(selectors.selectedTarget).should('not.exist')
-    cy.get(selectors.textContainer).its('0.scrollTop').should('equal', 0)
   })
 
-  it('Does not find a target for a nested selector none of whose parts are in the text', () => {
+  it('Hides the annotation of a nested selector none of whose parts are in the text', () => {
     openSidebar()
+    cy.get(nestedCard).should('be.visible')
 
-    // Still listed in the sidebar, so the annotation does not disappear.
-    cy.get(missingCard).should('be.visible')
-      .click({ scrollBehavior: false })
-      .should('have.attr', 'data-selected', 'true')
+    cy.get(missingCard).should('not.exist')
 
-    // No element of the text is bound to the annotation, and nothing is marked as selected.
+    // No element of the text is bound to the annotation.
     cy.get(selectors.textContainer).find(`[data-annotation-ids*="${missingAnnotationId}"]`).should('not.exist')
-    cy.get(selectors.textContainer).find(selectors.selectedTarget).should('not.exist')
-    cy.get(selectors.textContainer).its('0.scrollTop').should('equal', 0)
   })
 })

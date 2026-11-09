@@ -68,11 +68,9 @@ function matchAnnotations(
       targetNodes.forEach(node => matchedNodes.add(node))
     })
 
-    // an annotation none of whose targets can be resolved in the text is still part of the map -
-    // without targets and shown regardless of the filters, so it does not disappear from the sidebar
-    acc[cur.id] = matchedNodes.size > 0
-      ? { ...matchedAnnotation, target: [...matchedNodes] }
-      : { ...matchedAnnotation, filtered: true, target: [] }
+    // an annotation none of whose targets can be resolved in the text is left out of the map - its
+    // selectors point at nothing in the text, so it is not shown
+    if (matchedNodes.size > 0) acc[cur.id] = { ...matchedAnnotation, target: [...matchedNodes] }
 
     return acc
   }, {})

@@ -108,14 +108,14 @@ const TextAnnotationsLayer: FC<Props> = ({
         onMatchError: (annotation, kind, detail) => report.add(kind, annotation, detail)
       })
 
-      // An entry whose targets are not elements of the text is kept without them - like an annotation
+      // An entry whose targets are not elements of the text is left out of the map - like an annotation
       // whose selector matches nothing - so it neither breaks the binding below nor the styling later.
       // Checked before binding anything, so the listeners only ever go on targets that stay in the map.
-      resultMap = Object.fromEntries(Object.entries(resultMap).map(([id, entry]) => {
-        if (Array.isArray(entry.target) && entry.target.every(el => el instanceof Element)) return [id, entry]
+      resultMap = Object.fromEntries(Object.entries(resultMap).filter(([, entry]) => {
+        if (Array.isArray(entry.target) && entry.target.every(el => el instanceof Element)) return true
 
         report.add('unexpected', entry.annotation, { error: new Error('The matched targets are not elements of the text') })
-        return [id, { ...entry, filtered: true, target: [] as Element[] }]
+        return false
       }))
 
       // What the matching itself no longer does: give the cross reference targets their style and
