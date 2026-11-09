@@ -101,7 +101,9 @@ describe('Panel', () => {
       .click()
       .validateLabel('manifest', 'The Great Gatsby')         // Manifest and item labels should get updated
       .validateLabel('item', 'Page 1')
-      .validateText('I lived at West Egg, the—well')                        // Text area should update
+      // Text area should update. The Great Gatsby lists its diplomatic text first, and the transcription
+      // of the manifest left is no choice of the user, so the new one opens on its first content type.
+      .validateText('I lived at West Egg [ms: West-Egg], the—well')
   })
 
   // it('Should switch to previous item', () => {
@@ -184,7 +186,8 @@ describe('Panel', () => {
     // Update of content
     cy.validateLabel('manifest', 'The Great Gatsby')
     cy.validateLabel('item', 'Page 2')
-    cy.validateText('This is a valley of ashes—a fantastic farm where ashes grow like wheat')
+    // the first content type of The Great Gatsby is its diplomatic text
+    cy.validateText('This is a valley of ashes [gray valley]—a fantastic farm where ashes grow like wheat')
   })
 
   it('Should disable the next button in last manifest last item', () => {

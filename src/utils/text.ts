@@ -19,6 +19,7 @@ import {
 } from './constants'
 import { AnnotationsConfig, FilterNodeWithSelection, FilterType, PanelView } from '@/types'
 import { getAnnotationType } from '@/utils/annotation-data.ts'
+import { findContentByType } from '@/utils/panel.ts'
 
 function addAnnotationId(target: Element, id: string) {
   const ids = getAnnotationIds(target)
@@ -318,8 +319,7 @@ function isParentHovered(hoveredTargets: Element[], parentsEl: Element[]) {
 // Resolve the content url of a text view from its active content type - mirrors TextViewContext,
 // so the per-source syncedTargetsMap can be aggregated in panelViews order.
 function getContentUrlByType(contents: Content[], type: string | undefined) {
-  if (!type) return undefined
-  return contents.find(c => c.contentType.includes(type))?.id
+  return findContentByType(contents, type)?.id
 }
 
 

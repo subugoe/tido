@@ -19,7 +19,6 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     collectionId: null,
     item: null,
     manifest: null,
-    contentTypes: [],
     activeTargetIndex: -1,
     showSidebar: false,
     panelViews: []
