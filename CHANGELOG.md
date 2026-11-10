@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.12](https://github.com/subugoe/tido/compare/v5.0.0-beta.11...v5.0.0-beta.12) (2026-11-10)
+
+
+### Features
+
+* add a config to enable PanelViews to span full viewport width, instead of (viewport - sidebar) ([#1236](https://github.com/subugoe/tido/issues/1236)) ([1c8ff5e](https://github.com/subugoe/tido/commit/1c8ff5eadf8038628058ccbd8600525234cd3c83))
+* add an empty state for image view when the image is missing and is configured in panelViews ([f7c2987](https://github.com/subugoe/tido/commit/f7c29879660210ed492dc1536a3e67ba9a792160))
+* add back greedy initial panel width ([22b269f](https://github.com/subugoe/tido/commit/22b269fea45e96d5e552131dd4cbb22225bb9e4d))
+* add configurable option to display the item level in tree ([#1227](https://github.com/subugoe/tido/issues/1227)) ([a72ac73](https://github.com/subugoe/tido/commit/a72ac73a0d0229032f1aad19c6358f94c1113d02))
+* add make display of a single rootNode in trees as configurable ([#1238](https://github.com/subugoe/tido/issues/1238)) ([a8ee902](https://github.com/subugoe/tido/commit/a8ee902a35b4715fb4fc61c94409b6924cc983b1))
+* add resize handle between the panelViews in a panel ([#1240](https://github.com/subugoe/tido/issues/1240)) ([4d5ae38](https://github.com/subugoe/tido/commit/4d5ae3886a32268e06a913d3ed2e2147d1b506ba))
+* add show existing collections dialog when there is no need for adding dynamic collections in project ([#1225](https://github.com/subugoe/tido/issues/1225)) ([5938a5b](https://github.com/subugoe/tido/commit/5938a5b0b4ea6a3d05676872dc278b62994e61b6))
+* add viewsRatioWidth to enable the projects to display the views in their desired size ([#1235](https://github.com/subugoe/tido/issues/1235)) ([3823ac5](https://github.com/subugoe/tido/commit/3823ac57abba2b2c62fb27fad6961b6199e3f0a4))
+* align an annotation to its uppermost target in any text ([ae2efda](https://github.com/subugoe/tido/commit/ae2efdabb0a47e79d1476a285e71165e73272ab3))
+* completely isolate the translations within a TIDO instance even for the functions outside of react context and for console errors ([d40d6cc](https://github.com/subugoe/tido/commit/d40d6cc4c731aefdb8fcaae6aec49f469885e84a))
+* create a new i18n instance for each reinitialisation of TIDO with a new config (might be a new translations, new lang) ([#1233](https://github.com/subugoe/tido/issues/1233)) ([2e94259](https://github.com/subugoe/tido/commit/2e942592b6cf6f62d8e3a806d6f54bf60dc7fb24))
+* display text warning when there are problems with computing synoptic targets of a text ([159f909](https://github.com/subugoe/tido/commit/159f90955646fa4a6f2d12e1cb0305a2daee81e7))
+* display warning when there are errors with synoptic annotations + catch errors when styling targets in text ([156d6d6](https://github.com/subugoe/tido/commit/156d6d6124c81ead0e5bd0cd9c07da478b948faf))
+* use TextAPI v2 format for assets instead of the old one ([#1219](https://github.com/subugoe/tido/issues/1219)) ([7f80ddd](https://github.com/subugoe/tido/commit/7f80ddd70572f5d8e6cade2afff166b7280d066b))
+
+
+### Bug Fixes
+
+* add scope to querySelectorAll to scope the search of found candidates only to the text ([85f1a50](https://github.com/subugoe/tido/commit/85f1a50129804c7099ee5b85589faeb862028e6e))
+* apply annotations filters correctly when we have multiple type filters configured ([d83ba52](https://github.com/subugoe/tido/commit/d83ba528a69eb09a31c92ff937d0a7a0b39fcdb5))
+* apply the active annotation filters on initial load ([#1203](https://github.com/subugoe/tido/issues/1203)) ([5c321a2](https://github.com/subugoe/tido/commit/5c321a21633be5c6111815ce52af64de567f24b0))
+* dismiss the annotations which do not have a target in text ([e797a5b](https://github.com/subugoe/tido/commit/e797a5b09e660f5a24fe254f08fd00c0bd4776b3))
+* display the annotations in sidebar, even if there were problems with annotation matching in text (i.e selector value error) ([5fb05c8](https://github.com/subugoe/tido/commit/5fb05c8cdbbf89a53223faf54fd93ecc7401d053))
+* display the content in panel header in equal sized columns to prevent the panel Title from not jumping when the "Annotations" button is hidden when no annotations ([3187660](https://github.com/subugoe/tido/commit/318766070f2fadd8fa2c71f475e2aa6cfd5893f4))
+* do not show image view when the `image` is missing [not configured panelViews] + do this check on every item navigation ([#1201](https://github.com/subugoe/tido/issues/1201)) ([3554489](https://github.com/subugoe/tido/commit/3554489c2e5a3b3d45448840e9da104f33851247))
+* handle every annotation in annotation matching on its own (each target separately as well) ([d5de662](https://github.com/subugoe/tido/commit/d5de662c8fe197e8490becbe9a68a4ee9b7f5097))
+* highlight all elements of a synced target whose selector lists several ([#1187](https://github.com/subugoe/tido/issues/1187)) ([5f999a5](https://github.com/subugoe/tido/commit/5f999a5a51865d363d356d3882d649b8f5db1028)), closes [#ab_11](https://github.com/subugoe/tido/issues/ab_11) [#ab_12](https://github.com/subugoe/tido/issues/ab_12)
+* keep the sidebar toggle visible while navigating between items ([155b6e3](https://github.com/subugoe/tido/commit/155b6e3e571631ddf3f82a8f99f347b640a7e2d4))
+* navigate to a new item should update the contentTypes ([#1244](https://github.com/subugoe/tido/issues/1244)) ([b67d62e](https://github.com/subugoe/tido/commit/b67d62e74333837e15e357daeac0ec5bd9e4ada1))
+* open first leaf collection in quick view for collections holding collections ([#1211](https://github.com/subugoe/tido/issues/1211)) ([8e0952c](https://github.com/subugoe/tido/commit/8e0952cbeb4dbd7f7948e510d877f87b062df046))
+* resizing the panel should not change the zoom level of image ([#1228](https://github.com/subugoe/tido/issues/1228)) ([550daf1](https://github.com/subugoe/tido/commit/550daf197a55eafb521b5df781c434a552122ad6))
+* resolve the content types of text views from config and user choice ([f01583c](https://github.com/subugoe/tido/commit/f01583c68268091382297edab72f2d23076ec717))
+* restore contentTypes as part of text view ([ccb8747](https://github.com/subugoe/tido/commit/ccb87478d8609366cd4e469488a11fdcc8345dba))
+* scroll in text even when sidebar is open ([#1204](https://github.com/subugoe/tido/issues/1204)) ([338f69e](https://github.com/subugoe/tido/commit/338f69ef657c4525c78d0e7998851bf222fcb9cf))
+* show only the manifest label if manifest has only one item and manifest's label is same as the item's label ([#1190](https://github.com/subugoe/tido/issues/1190)) ([789429a](https://github.com/subugoe/tido/commit/789429a27a2ab96607539beaa7109acb891fbd81))
+* update "htmlString" and "activeContentUrl" simultaneously when rendering a new text to prevent inconsistencies ([00cb2a5](https://github.com/subugoe/tido/commit/00cb2a5f8b145ae05fa18cf50abc87a6234b4829))
+
+
+### Refactoring
+
+* display warning when there occurred even an annotation with wrong selector or no matched node in text ([46bdfad](https://github.com/subugoe/tido/commit/46bdfad207e17416e6893850241b6cfbc093ccbf))
+* render text in generic text renderer and make computations regarding annotations and text in a new component + show in tooltip several warnings regarding annotations errors ([cf8b573](https://github.com/subugoe/tido/commit/cf8b5735ee42bc29247d59d4017e758ba8f60526))
+* update the matchedAnnotationsMaps directly in GenericTextRenderer instead of passing it to TextRenderer ([fe3e6e1](https://github.com/subugoe/tido/commit/fe3e6e102f8544627887efd943df2b394d50d7fa))
+
 ## [5.0.0-beta.11](https://github.com/subugoe/tido/compare/v5.0.0-beta.10...v5.0.0-beta.11) (2026-10-13)
 
 
