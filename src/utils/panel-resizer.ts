@@ -15,15 +15,12 @@ import { PanelConfig } from '@/types'
 // the width it needs, so it stays visible as long as the panels do not fill the whole row.
 // When the room left is too small for a minimum width, the panels fall back to MIN_PANEL_WIDTH.
 // A panel with showViewportWidth takes the full width of the wrapper on its own, without room for a
-// sidebar - a sidebar opened in it is added beyond the viewport. The other panels share the room as
-// if it were not there.
+// sidebar - when a sidebar is opened in it, its main content shrinks so the panel still fits into the
+// viewport (see PanelResizer.setShowSidebar). The other panels share the room as if it were not there.
 function getInitialPanelWidths(wrapper: HTMLElement, configs: PanelConfig[]): number[] {
   if (configs.length === 0) return []
 
-  const wrapperStyle = window.getComputedStyle(wrapper)
-  const contentWidth = wrapper.clientWidth
-    - (parseFloat(wrapperStyle.paddingLeft) || 0)
-    - (parseFloat(wrapperStyle.paddingRight) || 0)
+  const contentWidth = getWrapperContentWidth(wrapper)
 
   const sharingCount = configs.filter(config => !config.showViewportWidth).length
 
@@ -37,6 +34,14 @@ function getInitialPanelWidths(wrapper: HTMLElement, configs: PanelConfig[]): nu
   const contentPerPanel = (contentWidth - gutters - sidebarRoom) / sharingCount
 
   return configs.map((config) => Math.max(MIN_PANEL_WIDTH, config.showViewportWidth ? contentWidth : contentPerPanel))
+}
+
+// The width the panels wrapper leaves for its panels: the viewport the panels are laid out in.
+function getWrapperContentWidth(wrapper: HTMLElement): number {
+  const wrapperStyle = window.getComputedStyle(wrapper)
+  return wrapper.clientWidth
+    - (parseFloat(wrapperStyle.paddingLeft) || 0)
+    - (parseFloat(wrapperStyle.paddingRight) || 0)
 }
 
 class PanelResizer {
@@ -56,6 +61,11 @@ class PanelResizer {
   isSidebarResizing = false
   showSidebar = false
   lastWidth: number | null = null
+  // The panel width right before the sidebar was opened. Closing the sidebar restores it, so the main
+  // content gets back exactly the width it had, even if it was shrunk to fit the sidebar into the
+  // viewport. Dropped when the user resizes the panel edge while the sidebar is open.
+  private widthBeforeSidebar: number | null = null
+  private scrollIntoViewTimeout: ReturnType<typeof setTimeout> | null = null
 
   private isDragToResizeInitialized = false
   private isSidebarResizeInitialized = false
@@ -165,6 +175,7 @@ class PanelResizer {
 
         if (newWidth < MIN_PANEL_WIDTH + (this.showSidebar ? this.sidebarWidth : 0)) return
 
+        this.widthBeforeSidebar = null
         this.onResizePanel(newWidth)
         return
       }
@@ -298,22 +309,86 @@ class PanelResizer {
     this.showSidebar = isOpen
 
     if (isOpen) {
-      const newWidth = this.lastWidth + this.sidebarWidth
-      this.onResizePanel(newWidth)
+      this.widthBeforeSidebar = this.lastWidth
+      this.onResizePanel(this.getWidthWithSidebar())
       this.initSidebarResize()
+      this.scrollIntoView()
     } else {
-      // Reset sidebarWidth before onResizePanel so the subtraction uses the right value
+      // Without a remembered width (the panel edge was dragged while the sidebar was open), the main
+      // content keeps its current width. Computed before resetting sidebarWidth, which may have been
+      // changed by dragging the split.
+      const newWidth = this.widthBeforeSidebar ?? this.lastWidth - this.sidebarWidth
+      this.widthBeforeSidebar = null
       this.sidebarWidth = SIDEBAR_DEFAULT_WIDTH
 
       // Clear any manual drag overrides so onResizePanel takes full control
       this.mainContentEl.style.width = ''
-      this.sidebarEl.style.left = ''
-      this.sidebarEl.style.width = ''
+      if (this.sidebarEl) {
+        this.sidebarEl.style.left = ''
+        this.sidebarEl.style.width = ''
+      }
 
-      const newWidth = this.lastWidth - this.sidebarWidth
       this.onResizePanel(newWidth)
       this.teardownSidebarResize()
     }
+  }
+
+  // The sidebar is added to the panel's width, but only as far as the free room in the row of panels
+  // allows - the main content is squeezed for the rest, so opening the sidebar does not make the
+  // panels wrapper scroll horizontally. The content never gets narrower than MIN_PANEL_WIDTH; when
+  // even that does not fit (e.g. many panels), the row overflows and scrollIntoView takes over.
+  private getWidthWithSidebar(): number {
+    const desired = this.lastWidth + this.sidebarWidth
+    if (!this.wrapper) return desired
+
+    const freeRoom = getWrapperContentWidth(this.wrapper) - this.getRowWidth()
+    const maxWidth = this.lastWidth + Math.max(0, freeRoom)
+    return Math.max(MIN_PANEL_WIDTH + this.sidebarWidth, Math.min(desired, maxWidth))
+  }
+
+  // The width all items of the panels wrapper (panels, gaps, placeholder) take up. This panel counts
+  // with lastWidth rather than its rendered width, which may still be mid-transition.
+  private getRowWidth(): number {
+    return Array.from(this.wrapper.children).reduce((sum, child) => {
+      const el = child as HTMLElement
+      const style = window.getComputedStyle(el)
+      if (style.display === 'none' || style.position === 'absolute' || style.position === 'fixed') return sum
+
+      const margins = (parseFloat(style.marginLeft) || 0) + (parseFloat(style.marginRight) || 0)
+      const width = el === this.panelEl ? this.lastWidth : el.getBoundingClientRect().width
+      return sum + width + margins
+    }, 0)
+  }
+
+  // Scroll the panels wrapper so the whole panel - including the newly opened sidebar - is visible.
+  // Waits for the width transition, otherwise the wrapper cannot scroll far enough yet.
+  private scrollIntoView() {
+    if (this.scrollIntoViewTimeout) clearTimeout(this.scrollIntoViewTimeout)
+
+    this.scrollIntoViewTimeout = setTimeout(() => {
+      this.scrollIntoViewTimeout = null
+      if (!this.wrapper || !this.showSidebar || document.fullscreenElement) return
+
+      const wrapperStyle = window.getComputedStyle(this.wrapper)
+      const paddingLeft = parseFloat(wrapperStyle.paddingLeft) || 0
+      const paddingRight = parseFloat(wrapperStyle.paddingRight) || 0
+
+      const wrapperRect = this.wrapper.getBoundingClientRect()
+      const panelRect = this.panelEl.getBoundingClientRect()
+      const scrollLeft = this.wrapper.scrollLeft
+      const panelLeft = panelRect.left - wrapperRect.left + scrollLeft
+      const panelRight = panelLeft + panelRect.width
+
+      // Bring the right edge into view first; the left edge wins if both cannot be visible.
+      let target = scrollLeft
+      if (panelRight > scrollLeft + this.wrapper.clientWidth - paddingRight) {
+        target = panelRight - this.wrapper.clientWidth + paddingRight
+      }
+      if (panelLeft < target + paddingLeft) target = panelLeft - paddingLeft
+      if (target === scrollLeft) return
+
+      this.wrapper.scrollTo({ left: target, behavior: 'smooth' })
+    }, 200)
   }
 
   setSidebarWidth(value: number) {
@@ -331,6 +406,9 @@ class PanelResizer {
     this.sidebarEventListeners = []
     this.isDragToResizeInitialized = false
     this.isSidebarResizeInitialized = false
+
+    if (this.scrollIntoViewTimeout) clearTimeout(this.scrollIntoViewTimeout)
+    this.scrollIntoViewTimeout = null
   }
 }
 
