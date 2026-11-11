@@ -14,7 +14,8 @@ import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
 import PaneResizeHandles from '@/components/panel/PaneResizeHandles.tsx'
 import Loading from '@/components/ui/loading.tsx'
-import { getContentUrlByType } from '@/utils/text.ts'
+import { shownViews, visibleTextSources } from '@/utils/panel-views.ts'
+import EmptyViews from '@/components/panel/views/EmptyViews.tsx'
 import { PanelView } from '@/types'
 
 const PanelContent: FC = React.memo(() => {
@@ -25,7 +26,10 @@ const PanelContent: FC = React.memo(() => {
   const allotmentContainerRef = useRef<HTMLDivElement>(null)
 
 
-  const visibleViews = panelState.panelViews.filter(v => v.visible ?? true)
+  // the views shown on the current item - the panel shows an empty state when there are none
+  const views = shownViews(panelState.panelViews)
+  const showsNoView = !loading && !!panelState.item && views.length === 0
+  const visibleViews = views.filter(v => v.visible ?? true)
   // the preferred sizes are computed before rendering - when we call allotment.reset() -> Allotment uses the updated preferred sizes.
   // Each visible view gets its share of the width ratios of the visible views, or an equal share without ratios.
   const hasRatios = visibleViews.length > 0 && visibleViews.every(v => v.widthRatio > 0)
@@ -36,11 +40,11 @@ const PanelContent: FC = React.memo(() => {
   }
 
   useEffect(() => {
-    const panes = panelState.panelViews.map((v, i) => {
-      const key = `${v.view}-${v.label || 'default'}-${i}`
+    const panes = shownViews(panelState.panelViews).map((v) => {
+      const key = `${v.view}-${v.label || 'default'}-${v.key}`
       const visible = v.visible ?? true
       if (v.view === 'image') return <ImageView key={key} />
-      else return <TextView key={key} viewIndex={i} visible={visible} />
+      else return <TextView key={key} viewKey={v.key} visible={visible} />
     })
 
     allotmentRef.current?.reset()
@@ -51,16 +55,9 @@ const PanelContent: FC = React.memo(() => {
   // order and only including the visible text views. Re-runs when the views change or when a
   // renderer adds/updates its targets in syncedTargetsMap.
   useEffect(() => {
-    const aggregated = panelState.panelViews.reduce<HTMLElement[]>((acc, view) => {
-      const visible = view.visible ?? true
-      if (view.view !== 'text' || !visible) return acc
-      const url = getContentUrlByType(panelState.item.contents, view.activeContentType)
-      const targets = url ? syncedTargetsMap[url] : undefined
-      if (targets) acc.push(...targets)
-      return acc
-    }, [])
+    const aggregated = visibleTextSources(panelState).flatMap(source => syncedTargetsMap[source.contentUrl] ?? [])
     setSyncedTargets(aggregated)
-  }, [panelState.panelViews, syncedTargetsMap])
+  }, [panelState.panelViews, panelState.item, syncedTargetsMap])
 
 
   useEffect(() => {
@@ -96,16 +93,17 @@ const PanelContent: FC = React.memo(() => {
         <div className="main-content flex flex-col h-full @container/panel">
           <PanelHeader />
           <div className="flex-1" ref={allotmentContainerRef}>
-            <Allotment ref={allotmentRef} proportionalLayout={true}>
+            {showsNoView && <EmptyViews />}
+            {!showsNoView && <Allotment ref={allotmentRef} proportionalLayout={true}>
               {contentPanes.map((pane, index) => {
-                const view = panelState.panelViews[index]
+                const view = views[index]
                 const visible = view?.visible ?? true
                 return <Allotment.Pane key={pane.key} visible={visible} preferredSize={view ? getPreferredSize(view) : undefined}>
                   {pane}
                 </Allotment.Pane>
               })}
-            </Allotment>
-            <PaneResizeHandles containerRef={allotmentContainerRef} />
+            </Allotment>}
+            {!showsNoView && <PaneResizeHandles containerRef={allotmentContainerRef} />}
           </div>
           <PanelFooter />
         </div>

@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
-import { findContentByType } from '@/utils/panel.ts'
+import { visibleTextSources } from '@/utils/panel-views.ts'
 import { Badge } from '@/components/ui/badge.tsx'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
 import WitnessItem from '@/components/panel/annotations/popover/items/Synopsis/WitnessItem.tsx'
@@ -44,11 +44,7 @@ const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
       const panel = source.item ? panels.find((p) => p.item?.id === source.item) : undefined
 
       // among that panel's currently visible views, is there a text view showing text with content url source.id?
-      opened[source.id] = !!panel?.panelViews.some((view) => {
-        if (view.view !== 'text' || (view.visible ?? true) === false || !view.activeContentType) return false
-        const content = findContentByType(panel.item?.contents, view.activeContentType)
-        return content?.id === source.id
-      })
+      opened[source.id] = !!panel && visibleTextSources(panel).some(s => s.contentUrl === source.id)
     })
 
     setOpenedWitnesses(opened)

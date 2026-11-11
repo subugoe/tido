@@ -4,7 +4,7 @@ import { sanitize } from '@/utils/text-sanitize.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useErrorBoundary } from 'react-error-boundary'
 import { logError } from '@/utils/custom-error.ts'
-import { chooseContentType, findContentByType } from '@/utils/panel.ts'
+import { chooseContentType, textSources } from '@/utils/panel-views.ts'
 
 type State = {
   // translation keys of the problems found for this text, each one listed once
@@ -29,16 +29,16 @@ type State = {
 const TextViewContext = createContext<State>(null)
 
 export const TextViewProvider = ({
-  viewIndex,
+  viewKey,
   visible,
   children
 }: {
-  viewIndex: number
+  viewKey: number
   visible: boolean
   children: ReactNode
 }) => {
   const { panelState, loading: loadingPanel, usePanelTranslation, updatePanel, annotationsError } = usePanel()
-  const view = panelState.panelViews[viewIndex]
+  const view = panelState.panelViews.find(v => v.key === viewKey)
   const { activeContentType, label } = view ?? {}
   const contentTypes = useMemo(() => view?.contentTypes ?? [], [view?.contentTypes])
   // A view restricted to content types the item does not offer shows a notice instead of a text
@@ -77,8 +77,8 @@ export const TextViewProvider = ({
   // of only on the panel loading state) makes the text reload whenever the item actually changes -
   // the loading flag alone can miss a transition when two navigations overlap.
   const contentUrl = useMemo(
-    () => findContentByType(panelState?.item?.contents, activeContentType)?.id,
-    [panelState?.item, activeContentType]
+    () => panelState ? textSources(panelState).find(source => source.viewKey === viewKey)?.contentUrl : undefined,
+    [panelState, viewKey]
   )
 
   useEffect(() => {
@@ -143,7 +143,7 @@ export const TextViewProvider = ({
 
   // A choice of the user: it becomes the preferred content type of the view, kept on every following item
   function setActiveContentType(type: string) {
-    updatePanel({ panelViews: chooseContentType(type, viewIndex, panelState.panelViews) })
+    updatePanel({ panelViews: chooseContentType(panelState.panelViews, viewKey, type) })
   }
 
   return (

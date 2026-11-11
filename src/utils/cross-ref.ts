@@ -1,6 +1,6 @@
 import { validateCollection, validateItem, validateManifest } from '@/utils/api-validate.ts'
 import { CustomError } from '@/utils/custom-error.ts'
-import { getContentTypes } from '@/utils/panel.ts'
+import { getContentTypes } from '@/utils/panel-views.ts'
 import { validateSelector } from '@/utils/dom.ts'
 
 async function validateCrossRefNode(crossRefInfo: CrossRefInfo)  {

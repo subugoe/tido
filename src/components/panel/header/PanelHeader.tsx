@@ -15,6 +15,7 @@ import PanelTitle from '@/components/panel/header/PanelTitle.tsx'
 import { useManifestSwitcher } from '@/components/panel/header/useManifestSwitcher.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { shownViews } from '@/utils/panel-views.ts'
 import { PANEL_HEADER_HEIGHT } from '@/utils/constants.ts'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 import CollectionTitle from '@/components/panel/header/CollectionTitle.tsx'
@@ -25,6 +26,7 @@ import { ButtonGroup } from '@/components/ui/button-group.tsx'
 import { cn } from '@/lib/utils'
 
 interface PanelView {
+  key: number
   icon: LucideIcon
   label: string
   visible: boolean
@@ -79,7 +81,9 @@ const PanelHeader: FC = () => {
   const { showCollectionTitle } = useConfig()
 
   useEffect(() => {
-    const data = panelState.panelViews.map(({ view, label, visible }) => ({
+    // only the views shown on the current item can be toggled
+    const data = shownViews(panelState.panelViews).map(({ key, view, label, visible }) => ({
+      key,
       icon: view === 'text' ? AlignCenter : view === 'image' ? Image : FileQuestionMark,
       label,
       visible
@@ -90,9 +94,9 @@ const PanelHeader: FC = () => {
   function updateView(index: number, visible: boolean) {
     if (!visible && views.filter(v => v.visible).length === 1) return
 
-    views[index].visible = visible
+    const { key } = views[index]
     updatePanel({
-      panelViews: views.map(({ visible }, i) => ({ ...panelState.panelViews[i], visible }))
+      panelViews: panelState.panelViews.map(view => view.key === key ? { ...view, visible } : view)
     })
   }
 

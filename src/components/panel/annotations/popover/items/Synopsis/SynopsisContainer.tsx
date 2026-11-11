@@ -3,8 +3,8 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
-import { createNewPanel, findContentByType, findTextViewIndexForContentType, getContentType, getContentTypes, resolveActiveContentType, setNewActiveContentType } from '@/utils/panel.ts'
-import { PanelViewState } from '@/types'
+import { createNewPanel } from '@/utils/panel.ts'
+import { configureViews, showContent, viewsShowingContent, visibleTextSources } from '@/utils/panel-views.ts'
 import { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import SynopsisContent from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContent.tsx'
 import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
@@ -18,17 +18,13 @@ interface Props {
 // Whether a synced target's source content is loaded in a panel AND visible via a text view.
 function isWitnessOpened(source: AnnotationTargetSource, panels: PanelState[]): boolean {
   const panel = source.item ? panels.find((p) => p.item?.id === source.item) : undefined
-  return !!panel?.panelViews.some((view) => {
-    if (view.view !== 'text' || (view.visible ?? true) === false || !view.activeContentType) return false
-    const content = findContentByType(panel.item?.contents, view.activeContentType)
-    return content?.id === source.id
-  })
+  return !!panel && visibleTextSources(panel).some(s => s.contentUrl === source.id)
 }
 
 const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
   const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
-  const { panelViews: panelViewsConfig } = useConfig()
+  const config = useConfig()
   const { handleSynopsisSelection } = useSynopsis()
 
   const targets = syncTargets.otherSyncedTargets
@@ -51,33 +47,6 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
     handleSynopsisSelection({ ...syncTargets, otherSyncedTargets: selectedTargets })
   }
 
-  // The index of the panel's text view showing the synced content (source.id), or -1 when the panel
-  // has no view for it. A view found here may still be hidden.
-  function findSyncedTextViewIndex(panel: PanelState, source: AnnotationTargetSource): number {
-    return panel.panelViews.findIndex((view) => {
-      if (view.view !== 'text' || !view.activeContentType) return false
-      const content = findContentByType(panel.item?.contents, view.activeContentType)
-      return content?.id === source.id
-    })
-  }
-
-  // Build a text view that displays the synced content of the given panel's item.
-  function buildSyncedTextView(panel: PanelState, source: AnnotationTargetSource): PanelViewState {
-    const contentTypes = panel.item ? getContentTypes(panel.item.contents) : []
-    const content = panel.item?.contents?.find((c) => c.id === source.id)
-    const activeContentType = content ? getContentType(content) : undefined
-
-    return {
-      view: 'text',
-      label: activeContentType ?? t('text'),
-      contentTypes,
-      activeContentType: resolveActiveContentType(contentTypes, activeContentType),
-      // the synced content type counts as chosen by the user, so it is kept on the following items
-      preferredContentType: activeContentType,
-      visible: true
-    }
-  }
-
   // Replace the existing panels (except the current one) with a fresh panel per selected witness.
   function openWithSubstitute(selectedTargets: SyncedTargetRef[]) {
     // remove all panels except the current one so new ones open to its right
@@ -95,11 +64,8 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
   }
 
   function openAdditionalPanel(selectedTargets: SyncedTargetRef[]) {
-    // Idea
-    // - Case 1 — the source item is not open in any panel → openInNewPanel(source).
-    // - Case 2 — its panel already has a view for the source content url (source.id) → show that view.
-    // - Case 3 — its panel has no view for that content → append the synced text view.
-    // Cases 2 and 3 differ only in the views they hand to the panel, so both end in the same update.
+    // The source item is opened in a new panel when no panel shows it - otherwise its panel shows the
+    // source content (see showContent).
 
     const panels = usePanelStore.getState().panels
 
@@ -107,20 +73,13 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
       const { source } = syncTarget
       if (!source.item) return
 
-      // 1) the panel the source item is open in - without one there is nothing to update
       const panel = panels.find((panel) => panel.item?.id === source.item)
       if (!panel) {
         openInNewPanel(source)
         return
       }
 
-      const syncedViewIndex = findSyncedTextViewIndex(panel, source)
-
-      const panelViews = syncedViewIndex === -1
-        ? [...panel.panelViews, buildSyncedTextView(panel, source)]
-        : panel.panelViews.map((view, i) => i === syncedViewIndex ? { ...view, visible: true } : view)
-
-      usePanelStore.getState().updatePanel(panel.id, { panelViews })
+      usePanelStore.getState().updatePanel(panel.id, { panelViews: showContent(panel.panelViews, panel.item, source.id) })
     })
   }
 
@@ -132,20 +91,9 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
       const manifest = await useDataStore.getState().initManifest(source.manifest)
       const item = await useDataStore.getState().initItem(source.item)
 
-      // find the content type that corresponds to the synced content (source.id), so the new
-      // panel opens the text view that shows exactly that content instead of the default one.
-      const content = item.contents?.find((c) => c.id === source.id)
-      const activeContentType = content ? getContentType(content) : undefined
-      const textViewIndex = findTextViewIndexForContentType(panelViewsConfig, activeContentType)
-
-      const newPanelId = crypto.randomUUID()
-      await createNewPanel(
-        source.collection,
-        manifest,
-        item,
-        activeContentType ? setNewActiveContentType(activeContentType, textViewIndex, panelViewsConfig) : panelViewsConfig,
-        newPanelId
-      )
+      // the new panel shows exactly the synced content (source.id) instead of its default one
+      const views = viewsShowingContent(configureViews(config), item, source.id)
+      await createNewPanel(source.collection, manifest, item, crypto.randomUUID(), { views })
     } catch (e) {
       logError(e, t)
     }
