@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example-synopsis-scroll/annotations/annotationCollection/book2-page1.json",
+  "type": "AnnotationCollection",
+  "label": "Annotations for Harbour Letters",
+  "total": 0,
+  "first": "http://localhost:8181/example-synopsis-scroll/annotations/annotationPage/book2-page1.json",
+  "last": "http://localhost:8181/example-synopsis-scroll/annotations/annotationPage/book2-page1.json"
+}
