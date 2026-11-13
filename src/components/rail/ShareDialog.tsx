@@ -2,8 +2,7 @@ import { FC, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button.tsx'
 import { Check, Copy } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { usePanelStore } from '@/store/PanelStore.tsx'
-import { createContentState, encodeState } from '@/utils/bookmarking.ts'
+import { getShareUrl } from '@/utils/share.ts'
 import { Input } from '@/components/ui/input.tsx'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx'
 
@@ -20,13 +19,7 @@ const ShareDialog: FC<ShareDialogProps> = ({ open, onOpenChange }) => {
   const inputRef = useRef(null)
 
   async function generate() {
-    const panelStates = usePanelStore.getState().panels
-    const contentState = createContentState(panelStates)
-    const encoded = await encodeState(contentState)
-    const url = new URL(window.location.href)
-
-    url.searchParams.set('tido', encoded)
-    setLink(url.toString())
+    setLink(await getShareUrl())
   }
 
   async function copyLink() {

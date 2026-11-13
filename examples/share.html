@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head><title>TIDO - Custom share dialog</title>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="dist/tido.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    header p {
+      margin: 0;
+    }
+
+    .share-button {
+      margin-left: auto;
+      height: 38px;
+      padding: 4px 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: white;
+      color: #222;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .share-button:hover:not(:disabled) {
+      background: #eee;
+    }
+
+    .share-button:disabled {
+      color: #999;
+      cursor: default;
+    }
+
+    #share-dialog {
+      width: min(560px, calc(100vw - 32px));
+      padding: 24px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+    }
+
+    #share-dialog::backdrop {
+      background: rgb(0 0 0 / 40%);
+    }
+
+    #share-dialog h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    #share-dialog p {
+      margin: 0 0 16px;
+      color: #666;
+    }
+
+    #share-dialog .row {
+      display: flex;
+      gap: 8px;
+    }
+
+    #share-dialog input {
+      flex: 1;
+      min-width: 0;
+      height: 38px;
+      padding: 4px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    #share-dialog .error {
+      margin: 16px 0 0;
+      color: #b91c1c;
+    }
+
+    #share-dialog form {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+<noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
+  continue.</strong></noscript>
+
+<!-- The share UI belongs to the host page: TIDO's own "Share" button is hidden with "showShareButton" -->
+<header>
+  <a class="home" href="./">TIDO</a>
+  <p>Custom share dialog with <code>Tido.getShareUrl()</code></p>
+  <button id="share-button" class="share-button" type="button" disabled>Share this view</button>
+</header>
+
+<div id="app"></div>
+
+<dialog id="share-dialog">
+  <h2>Share this view</h2>
+  <p>This link restores the panels as you see them now.</p>
+  <div class="row">
+    <input id="share-url" type="text" readonly aria-label="Share URL">
+    <button id="copy-button" class="share-button" type="button">Copy link</button>
+  </div>
+  <p id="share-error" class="error" hidden></p>
+  <form method="dialog">
+    <button class="share-button">Close</button>
+  </form>
+</dialog>
+
+<script src="dist/tido.min.js"></script>
+<script>
+  const collection = new URL('./api/collections/example.json', window.location.href).href
+
+  const shareButton = document.getElementById('share-button')
+  const copyButton = document.getElementById('copy-button')
+  const dialog = document.getElementById('share-dialog')
+  const urlInput = document.getElementById('share-url')
+  const error = document.getElementById('share-error')
+
+  const tido = new Tido({
+    panels: [{ collection }],
+    rootCollections: [collection],
+    showShareButton: false
+  })
+
+  // getShareUrl rejects while the panels are still loading, so the button is enabled when TIDO is ready
+  tido.onReady = () => {
+    shareButton.disabled = false
+  }
+
+  shareButton.addEventListener('click', async () => {
+    urlInput.value = ''
+    error.hidden = true
+    dialog.showModal()
+
+    try {
+      // The state is added as "tido" param to the current location.
+      // Pass { baseUrl: '...' } if the page to share has a different url.
+      urlInput.value = await Tido.getShareUrl()
+      urlInput.select()
+    } catch (e) {
+      error.textContent = e.message
+      error.hidden = false
+    }
+  })
+
+  copyButton.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(urlInput.value)
+    copyButton.textContent = 'Copied'
+    setTimeout(() => { copyButton.textContent = 'Copy link' }, 2000)
+  })
+</script>
+</body>
+</html>

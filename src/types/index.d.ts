@@ -269,6 +269,7 @@ export interface TidoConfig {
   showContentTypeToggle: boolean
   showGlobalTree: boolean
   showPanelPlaceholder: boolean
+  showShareButton: boolean
   showThemeToggle: boolean
   showCrossRefLabels: boolean
   showSynopsisNavigation: boolean
@@ -368,5 +369,11 @@ export interface TidoInstance {
 export declare class Tido extends React.Component<TidoProps, never> {}
 export declare function encodeState(state: TidoContentState): Promise<string>
 export declare function decodeState(encoded: string): Promise<TidoContentState>
+
+export interface GetShareUrlOptions {
+  // the url the state is added to as "tido" param - the current location by default
+  baseUrl?: string
+}
+export declare function getShareUrl(options?: GetShareUrlOptions): Promise<string>
 
 export {}

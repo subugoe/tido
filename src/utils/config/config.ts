@@ -117,6 +117,19 @@ function validateShowNewCollectionButton(input: unknown): ValidationResult<TidoC
   return { result, errors }
 }
 
+function validateShowShareButton(input: unknown): ValidationResult<TidoConfig['showShareButton']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'boolean'
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['showShareButton'] = 'must be a boolean'
+        return defaultConfig.showShareButton
+      })()
+  return { result, errors }
+}
+
 function validateShowCollectionTitle(input: unknown): ValidationResult<TidoConfig['showCollectionTitle']> {
   const errors: Record<string, string> = {}
   const result =
@@ -394,6 +407,7 @@ export async function mergeAndValidateConfig(
   const showContentTypeToggle = validateShowContentTypeToggle(userConfig.showContentTypeToggle)
   const showGlobalTree = validateGlobalTree(userConfig.showGlobalTree)
   const showPanelPlaceholder = validateShowPanelPlaceholder(userConfig.showPanelPlaceholder)
+  const showShareButton = validateShowShareButton(userConfig.showShareButton)
   const showThemeToggle = validateShowThemeToggle(userConfig.showThemeToggle)
   const showCrossRefLabels = validateShowCrossRefLabels(userConfig.showCrossRefLabels)
   const showSynopsisNavigation = validateShowSynopsisNavigation(userConfig.showSynopsisNavigation)
@@ -414,6 +428,7 @@ export async function mergeAndValidateConfig(
     ...showContentTypeToggle.errors,
     ...showGlobalTree.errors,
     ...showPanelPlaceholder.errors,
+    ...showShareButton.errors,
     ...showThemeToggle.errors,
     ...showCrossRefLabels.errors,
     ...showSynopsisNavigation.errors,
@@ -511,6 +526,7 @@ export async function mergeAndValidateConfig(
     showContentTypeToggle: showContentTypeToggle.result,
     showGlobalTree: showGlobalTree.result,
     showPanelPlaceholder: showPanelPlaceholder.result,
+    showShareButton: showShareButton.result,
     showThemeToggle: showThemeToggle.result,
     showCrossRefLabels: showCrossRefLabels.result,
     showSynopsisNavigation: showSynopsisNavigation.result,

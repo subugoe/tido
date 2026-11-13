@@ -11,6 +11,7 @@ const defaultConfig: TidoConfig = {
   showContentTypeToggle: true,
   showGlobalTree: true,
   showPanelPlaceholder: true,
+  showShareButton: true,
   showThemeToggle: true,
   showCrossRefLabels: true,
   showSynopsisNavigation: true,

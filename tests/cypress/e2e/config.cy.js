@@ -65,6 +65,10 @@ describe('Config', () => {
   runConfigTest('showAddNewPanelButton=false', 'showAddNewPanelButton false', () => {
     cy.get('[data-cy="new-panel"]').should('not.exist')
   });
+  runConfigTest('showShareButton=false', 'showShareButton false', () => {
+    cy.get('[data-cy="rail-sidebar"]').should('be.visible')
+    cy.get('[data-cy="share"]').should('not.exist')
+  });
   runConfigTest('showContentTypeToggle=false&panels[0].collection=http://localhost:8181/4w/collections/transcriptions.json', 'showContentTypeToggle false hides TextOptions', () => {
     cy.get('[data-cy="content-type"]').should('not.exist')
   });

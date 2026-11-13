@@ -5,7 +5,8 @@ import '@/css/style.css'
 import { Tido as TidoApp } from './components/Tido.tsx'
 import { defaultConfig } from '@/utils/config/default-config.ts'
 import { encodeState, decodeState } from '@/utils/bookmarking.ts'
-import { TidoConfig, TidoInstance, ThemeConfig, TidoContentState } from '@/types'
+import { getShareUrl } from '@/utils/share.ts'
+import { TidoConfig, TidoInstance, ThemeConfig, TidoContentState, GetShareUrlOptions } from '@/types'
 import { useUIStore } from '@/store/UIStore.tsx'
 
 declare global {
@@ -13,6 +14,7 @@ declare global {
     Tido: TidoInstance & {
       encodeState: (state: TidoContentState) => Promise<string>
       decodeState: (encoded: string) => Promise<TidoContentState>
+      getShareUrl: (options?: GetShareUrlOptions) => Promise<string>
     }
   }
 }
@@ -47,5 +49,6 @@ const tidoInstance = Tido as unknown as Window['Tido']
 window.Tido = tidoInstance
 window.Tido.encodeState = encodeState
 window.Tido.decodeState = decodeState
+window.Tido.getShareUrl = getShareUrl
 
 export default window.Tido

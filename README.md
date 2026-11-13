@@ -33,6 +33,7 @@ and also view our production examples.
   - [How it works](#how-it-works)
   - [Working with the state object](#working-with-the-state-object)
   - [Encoding/Decoding](#encodingdecoding)
+  - [Creating the share URL programmatically](#creating-the-share-url-programmatically)
 - [Text Sanitization](#text-sanitization)
   - [Forbidden Tags](#forbidden-tags)
   - [Allowed Attributes](#allowed-attributes)
@@ -50,6 +51,7 @@ and also view our production examples.
   - [Testing](#testing)
     - [Quick Test Run](#quick-test-run)
     - [Testing In Detail](#testing-in-detail)
+    - [Unit Tests](#unit-tests)
   - [Linting](#linting)
   - [Generate TextAPI support table](#generate-textapi-support-table)
 - [TextAPI Support](#textapi-support)
@@ -554,6 +556,15 @@ Toggles the display of the global tree on the left. When false the toggle button
 
 ---
 
+##### `showShareButton`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Toggles the display of the "Share" button. Set it to false when your application provides its own share UI, see [Creating the share URL programmatically](#creating-the-share-url-programmatically).
+
+---
+
 ##### `showSynopsisNavigation`
 
 - **Type:** Boolean
@@ -1018,6 +1029,32 @@ In case you want to implement the mechanism yourself, here is the procedure:
   3. GZIP-decompress the binary
   4. Parse JSON string to object
 
+### Creating the share URL programmatically
+If your application brings its own share UI, you can hide the "Share" button with [`showShareButton`](#showsharebutton)
+and create the URL yourself. `getShareUrl` returns the same URL as the share dialog: the current state of all panels,
+set as `tido` GET-parameter.
+
+```JavaScript
+import { Tido, getShareUrl } from 'tido'
+
+<Tido config={{ showShareButton: false }} />
+
+// e.g. in the click handler of your own dialog
+const url = await getShareUrl()
+```
+
+With the embedded bundle the function is available as `Tido.getShareUrl()`.
+
+By default the parameter is added to the current location. Pass a `baseUrl` if the page to share has a different URL:
+
+```JavaScript
+const url = await getShareUrl({ baseUrl: 'https://example.com/edition' })
+```
+
+The returned promise rejects while a panel is still loading, so call the function after `onReady` has fired.
+
+A complete page with its own share button and dialog is in [`examples/share.html`](examples/share.html).
+
 ## Text Sanitization
 
 TIDO uses [DOMPurify](https://github.com/cure53/DOMPurify) to sanitize the incoming text in order to provide
@@ -1167,6 +1204,12 @@ Now you can run the tests on your local machine with a proper Cypress UI and sel
 or run the tests only in headless mode which will prompt the results on the console.
 
 - `npm run cypress` or `npm run cypress:headless`
+
+#### Unit Tests
+
+Logic that does not need a browser is covered by unit tests next to the modules they test (`src/**/*.test.ts`). They run on the source code with [Vitest](https://vitest.dev) and need neither a build nor the mock API:
+
+- `npm run test:unit`
 
 ### Linting
 
