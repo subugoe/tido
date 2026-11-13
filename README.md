@@ -346,6 +346,15 @@ Specifies the CSS selector where we should append the TIDO app to.
 
 ---
 
+##### `hideEmptyViews`
+
+- **Type:** (`image` | `text`)[]
+- **Default:** `["image", "text"]`
+
+The kinds of views a panel leaves out on an item they have nothing to show for: an image view on an item without images (no `images` key, an empty `images` array or an image without `id`), a text view on an item offering none of its `contentTypes`. This is evaluated again on every item navigation, and a view left out on one item comes back on the next item it has something to show for. When every view of a panel is left out, the panel shows that there is nothing to show on this item. Kinds not listed keep their views: an image view shows a "No image available" empty state, a text view a notice about the missing content types. Can be overridden per panel with `panels[i].hideEmptyViews`.
+
+---
+
 ##### `lang`
 
 - **Type:** String (ISO 639-1 language code)
@@ -369,6 +378,14 @@ Defines an array of panel objects. The panels will appear in the same order.
 - **Type:** String
 
 TextAPI collection URL.
+
+---
+
+##### `panels[i].hideEmptyViews`
+
+- **Type:** (`image` | `text`)[]
+
+Overrides the global `hideEmptyViews` config for this specific panel.
 
 ---
 
@@ -434,7 +451,7 @@ Sets the width of each view relative to the others, with one value per view of t
 
 - **Type:** PanelViewConfig[]
 
-Overrides the global `panelViews` config for this specific panel. Use this to customize views per panel while still inheriting unset properties from the global config.
+Overrides the global `panelViews` config for this specific panel. When given, the panel uses these views only - nothing of the global `panelViews` is taken over.
 
 ---
 
@@ -445,7 +462,7 @@ Overrides the global `panelViews` config for this specific panel. Use this to cu
 
 Configures an initial distribution of content views inside each panel. The defined views here can then be toggled on/off in the "View" dropdown in the panel header. See [Panel Views](#panel-views) chapter.
 
-If `panelViews` is not specified, TIDO decides for each item whether to show the image view: an item with images shows the image and the text view, an item without images (no `images` key, an empty `images` array or an image without `id`) shows only the text view. This is evaluated again on every item navigation. If some items have images but others don't, it is recommended not to specify `panelViews` at all and let TIDO discover whether to show the image view. When `panelViews` is specified, the configured views are shown for every item, i.e. a configured image view shows a "No image available" empty state for items without images, and an error only when the given image cannot be loaded.
+Which of the views are shown on an item is decided by `hideEmptyViews`: by default an image view is left out on items without images and a text view on items offering none of its content types.
 
 ---
 

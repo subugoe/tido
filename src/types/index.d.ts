@@ -200,6 +200,8 @@ export interface PanelConfig {
   viewsWidthRatio?: number[]
   // the panel takes the full width of the viewport, without the room otherwise kept for the sidebar
   showViewportWidth?: boolean
+  // the kinds of views this panel leaves out on an item they have nothing to show for - overrides the global hideEmptyViews
+  hideEmptyViews?: PanelViewType[]
 }
 
 export type PanelViewType = 'text' | 'image'
@@ -214,15 +216,21 @@ export interface PanelView {
   widthRatio?: number
 }
 
-// A view of a panel as it is shown on the current item - resolved from its configuration (PanelView)
-// on every item by resolveView, never written back into the configuration.
+// A view of a panel as it is shown on the current item (the "view state" of CONTEXT.md) - only ever made
+// by utils/panel-views.ts, never written back into the configuration.
 // For a text view, contentTypes are the content types it offers on the current item (can be empty) and
-// activeContentType the one it shows (undefined when it offers none) - always decided by
-// resolveActiveContentType from the preferred and the configured one, read by everyone else.
+// activeContentType the one it shows (undefined when it offers none), decided from the preferred and the
+// configured one. Which content that is, is read with textSources / visibleTextSources.
 export interface PanelViewState extends PanelView {
+  // the view key: its position among the configured panel views, continued for appended views
+  key: number
+  // a text view the panel gained while open (synopsis, cross-reference), without a configured panel view
+  appended?: boolean
+  // not shown on the current item, as it has nothing to show there and its kind is in hideEmptyViews
+  omitted?: boolean
   // the last deliberate decision on the content type: the configured activeContentType at first, replaced
-  // by every choice of the user, never by a fallback - so it is kept on items that do not offer it.
-  // Only an input for the active content type, nothing else reads it.
+  // by every choice of the user, a cross-reference, a synopsis selection or a bookmark, never by a fallback -
+  // so it is kept on items that do not offer it. Read for the active content type and by the bookmark.
   preferredContentType?: string
   // the configured content types of a text view when the current item offers none of them
   missingContentTypes?: string[]
@@ -270,6 +278,9 @@ export interface TidoConfig {
   translations: TranslationsConfig,
   tree: TreeConfig,
   panelViews: PanelView[],
+  // the kinds of views a panel leaves out on an item they have nothing to show for: an image view on an item
+  // without image, a text view on an item offering none of its content types
+  hideEmptyViews: PanelViewType[]
   annotations: AnnotationsConfig
 }
 
@@ -333,6 +344,8 @@ export interface TidoContentStateTarget {
 }
 
 export interface TidoContentStatePanelState {
+  // the views of the panel by view key, as partials of the panel views they override. Their activeContentType
+  // is the preferred content type of the view.
   views?: Partial<PanelView>[]
   annotation?: string
 }

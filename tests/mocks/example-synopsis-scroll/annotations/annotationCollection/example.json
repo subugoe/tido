@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example-synopsis-scroll/annotations/annotationCollection/example.json",
+  "type": "AnnotationCollection",
+  "label": "Synopsis connections for the scroll sync",
+  "total": 4,
+  "first": "http://localhost:8181/example-synopsis-scroll/annotations/annotationPage/example.json",
+  "last": "http://localhost:8181/example-synopsis-scroll/annotations/annotationPage/example.json"
+}

@@ -24,6 +24,7 @@ const defaultConfig: TidoConfig = {
     showItemLevel: true,
     showRootNode: true
   },
+  hideEmptyViews: ['image', 'text'],
   panelViews: [
     {
       label: 'Image',

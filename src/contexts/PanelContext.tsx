@@ -4,10 +4,11 @@ import { useDataStore } from '@/store/DataStore.tsx'
 
 import { getSelectedTypes } from '@/utils/annotations.ts'
 import { getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
-import { getContentTypes, getViewsWidthRatio, hasImage, isNewManifest, resolveView } from '@/utils/panel.ts'
+import { isNewManifest } from '@/utils/panel.ts'
+import { configureViews, getContentTypes, resolveViews } from '@/utils/panel-views.ts'
 import { getAssets } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
-import { FilterNodeWithSelection, PanelConfig, PanelView, PanelViewState, SelectedAnnotation } from '@/types'
+import { FilterNodeWithSelection, PanelConfig, SelectedAnnotation } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
@@ -17,7 +18,6 @@ import { Scroller } from '@/utils/scroller.ts'
 import { CustomError, logError } from '@/utils/custom-error.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
-import { isPanelViewsUserExplicit } from '@/utils/config/config.ts'
 import { useAnnotationsPending, useFilteredAnnotations } from '@/contexts/AnnotationsContext.tsx'
 import { getPageAnnotations, getPageWitnesses } from '@/utils/annotation-data.ts'
 
@@ -94,7 +94,8 @@ interface PanelProviderProps {
 }
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) => {
-  const { annotations: annotationsConfig, panelViews: globalPanelViewsConfig } = useConfig()
+  const tidoConfig = useConfig()
+  const { annotations: annotationsConfig } = tidoConfig
 
   const panelRootRef = useRef<HTMLDivElement>(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -143,7 +144,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const filteredAnnotations = useFilteredAnnotations(
     matchedAnnotationsMaps,
     panelState?.panelViews,
-    panelState?.item?.contents,
+    panelState?.item,
     annotationsConfig?.tooltipTypes
   )
 
@@ -237,48 +238,20 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         await getAssets(assets)
       }
 
-      // 4. We discover the correct "views" config. This can come from a global config (root key "panelViews")
-      // or local config (key "views" in the panel config). On every item each view is resolved from this
-      // configuration - the views of the previous item only hand over what the user changed (see resolveView).
+      // 4. We discover the "views" config, local first: the views of the panel config (key "views") when
+      // given, else the global config (root key "panelViews"). On every item each view is resolved from this
+      // configuration - the views of the previous item only hand over what the user changed (see resolveViews).
       // The navigation only hands over where to go, so without views in the given config the panel keeps
       // the views it was opened with.
-      const viewsConfig = config.views ?? panelState.config?.views
-      const viewsWidthRatioConfig = config.viewsWidthRatio ?? panelState.config?.viewsWidthRatio
-
-      const views: PanelView[] = viewsConfig && viewsConfig.length > 0
-        ? viewsConfig.map((view, i) => ({ ...(globalPanelViewsConfig[i] ?? {}), ...view }))
-        : globalPanelViewsConfig
-
-      // Every view carries its own width ratio, so the ratio stays with its view on every item -
-      // also when a view is left out, like the image view of an item without images.
-      const viewsWidthRatio = getViewsWidthRatio(viewsWidthRatioConfig, views.length)
-      const configuredViews: PanelView[] = views.map((view, i) => ({ ...view, widthRatio: viewsWidthRatio?.[i] }))
-
-      let resultPanelViews: PanelViewState[]
-
-      if (isPanelViewsUserExplicit() || viewsConfig?.length > 0) {
-        // The views are configured explicitly, so they are kept as they are on every item.
-        // We prioritize the views changed from the user on the current panel. I.e toggle off views and navigate to a new item on same panel
-        // we should preserve the selected views from user for this panel
-        const previousViews = panelState.panelViews ?? []
-        const viewsCount = previousViews.length > 0 ? previousViews.length : configuredViews.length
-        resultPanelViews = Array.from({ length: viewsCount }, (_, i) => {
-          const previous = previousViews[i]
-          // A view the synopsis appended to the panel has no configuration: it offers every content type
-          const configured = configuredViews[i] ?? { view: previous.view, label: previous.label, widthRatio: previous.widthRatio }
-          return resolveView(configured, contentTypes, previous)
-        })
-      } else {
-        // Without a views config, the item decides on every navigation: an image view is only shown when the item has images.
-        // No images key, an empty images array or an image without url count as no images. Broken images are still shown in the image view with an error.
-        const itemViews = hasImage(item) ? configuredViews : configuredViews.filter(v => v.view !== 'image')
-
-        // Keep what the user changed on the matching views of the previous item, i.e. a toggled off view or the active content type
-        resultPanelViews = itemViews.map((view) => {
-          const oldView = panelState.panelViews.find(v => v.view === view.view && v.label === view.label)
-          return resolveView(view, contentTypes, oldView)
-        })
-      }
+      const resultPanelViews = resolveViews({
+        ...configureViews(tidoConfig, {
+          views: config.views ?? panelState.config?.views,
+          viewsWidthRatio: config.viewsWidthRatio ?? panelState.config?.viewsWidthRatio,
+          hideEmptyViews: config.hideEmptyViews ?? panelState.config?.hideEmptyViews,
+        }),
+        item,
+        previous: panelState.panelViews,
+      })
 
       // 5. We update the panel state with the data.
       updatePanel({

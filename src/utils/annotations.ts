@@ -5,7 +5,7 @@ import { CustomError } from '@/utils/custom-error.ts'
 import type { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { ANNOTATION_TARGET_JSON_FORMAT } from '@/utils/constants.ts'
-import { getContentType } from '@/utils/panel.ts'
+import { getContentType } from '@/utils/panel-views.ts'
 import {
   getAnnotationTargets,
   getAnnotationType,

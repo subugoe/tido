@@ -3,7 +3,8 @@ import React, { FC } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { CustomError, logError } from '@/utils/custom-error.ts'
 
-import { createNewPanel, findTextViewIndexForContentType, getContentTypes, setNewActiveContentType, setPreferredContentType } from '@/utils/panel.ts'
+import { createNewPanel } from '@/utils/panel.ts'
+import { configureViews, findContentByType, getContentTypes, resolveViews, showContent, viewsShowingContent } from '@/utils/panel-views.ts'
 import { waitForElementInDom } from '@/utils/dom.ts'
 
 import Content from '@/components/panel/annotations/popover/cross-ref/Content.tsx'
@@ -22,7 +23,7 @@ interface Props {
 
 const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => {
 
-  const { panelViews: panelViewsConfig } = useConfig()
+  const config = useConfig()
   const { updatePanel, panelId, usePanelTranslation, panelState } = usePanel()
   const { t } = usePanelTranslation()
   const isDifferentItem = crossRefInfo?.item !== panelState.item?.id
@@ -45,35 +46,33 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
     let newPanelId = panelId
     const contentType = crossRefInfo?.contentType
 
-    // We need to open that content which contains the cross ref target. Since a panel can have multiple views,
-    // we need to find out which view is able to display the content type. Because panel views can be configured freely,
-    // we cannot know which view is meant exactly. So we just take the first one offering it, else the first text view.
+    // The panel shows the content that contains the cross ref target (see showContent): the referenced item
+    // is resolved with the views of the panel first, so that content is looked for among them.
 
     try {
       const refManifest = await useDataStore.getState().initManifest(crossRefInfo.manifest)
       const refItem = await useDataStore.getState().initItem(crossRefInfo.item)
 
+      const contentUrl = findContentByType(refItem.contents, contentType)?.id
+
       if (action === 'new') {
         newPanelId = crypto.randomUUID()
-        await createNewPanel(
-          crossRefInfo.collection,
-          refManifest,
-          refItem,
-          setNewActiveContentType(contentType, findTextViewIndexForContentType(panelViewsConfig, contentType), panelViewsConfig),
-          newPanelId,
-          !!crossRefInfo.selectedAnnotation
-        )
+        await createNewPanel(crossRefInfo.collection, refManifest, refItem, newPanelId, {
+          showSidebar: !!crossRefInfo.selectedAnnotation,
+          views: viewsShowingContent(configureViews(config), refItem, contentUrl),
+        })
       } else if (action === 'update') {
-        // The configured views stay as they are, the content type of the reference becomes the preferred
-        // one in this panel - the panel resolves the views of the referenced item from both.
+        // The panel config stays as it is, the panel only goes to the referenced item and shows its content
+        const views = resolveViews({ ...configureViews(config, panelState.config), item: refItem, previous: panelState.panelViews })
         updatePanel({
           config: {
+            ...panelState.config,
             collection: crossRefInfo.collection,
             manifest: crossRefInfo.manifest,
             item: crossRefInfo.item,
-            views: panelState.config.views,
+            selectedAnnotationId: null,
           },
-          panelViews: setPreferredContentType(contentType, findTextViewIndexForContentType(panelState.panelViews, contentType), panelState.panelViews),
+          panelViews: contentUrl ? showContent(views, refItem, contentUrl) : views,
           showSidebar: !!crossRefInfo.selectedAnnotation,
         })
       }

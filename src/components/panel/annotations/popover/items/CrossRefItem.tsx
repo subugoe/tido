@@ -4,7 +4,7 @@ import { CustomError } from '@/utils/custom-error.ts'
 import CrossRefLink from '@/components/panel/annotations/popover/cross-ref/CrossRefLink.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { getCrossRefInfo } from '@/utils/annotations.ts'
-import { findContentByType } from '@/utils/panel.ts'
+import { findContentByType } from '@/utils/panel-views.ts'
 
 interface Props {
   annotation: Annotation

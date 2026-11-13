@@ -2,18 +2,13 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
-import { TidoConfig, PanelConfig, TidoContentState, TidoContentStateTarget, PanelView } from '@/types'
+import { TidoConfig, PanelConfig, TidoContentState, TidoContentStateTarget } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
 import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { TFunction } from 'i18next'
 import { translateError } from '@/utils/custom-error.ts'
-
-let _panelViewsUserExplicit = false
-
-export function isPanelViewsUserExplicit(): boolean {
-  return _panelViewsUserExplicit
-}
+import { applyViewOverrides } from '@/utils/panel-views.ts'
 
 type ValidationResult<T> = {
   result: T;
@@ -234,26 +229,30 @@ function validatePanelViews(input: unknown): ValidationResult<TidoConfig['panelV
   const errors: Record<string, string> = {}
 
   if (input === undefined) {
-    _panelViewsUserExplicit = false
     return { errors, result: defaultConfig.panelViews }
   }
 
   if (!Array.isArray(input)) {
     errors['panelViews'] = 'must be an array'
-    _panelViewsUserExplicit = false
     return { errors, result: defaultConfig.panelViews }
   }
 
   if (input.length === 0) {
     errors['panelViews'] = 'must have at least 1 value'
-    _panelViewsUserExplicit = false
     return { errors, result: defaultConfig.panelViews }
   }
 
-  _panelViewsUserExplicit = true
   return { errors, result: input as TidoConfig['panelViews'] }
 }
 
+function validateHideEmptyViews(input: unknown): ValidationResult<TidoConfig['hideEmptyViews']> {
+  const errors: Record<string, string> = {}
+  const isViewType = (value: unknown) => value === 'image' || value === 'text'
+
+  if (Array.isArray(input) && input.every(isViewType)) return { errors, result: input as TidoConfig['hideEmptyViews'] }
+  if (input !== undefined) errors['hideEmptyViews'] = 'must be an array of "image" and "text"'
+  return { errors, result: defaultConfig.hideEmptyViews }
+}
 
 function validateRootCollections(input: unknown): ValidationResult<TidoConfig['rootCollections']> {
   const errors: Record<string, string> = {}
@@ -388,6 +387,7 @@ export async function mergeAndValidateConfig(
   const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
   const container = validateContainer(userConfig.container)
   const panelViews = validatePanelViews(userConfig.panelViews)
+  const hideEmptyViews = validateHideEmptyViews(userConfig.hideEmptyViews)
   const panels = validatePanels(userConfig.panels)
   const showAddNewPanelButton = validateShowNewCollectionButton(userConfig.showAddNewPanelButton)
   const showCollectionTitle = validateShowCollectionTitle(userConfig.showCollectionTitle)
@@ -421,6 +421,7 @@ export async function mergeAndValidateConfig(
     ...title.errors,
     ...tree.errors,
     ...panelViews.errors,
+    ...hideEmptyViews.errors,
     ...annotations.errors
   }
 
@@ -442,7 +443,7 @@ export async function mergeAndValidateConfig(
           let manifestIndex: number | null = null
           let itemIndex: number | null = null
 
-          const { collection, manifest, item, selectedAnnotationId, views } = extractPanelConfig(target)
+          const { collection, manifest, item, selectedAnnotationId, views: bookmarkedViews } = extractPanelConfig(target)
 
           if (!collection) return null
 
@@ -466,25 +467,17 @@ export async function mergeAndValidateConfig(
             console.error(`Bookmarking Error: the provided item (${item}) could not be found in manifest (${manifest})`)
           }
 
-          let resultViews: PanelView[] | null = null
-          if (panels.result) {
-            const viewsFromConfig = panels.result[i]?.views ?? panelViews.result
-            if (viewsFromConfig) {
-              resultViews = viewsFromConfig.map((v, j) => ({
-                ...v,
-                visible: views[j]?.visible ?? v.visible ?? true,
-                activeContentType: views[j]?.activeContentType ?? v.activeContentType
-              }))
-            }
-          }
-
-          // the widths are not part of the bookmark, so they come from the panel config
-          const { viewsWidthRatio, showViewportWidth } = panels.result?.[i] ?? {}
+          // The bookmark overrides the views of the panel config, local first - else the global panelViews. The
+          // widths and the rules of the panel are not part of the bookmark, so they come from the panel config.
+          const { views: panelViewsConfig, viewsWidthRatio, showViewportWidth, hideEmptyViews } = panels.result?.[i] ?? {}
+          const configuredViews = panelViewsConfig?.length > 0 ? panelViewsConfig : panelViews.result
+          const resultViews = bookmarkedViews.length > 0 ? applyViewOverrides(configuredViews, bookmarkedViews) : panelViewsConfig
 
           return {
             collection,
             ...(viewsWidthRatio && { viewsWidthRatio }),
             ...(showViewportWidth && { showViewportWidth }),
+            ...(hideEmptyViews && { hideEmptyViews }),
             ...(itemIndex > -1 && { item }),
             ...(manifestIndex > -1 && { manifest }),
             ...(selectedAnnotationId && { selectedAnnotationId, showSidebar: true }),
@@ -526,6 +519,7 @@ export async function mergeAndValidateConfig(
     translations: i18nConfig.translations,
     tree: tree.result,
     panelViews: panelViews.result,
+    hideEmptyViews: hideEmptyViews.result,
     annotations: annotations.result
   }
 

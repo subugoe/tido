@@ -43,6 +43,8 @@
     "no_content_found": "Keinen passenden Inhalt gefunden.",
     "no_content_for_content_types_title": "Kein passender Text auf dieser Seite",
     "no_content_for_content_types": "Diese Seite enthält keinen Text vom Typ {{contentTypes}}.",
+    "no_views_to_show_title": "Auf dieser Seite gibt es nichts anzuzeigen",
+    "no_views_to_show": "Keine der Ansichten dieses Panels hat Inhalte für diese Seite.",
     "unknown_error": "Unbekannter Fehler",
     "metadata": "Metadaten",
     "please_click_to_view_metadata": "Bitte klicken Sie auf die folgenden Überschriften, um die Metadaten anzuzeigen",

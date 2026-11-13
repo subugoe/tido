@@ -38,6 +38,8 @@
     "no_content_found": "No content found.",
     "no_content_for_content_types_title": "No matching text on this page",
     "no_content_for_content_types": "This page has no text of the type {{contentTypes}}.",
+    "no_views_to_show_title": "Nothing to show on this page",
+    "no_views_to_show": "None of the views of this panel has content for this page.",
     "unknown_error": "Unknown Error",
     "metadata": "Metadata",
     "please_click_to_view_metadata": "Please click headings below to view the metadata",
