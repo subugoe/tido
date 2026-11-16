@@ -5,14 +5,15 @@ import { CustomError, logError } from '@/utils/custom-error.ts'
 
 import { createNewPanel } from '@/utils/panel.ts'
 import { configureViews, findContentByType, getContentTypes, resolveViews, showContent, viewsShowingContent } from '@/utils/panel-views.ts'
-import { waitForElementInDom } from '@/utils/dom.ts'
+import { onScrolledIntoView, waitForElementInDom } from '@/utils/dom.ts'
 
 import Content from '@/components/panel/annotations/popover/cross-ref/Content.tsx'
 import Loading from '@/components/ui/loading.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
-import { addCrossReferencedElStyle } from '@/utils/text.ts'
+import { addCrossReferencedElStyle, removeCrossReferencedElStyle } from '@/utils/text.ts'
+import { CROSS_REF_REL_STYLE_DURATION } from '@/utils/constants.ts'
 
 interface Props {
   crossRefInfo: CrossRefInfo,
@@ -84,11 +85,19 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
         // use setTimeout to create a small delay before actually scrolling to target
         setTimeout(() => {
           const refEl = panelEl.querySelector(refSelector) as HTMLElement
-          addCrossReferencedElStyle(refEl)
+          if (!refEl) return
+          // The referenced element gets its style for a moment once it is on screen and the scrolling
+          // has stopped - the same for a text part and an annotation card, whichever scroll brings it
+          // there. Added only then, since selecting the annotation re-renders its card, and React
+          // rewriting the card's className would drop a class added before.
+          onScrolledIntoView(refEl, panelEl, () => {
+            addCrossReferencedElStyle(refEl)
+            setTimeout(() => removeCrossReferencedElStyle(refEl), CROSS_REF_REL_STYLE_DURATION)
+          })
           // Selecting the annotation already scrolls its card into view and then aligns the text to
           // it, so scrolling here as well would race that alignment.
           if (scrollArea === 'sidebar') usePanelStore.getState().updatePanel(newPanelId, { selectedAnnotation: crossRefInfo.selectedAnnotation })
-          else refEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          else refEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }, 700)
       })
     } catch (e) {

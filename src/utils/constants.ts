@@ -12,6 +12,8 @@ export const CROSS_REF_TARGET_STYLE = ['text-blue-500', 'underline']
 export const CROSS_REF_ATTRIBUTE = 'data-target'
 export const CROSS_REF_REL_ATTRIBUTE = 'rel'
 export const CROSS_REF_REL_STYLE = ['bg-yellow-200']
+// How long the referenced element keeps its style once it is on screen and the scrolling has stopped
+export const CROSS_REF_REL_STYLE_DURATION = 3000
 export const SYNOPSIS_SELECTED_STYLE = ['bg-synopsis-selected']
 export const SYNOPSIS_HOVER_STYLE = ['bg-synopsis-hover', 'cursor-pointer']
 export const ACTIVE_TARGET_STYLE = ['bg-annotation-selected']
