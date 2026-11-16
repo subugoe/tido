@@ -47,9 +47,9 @@ const SidebarToggle = memo((props) => {
   }, [panelState.showSidebar])
 
   function onClick() {
-    updatePanel({
-      showSidebar: !panelState.showSidebar
-    })
+    const showSidebar = !panelState.showSidebar
+    // closing the sidebar deselects the annotation in the same update
+    updatePanel(showSidebar ? { showSidebar } : { showSidebar, selectedAnnotation: null })
   }
 
   // Without any annotations there is nothing to display in the sidebar,

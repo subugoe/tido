@@ -174,6 +174,12 @@ describe('Synopsis: hovering interconnected sync targets across panels', () => {
     // looked up in the document at the moment of the hover
     connections.forEach(({ targets }) => targets.forEach((target, panelIndex) =>
       targetEl(panelIndex, target).should('exist')))
+
+    // ... and every panel has its sync targets wired up. The text renders before the sync annotations
+    // of the collection are loaded, and only then do the targets get their hover listeners - a hover
+    // that comes earlier is never retried. The Sync Target Navigation appears once a panel's sync
+    // targets are known.
+    for (let i = 0; i < 3; i++) getPanel(i).find('[data-cy="sync-target-navigation"]').should('exist')
   })
 
   it('Should hover the synced targets of the two other panels for each of two sync targets of the first panel', () => {
