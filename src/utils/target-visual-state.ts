@@ -1,4 +1,5 @@
 import {
+  ACTIVE_TARGET_STYLE,
   ANNOTATION_BASE_STYLE,
   ANNOTATION_HOVER_CLASSES,
   ANNOTATION_IDS_ATTRIBUTE,
@@ -24,6 +25,8 @@ interface TargetVisualState {
   hover: boolean
   nested: boolean
   selected: boolean
+  // the target the annotation popover is open for
+  active: boolean
 }
 
 interface TargetVisualContext {
@@ -32,6 +35,8 @@ interface TargetVisualContext {
   // the targets of the selected annotation - a target inside one of them counts as selected too
   selectedTargets: Element[]
   disabledTargets: Set<Element>
+  // the clicked target while the annotation popover is open for it
+  activeTarget?: Element | null
 }
 
 // The classes this module owns. A target's class list is set to exactly the ones its state asks
@@ -41,7 +46,8 @@ const MANAGED_CLASSES = [...new Set([
   ...HIGHLIGHTING_STYLE,
   ...ANNOTATION_HOVER_CLASSES,
   ...NESTED_TARGET_HOVER_CLASSES,
-  ...SELECTED_ANNOTATION_CLASSES
+  ...SELECTED_ANNOTATION_CLASSES,
+  ...ACTIVE_TARGET_STYLE
 ])]
 
 function getVisibleAnnotations(entry: MergedAnnotationEntry) {
@@ -73,6 +79,7 @@ function getTargetVisualState(entry: MergedAnnotationEntry, context: TargetVisua
   const isDisabled = context.disabledTargets.has(target)
   const isSelected = partOfSelectedTargets(target, context.selectedTargets)
   const isHovered = context.hoveredTargets.includes(target)
+  const isActive = !!context.activeTarget && context.activeTarget === target
 
   // a hovered parent that may be highlighted gives this target the nested border; one that may not
   // leaves it reading as a plain highlight instead
@@ -88,8 +95,9 @@ function getTargetVisualState(entry: MergedAnnotationEntry, context: TargetVisua
     base: isVisible,
     hover: isVisible && isHovered && (isDisabled || !readsAsHighlightedChild),
     nested: isVisible && isHovered && !isDisabled && hasHighlightedParentHovered,
-    highlight: isVisible && !isDisabled && (isHovered ? readsAsHighlightedChild : !isSelected),
-    selected: isSelected
+    highlight: isVisible && !isDisabled && (isHovered ? readsAsHighlightedChild : !isSelected && !isActive),
+    selected: isSelected,
+    active: isActive
   }
 }
 
@@ -101,6 +109,7 @@ function classesFor(state: TargetVisualState): string[] {
   if (state.hover) classes.push(...ANNOTATION_HOVER_CLASSES)
   if (state.nested) classes.push(...NESTED_TARGET_HOVER_CLASSES)
   if (state.selected) classes.push(...SELECTED_ANNOTATION_CLASSES)
+  if (state.active) classes.push(...ACTIVE_TARGET_STYLE)
 
   return [...new Set(classes)]
 }

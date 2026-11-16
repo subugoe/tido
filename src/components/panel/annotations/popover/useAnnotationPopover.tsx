@@ -33,6 +33,8 @@ export interface TargetClickResult {
 
 export interface AnnotationPopover {
   popover: ReactNode
+  // the clicked target while the popover is open for it - styled as active by the renderer
+  activeTarget: HTMLElement | null
   onTargetClick: (targetEl: HTMLElement, source: string, annotations: Annotation[]) => TargetClickResult
 }
 
@@ -178,7 +180,7 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
     </AnnotationPopoverContainer>
   )
 
-  return { popover, onTargetClick }
+  return { popover, activeTarget: open ? targetElement : null, onTargetClick }
 }
 
 export { useAnnotationPopover }
