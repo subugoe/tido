@@ -74,4 +74,33 @@ describe('Annotation sidebar selection', () => {
     cy.get(selectors.closeSidebar).click()
     assertDeselected()
   })
+
+  describe('Annotation popover', () => {
+    // #man is targeted by two annotations (Historical and Economic Context), so a click opens the popover
+    const popoverTarget = () => cy.get(selectors.textContainer).find('#man')
+    const popover = () => cy.get('[data-cy="annotation-popover-content"]')
+
+    it('Styles the clicked target as active while the popover is open', () => {
+      popoverTarget().should('have.class', 'bg-accent').and('not.have.class', 'bg-annotation-selected')
+
+      popoverTarget().click()
+      popover().should('be.visible')
+      popoverTarget().should('have.class', 'bg-annotation-selected').and('not.have.class', 'bg-accent')
+
+      // restyling the targets on a hover change keeps the active style
+      target().trigger('mouseenter')
+      target().trigger('mouseleave')
+      popoverTarget().should('have.class', 'bg-annotation-selected')
+    })
+
+    it('Removes the active style when the popover is closed', () => {
+      popoverTarget().click()
+      popover().should('be.visible')
+      popoverTarget().should('have.class', 'bg-annotation-selected')
+
+      cy.get('[data-cy="annotation-popover-close"]').click()
+      popover().should('not.exist')
+      popoverTarget().should('not.have.class', 'bg-annotation-selected').and('have.class', 'bg-accent')
+    })
+  })
 })

@@ -85,7 +85,7 @@ const TextAnnotationsLayer: FC<Props> = ({
   const selectedAnnotationRef = useRef<SelectedAnnotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
-  const { popover, onTargetClick } = useAnnotationPopover({
+  const { popover, activeTarget, onTargetClick } = useAnnotationPopover({
     source,
     wrapper: wrapperRef.current,
     onBaseItemSelection: onSelect
@@ -240,7 +240,8 @@ const TextAnnotationsLayer: FC<Props> = ({
         selectedTargets: selectedAnnotation && matchedMap[selectedAnnotation.annotation.id]
           ? matchedMap[selectedAnnotation.annotation.id].target
           : [],
-        disabledTargets
+        disabledTargets,
+        activeTarget
       }
 
       entries.forEach((entry) =>
@@ -249,7 +250,7 @@ const TextAnnotationsLayer: FC<Props> = ({
       reportAnnotationError(source, 'styling', e)
       textView?.addTextWarning('annotation_styling_error')
     }
-  }, [entries, targets, disabledTargets, matchedMap, hoveredAnnotations, selectedAnnotation])
+  }, [entries, targets, disabledTargets, matchedMap, hoveredAnnotations, selectedAnnotation, activeTarget])
 
 
   useEffect(() => {

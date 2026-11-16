@@ -6,8 +6,9 @@ import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useSetHoveredAnnotations } from '@/contexts/TextContext.tsx'
-import { EMPTY_SYNOPSIS_CONNECTION, SynopsisConnection } from '@/store/SynopsisStore.tsx'
+import { EMPTY_SYNOPSIS_CONNECTION, SynopsisConnection, SyncedTargetRef } from '@/store/SynopsisStore.tsx'
 import { getSelectorValue } from '@/utils/annotations.ts'
+import { ANNOTATION_IDS_ATTRIBUTE } from '@/utils/constants.ts'
 import {
   addActiveTargetStyle,
   addSynopsisSelectedStyle,
@@ -33,6 +34,8 @@ export interface TargetClickResult {
 
 export interface AnnotationPopover {
   popover: ReactNode
+  // the clicked target while the popover is open for it - styled as active by the renderer
+  activeTarget: HTMLElement | null
   onTargetClick: (targetEl: HTMLElement, source: string, annotations: Annotation[]) => TargetClickResult
 }
 
@@ -71,6 +74,28 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
     }
   }
 
+  // The sync target a click on the given target offers the synopsis of: the target itself when it is
+  // synced, else the closest element around it that is - looked for up to the outermost annotation
+  // target containing the click and no further, so a target nested in a sync target (e.g. a cross ref
+  // link) offers that one's synced targets, while an element around all of its targets does not.
+  function findSyncTarget(targetEl: HTMLElement, source: string): { syncTargetEl: HTMLElement, otherSyncedTargets: SyncedTargetRef[] } {
+    const textContainer = targetEl.closest('[data-text-container]')
+
+    // the outermost annotation target containing the click - the clicked target itself when it is not
+    // nested in one (e.g. a plain sync target)
+    let boundary = targetEl
+    for (let el = targetEl.parentElement; el && el !== textContainer; el = el.parentElement) {
+      if (el.hasAttribute(ANNOTATION_IDS_ATTRIBUTE)) boundary = el
+    }
+
+    for (let el: HTMLElement | null = targetEl; el; el = el === boundary ? null : el.parentElement) {
+      const otherSyncedTargets = getOtherSyncedTargets(el, source)
+      if (otherSyncedTargets.length > 0) return { syncTargetEl: el, otherSyncedTargets }
+    }
+
+    return { syncTargetEl: targetEl, otherSyncedTargets: [] }
+  }
+
   // Sort the annotations of a clicked target into the areas the popover shows - cross references,
   // tooltip items and the ones offered for the sidebar - and resolve the target's synced targets.
   // `annotations` are the annotations of the clicked target and of its parent targets.
@@ -97,8 +122,12 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
     const newTooltipAnnotations = newRelatedAnnotations.filter((a) => tooltipTypes.includes(getAnnotationType(a)))
     const normalAnnotations = newRelatedAnnotations.filter((a) => !tooltipTypes.includes(getAnnotationType(a)))
 
-    // the targets the clicked one is synced with, from the sync annotations in the SynopsisStore
-    const otherSyncedTargets = synopsisSelectionDisabled ? [] : getOtherSyncedTargets(targetEl, source)
+    // the targets the clicked one is synced with, from the sync annotations in the SynopsisStore. A target
+    // nested in a sync target (e.g. a cross ref link inside it) offers the synopsis of that sync target,
+    // just as it offers the annotations of its parent targets.
+    const { syncTargetEl, otherSyncedTargets } = synopsisSelectionDisabled
+      ? { syncTargetEl: targetEl, otherSyncedTargets: [] }
+      : findSyncTarget(targetEl, source)
 
     const openTooltip = newTooltipAnnotations.length > 0 || newCrossRefAnnotations.length > 0 || normalAnnotations.length > 1
       || (!synopsisSelectionDisabled && (otherSyncedTargets.length > 1 || otherSyncedTargets.length === 1 && normalAnnotations.length === 1))
@@ -113,15 +142,15 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
 
     setCrossRefAnnotations(newCrossRefAnnotations)
 
-    // y-position of the clicked target within its scroll container's visible height (ignoring
+    // y-position of the sync target within its scroll container's visible height (ignoring
     // scroll position), so each synced panel can scroll its own target to the same y-position.
-    const scrollContainer = targetEl.closest('[data-text-container]') as HTMLElement | null
+    const scrollContainer = syncTargetEl.closest('[data-text-container]') as HTMLElement | null
     const yPos = scrollContainer
-      ? targetEl.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+      ? syncTargetEl.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
       : 0
 
     const clickedConnection: SynopsisConnection = {
-      navigatedTarget: targetEl,
+      navigatedTarget: syncTargetEl,
       otherSyncedTargets,
       yPos
     }
@@ -178,7 +207,7 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
     </AnnotationPopoverContainer>
   )
 
-  return { popover, onTargetClick }
+  return { popover, activeTarget: open ? targetElement : null, onTargetClick }
 }
 
 export { useAnnotationPopover }
