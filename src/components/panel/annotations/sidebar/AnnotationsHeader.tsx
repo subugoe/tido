@@ -22,7 +22,7 @@ const AnnotationsHeader: FC = () => {
       <AnnotationFilters  />
       { annotations.defaultMode && <AnnotationsModeToggle className="ml-auto" /> }
       <BaseTooltip message={t('hide_annotations')}>
-        <Button size="iconSm" variant="ghost" onClick={() => updatePanel({ showSidebar: false })} data-cy="close-sidebar">
+        <Button size="iconSm" variant="ghost" onClick={() => updatePanel({ showSidebar: false, selectedAnnotation: null })} data-cy="close-sidebar">
           <X />
         </Button>
       </BaseTooltip>
