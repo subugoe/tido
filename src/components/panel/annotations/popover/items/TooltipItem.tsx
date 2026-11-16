@@ -13,7 +13,7 @@ const TooltipItem: FC<Props> = ({ annotation }) => {
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
   const content = getTextualBody(annotation)?.value
 
-  return <div className="flex flex-col px-3 py-1.5 min-w-80 max-w-95 border border-border rounded-lg">
+  return <div className="flex flex-col px-3 py-1.5 min-w-80 max-w-95 border border-border rounded-lg" data-cy="popover-tooltip-item">
     <div className="flex align-start gap-4">
       <div
         className="overflow-hidden text-sm"
