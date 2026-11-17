@@ -106,11 +106,16 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
     // only its synopsis behavior (connection, action area) is skipped.
     const synopsisSelectionDisabled = !!annotationsConfig?.disableSynopsisSelection
 
+    const textContainer = targetEl.closest('[data-text-container]') ?? document
     const newCrossRefAnnotations = annotations.filter((annotation) =>
       getAnnotationType(annotation) === crossRefContentType &&
       getAnnotationTargets(annotation).some((target) => {
         const selector = getSelectorValue(target)
-        return selector && targetEl.matches(selector)
+        if (!selector) return false
+        // we might click at a target which is inside a cross ref link. we should still be able to retrieve the cross ref
+        // annotation in this case
+        const crossRefEl = textContainer.querySelector(selector)
+        return !!crossRefEl && crossRefEl.contains(targetEl)
       })
     )
 
