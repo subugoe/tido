@@ -389,6 +389,41 @@ describe('Annotation popover content', () => {
     })
   })
 
+  describe('cross ref link with 2 spans inside it, one of them with a tooltip annotation', () => {
+    // #bingley-link is the target of annotation-crossref-text-two-spans-1, a CrossRef pointing at #ishmael
+    // in the transcription of Moby-Dick, item "1". Inside it are 2 spans:
+    //   - #bingley-name (annotation-17, Editorial Note - configured as tooltip type)
+    //   - #bingley-married (no annotation of its own)
+    beforeEach(() => {
+      openPage1({ tooltipTypes: ['Editorial Note'], crossRefContentType: 'CrossRef' })
+    })
+
+    it('Shows the popover with the tooltip annotation and the cross ref when clicking the span inside the link', () => {
+      target('#bingley-name').click()
+
+      popover().should('be.visible')
+
+      // the tooltip of the clicked span and the cross ref of the link around it - nothing else
+      popover().find(selectors.sectionLabel).should('have.length', 2)
+      popover().find(selectors.sectionLabel).eq(0).should('have.text', 'Tooltip')
+      popover().find(selectors.sectionLabel).eq(1).should('have.text', 'Reference')
+
+      popover().find(selectors.tooltipItem).should('have.length', 1)
+        .and('contain.text', 'Mr. Bingley is named here for the first time')
+        .and('contain.text', 'Editorial Note')
+
+      popover().find('[data-cy="popover-reference-section"]').within(() => {
+        cy.contains('p', 'Moby-Dick').should('exist')
+        cy.get('button').should('have.length', 2)
+        cy.contains('button', 'Open in this Panel').should('exist')
+        cy.contains('button', 'Open in new Panel').should('exist')
+      })
+
+      popover().find('[data-cy="popover-annotations-section"]').should('not.exist')
+      cy.get(selectors.sidebarContainer).should('not.exist')
+    })
+  })
+
   describe('target with 2 nested targets', () => {
     // #para6 is the target of annotation-11 (Narrative Technique). Two spans inside it are targets of
     // their own:
