@@ -4,24 +4,28 @@ import { useDataStore } from '@/store/DataStore.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
 import { cn } from '@/lib/utils'
+import { WitnessError } from '@/utils/annotations.ts'
 import { SyncedTargetRef } from '@/store/SynopsisStore.tsx'
+import WitnessItemError from '@/components/panel/annotations/popover/items/Synopsis/WitnessItemError.tsx'
 
 interface Props {
   syncedTarget: SyncedTargetRef
   isOpened: boolean
   isSelected: boolean
   onSelect: () => void
+  // set when the witness can not be navigated to - the item is then shown disabled
+  error?: WitnessError
   selectOnly?: boolean
 }
 
-const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect, selectOnly = false }) => {
+const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect, error, selectOnly = false }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
   const [label, setLabel] = useState('')
 
   useEffect(() => {
-    async function loadWitness() {
+    async function loadLabel() {
       if (!syncedTarget.source.manifest) return
       try {
         const manifest = await useDataStore.getState().initManifest(syncedTarget.source.manifest)
@@ -31,8 +35,10 @@ const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect, 
       }
     }
 
-    loadWitness()
+    loadLabel()
   }, [])
+
+  if (error) return <WitnessItemError label={label} error={error} selectOnly={selectOnly} />
 
   return (
     <button

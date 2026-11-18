@@ -6,6 +6,7 @@ import type { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.
 import { useDataStore } from '@/store/DataStore.tsx'
 import { ANNOTATION_TARGET_JSON_FORMAT } from '@/utils/constants.ts'
 import { getContentType } from '@/utils/panel-views.ts'
+import { getParsedText } from '@/utils/text.ts'
 import {
   getAnnotationTargets,
   getAnnotationType,
@@ -234,8 +235,39 @@ function isPartOfActiveSynopsisConnection(
       el.matches(syncedTarget.selector)
     )
 }
+// why a witness can not be navigated to - each is also the translation key of its tooltip description
+type WitnessError = 'witness_text_not_in_item' | 'witness_target_not_found'
+
+// Identifies a synced target: a text (source.id) can have several targets, distinguished by their selector
+function getTargetKey({ source, selector }: SyncedTargetRef): string {
+  return `${source.id}|${selector}`
+}
+
+// Checks that the witness text (source.id) is a content of its item (source.item) and that the
+// synced target (selector) exists in that text. Returns the first failing check, or null.
+async function validateWitness({ source, selector }: SyncedTargetRef): Promise<WitnessError | null> {
+  if (!source.item) return 'witness_text_not_in_item'
+
+  const item = await useDataStore.getState().initItem(source.item)
+  if (!item.contents?.some((content) => content.id === source.id)) return 'witness_text_not_in_item'
+
+  const doc = await getParsedText(source.id)
+  let targetEl: Element | null = null
+  try {
+    targetEl = doc.querySelector(selector)
+  } catch {
+    // invalid css selector - treated as target not found
+  }
+  if (!targetEl) return 'witness_target_not_found'
+
+  return null
+}
+
+export type { WitnessError }
 
 export {
+  getTargetKey,
+  validateWitness,
   getSelectedTypes,
   getSelectedTypesFromNode,
   mergeTypes,
