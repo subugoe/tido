@@ -6,13 +6,15 @@ import { Badge } from '@/components/ui/badge.tsx'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
 import WitnessItem from '@/components/panel/annotations/popover/items/Synopsis/WitnessItem.tsx'
 import { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
+import { getTargetKey } from '@/utils/annotations.ts'
+import useWitnessErrors from '@/components/panel/annotations/popover/items/Synopsis/useWitnessErrors.ts'
 
 interface Props {
   syncTargets: SynopsisConnection
   onSelect: (selected: SyncedTargetRef[]) => void
 }
 
-// maps a witness' source content id (source.id) to a boolean (opened / selected)
+// maps a synced target (getTargetKey) to a boolean (opened / selected)
 type WitnessMap = Record<string, boolean>
 
 const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
@@ -22,17 +24,22 @@ const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
   const targets = syncTargets.otherSyncedTargets
   const [openedWitnesses, setOpenedWitnesses] = useState<WitnessMap>({})
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessMap>({})
+  // witnesses whose text is not part of their item or which don't contain the synced target - can't be selected
+  const errors = useWitnessErrors(targets)
 
-  const total = targets.length
-  const selectedCount = Object.values(selectedWitnesses).filter(Boolean).length
+  // a witness counts as selected only while it is valid, so one that turns out invalid is deselected
+  const validTargets = targets.filter((st) => !errors[getTargetKey(st)])
+  const selectedTargets = validTargets.filter((st) => selectedWitnesses[getTargetKey(st)])
+
+  const total = validTargets.length
+  const selectedCount = selectedTargets.length
   const allSelected = total > 0 && selectedCount === total
   const allChecked: boolean | 'indeterminate' =
     selectedCount === 0 ? false : allSelected ? true : 'indeterminate'
 
-
   // Determine which witnesses are opened: a witness counts as open when its source item is loaded
   // in some panel AND that panel has a currently visible text view showing the source content
-  // (source.id). Keyed by source.id. On mount both maps are identical (opened witnesses preselected).
+  // (source.id). All targets of an opened text count as opened. On mount opened witnesses are preselected.
   useEffect(() => {
     const panels = usePanelStore.getState().panels
 
@@ -44,32 +51,31 @@ const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
       const panel = source.item ? panels.find((p) => p.item?.id === source.item) : undefined
 
       // among that panel's currently visible views, is there a text view showing text with content url source.id?
-      opened[source.id] = !!panel && visibleTextSources(panel).some(s => s.contentUrl === source.id)
+      opened[getTargetKey(ref)] = !!panel && visibleTextSources(panel).some(s => s.contentUrl === source.id)
     })
 
     setOpenedWitnesses(opened)
-    setSelectedWitnesses({ ...opened })
-    applySelection({ ...opened })
+    setSelectedWitnesses(opened)
   }, [])
 
+  // report the selection whenever it changes - also when a selected witness turns out invalid
+  const selectedKeys = selectedTargets.map(getTargetKey).join(',')
+  useEffect(() => {
+    onSelect(selectedTargets)
+  }, [selectedKeys])
 
   function toggleWitness(syncedTarget: SyncedTargetRef) {
-    const id = syncedTarget.source.id
-    if (!id) return
-    applySelection({ ...selectedWitnesses, [id]: !selectedWitnesses[id] })
+    const key = getTargetKey(syncedTarget)
+    if (errors[key]) return
+    setSelectedWitnesses({ ...selectedWitnesses, [key]: !selectedWitnesses[key] })
   }
 
-  function toggleAll(selectedWitnesses: WitnessMap, allSelected: boolean) {
+  function toggleAll() {
     const newSelectedWitnesses: WitnessMap = {}
-    Object.keys(selectedWitnesses).forEach((id) => {
-      newSelectedWitnesses[id] = !allSelected
+    validTargets.forEach((st) => {
+      newSelectedWitnesses[getTargetKey(st)] = !allSelected
     })
-    applySelection(newSelectedWitnesses)
-  }
-
-  function applySelection(newSelectedWitnesses: WitnessMap) {
     setSelectedWitnesses(newSelectedWitnesses)
-    onSelect(targets.filter((st) => newSelectedWitnesses[st.source.id]))
   }
 
   if (total === 0) return null
@@ -85,7 +91,7 @@ const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
       {/* select-all checkbox + gray count label */}
       <div className="flex items-center justify-between">
         <label className="flex items-center gap-2 cursor-pointer text-sm">
-          <Checkbox checked={allChecked} onCheckedChange={() => toggleAll(selectedWitnesses, allSelected)} />
+          <Checkbox checked={allChecked} onCheckedChange={toggleAll} />
           {t('select_all')}
         </label>
       </div>
@@ -94,10 +100,11 @@ const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
       <div data-cy="witness-list" className="flex flex-col gap-1.5">
         {targets.map((st) => (
           <WitnessItem
-            key={st.source.id}
+            key={getTargetKey(st)}
             syncedTarget={st}
-            isOpened={!!openedWitnesses[st.source.id]}
-            isSelected={!!selectedWitnesses[st.source.id]}
+            isOpened={!!openedWitnesses[getTargetKey(st)]}
+            isSelected={!!selectedWitnesses[getTargetKey(st)]}
+            error={errors[getTargetKey(st)]}
             onSelect={() => toggleWitness(st)}
           />
         ))}

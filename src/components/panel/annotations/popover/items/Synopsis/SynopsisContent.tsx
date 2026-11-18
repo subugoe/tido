@@ -5,6 +5,8 @@ import { Checkbox } from '@/components/ui/checkbox.tsx'
 import { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import WitnessesArea from '@/components/panel/annotations/popover/items/Synopsis/WitnessesArea.tsx'
 import WitnessItem from '@/components/panel/annotations/popover/items/Synopsis/WitnessItem.tsx'
+import useWitnessErrors from '@/components/panel/annotations/popover/items/Synopsis/useWitnessErrors.ts'
+import { getTargetKey } from '@/utils/annotations.ts'
 
 interface Props {
   syncTargets: SynopsisConnection
@@ -20,16 +22,21 @@ const SynopsisContent: FC<Props> = ({ syncTargets, allWitnessesOpened, onOpenSyn
   const [selectedTargets, setSelectedTargets] = useState<SyncedTargetRef[]>([])
   const [replacePanels, setReplacePanels] = useState(false)
 
+  // hooks can't be called conditionally: validate only when the select buttons are shown,
+  // otherwise WitnessesArea validates its own list
+  const errors = useWitnessErrors(allWitnessesOpened ? syncTargets.otherSyncedTargets : [])
+
   // All witnesses already loaded in the current panel — show simple select buttons.
   if (allWitnessesOpened) {
     return (
       <div className="flex flex-col gap-2 w-[360px]">
         {syncTargets.otherSyncedTargets.map((st) => (
           <WitnessItem
-            key={st.source.id}
+            key={getTargetKey(st)}
             syncedTarget={st}
             isOpened={true}
             isSelected={false}
+            error={errors[getTargetKey(st)]}
             onSelect={() => onSelectTarget(st)}
             selectOnly
           />

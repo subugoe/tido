@@ -20,6 +20,7 @@ import {
 import { AnnotationsConfig, FilterNodeWithSelection, FilterType, PanelViewState } from '@/types'
 import { getAnnotationType } from '@/utils/annotation-data.ts'
 import { visibleTextSources } from '@/utils/panel-views.ts'
+import { apiRequest } from '@/utils/api.ts'
 
 function addAnnotationId(target: Element, id: string) {
   const ids = getAnnotationIds(target)
@@ -359,7 +360,30 @@ function getVisibleAnnotationTypes(
 }
 
 
+// Inflight map tracks ongoing text fetches by content url. When several witness checks request the same
+// text (e.g. several synced targets of one text) before the first fetch completes, they share the same
+// promise instead of firing duplicate requests. Entries are cleaned up once the promise settles, so no
+// parsed text is kept in memory.
+const inflightParsedTexts = new Map<string, Promise<Document>>()
+
+async function getParsedText(url: string): Promise<Document> {
+  if (inflightParsedTexts.has(url)) return inflightParsedTexts.get(url)!
+
+  const promise = (async () => {
+    const html = await apiRequest<string>(url)
+    return new DOMParser().parseFromString(`${html}`, 'text/html')
+  })()
+
+  inflightParsedTexts.set(url, promise)
+  try {
+    return await promise
+  } finally {
+    inflightParsedTexts.delete(url)
+  }
+}
+
 export {
+  getParsedText,
   addAnnotationId,
   removeAnnotationIds,
   addAnnotationBaseStyle,

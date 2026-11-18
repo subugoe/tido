@@ -206,3 +206,88 @@ describe('Synopsis: hovering interconnected sync targets across panels', () => {
     connections.forEach((connection) => expectHovered(connection, false))
   })
 })
+
+// A witness of the popover is disabled when it can not be navigated to - with an error icon and a
+// tooltip telling why:
+//   - its text (source.id) is not one of the contents of its item (source.item)
+//   - its synced target (selector) is not found in its text
+// Each test breaks the 'Whale Voyages' target of synopsis-14 in the annotation page response, while
+// 'Country Manners' stays valid.
+describe('Synopsis: disabled witnesses', () => {
+
+  const annotationPageUrl = '**/example-synopsis-2/annotations/annotationPage/example.json'
+  const syncAnnotationId = `${base}/annotations/annotation/synopsis-14`
+  const [brokenWitness, validWitness] = witnesses
+
+  const getWitness = (title) => getPopover().contains('[data-cy="witness-item"]', title)
+
+  // Changes the 'Whale Voyages' target of synopsis-14 in the annotation page response
+  function breakWitnessTarget(change) {
+    cy.intercept('GET', annotationPageUrl, (req) => {
+      req.continue((res) => {
+        const page = typeof res.body === 'string' ? JSON.parse(res.body) : res.body
+        const annotation = page.items.find((a) => a.id === syncAnnotationId)
+        const target = annotation.target.find((t) => t.source.id === brokenWitness.contentUrl)
+        change(target)
+        res.send(page)
+      })
+    })
+  }
+
+  function openSynopsisPopover() {
+    cy.visit('/e2e.html?' + config)
+    cy.get('[data-cy="panel"]').should('have.length', 1)
+    getPanel(0).find(textPaneSelector(source.contentUrl)).find(source.selector).should('exist').click()
+    getPopover().should('be.visible')
+    getPopover().find('[data-cy="witness-item"]').should('have.length', 2)
+  }
+
+  function expectDisabledWitness(description) {
+    // 1. The broken witness is disabled and shows the error icon, the valid one doesn't
+    getWitness(brokenWitness.title).should('have.attr', 'data-disabled')
+    getWitness(brokenWitness.title).should('have.attr', 'aria-disabled', 'true')
+    getWitness(brokenWitness.title).find('[data-cy="witness-error-icon"]').should('exist')
+
+    getWitness(validWitness.title).should('not.have.attr', 'data-disabled')
+    getWitness(validWitness.title).find('[data-cy="witness-error-icon"]').should('not.exist')
+
+    // 2. Only the valid witness counts
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '0/1')
+
+    // 3. Clicking the disabled witness doesn't select it
+    getWitness(brokenWitness.title).click()
+    getWitness(brokenWitness.title).should('not.have.attr', 'data-selected')
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '0/1')
+    getPopover().find('[data-cy="open-synced-panels"]').should('be.disabled')
+
+    // 4. Its tooltip tells what went wrong
+    getWitness(brokenWitness.title).focus()
+    cy.get('[data-cy="witness-error-tooltip"]')
+      .should('be.visible')
+      .and('contain.text', 'Synoptic target unavailable')
+      .and('contain.text', description)
+
+    // 5. "Select all" only selects the valid witness
+    getPopover().contains('label', 'Select all').click()
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '1/1')
+    getWitness(validWitness.title).should('have.attr', 'data-selected')
+    getWitness(brokenWitness.title).should('not.have.attr', 'data-selected')
+    getPopover().find('[data-cy="open-synced-panels"]').should('contain.text', '(1)')
+  }
+
+  it('Should disable a witness whose text is not part of its item', () => {
+    // the item of 'Whale Voyages', Chapter 2 has no such content
+    breakWitnessTarget((target) => { target.source.id = `${base}/html/not-part-of-item.html` })
+    openSynopsisPopover()
+
+    expectDisabledWitness('The text where the synoptic target should appear, was not found')
+  })
+
+  it('Should disable a witness whose synced target is not found in its text', () => {
+    // the transcription of 'Whale Voyages', Chapter 2 has no such element
+    breakWitnessTarget((target) => { target.selector.value = '#not-in-text' })
+    openSynopsisPopover()
+
+    expectDisabledWitness('The synoptic target was not found in the text.')
+  })
+})
