@@ -98,7 +98,6 @@ const AnnotationPopoverContent : FC<Props> = ({
     )}
     {children && (
       <div data-cy="popover-synopsis-section" className={`flex flex-col gap-1 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current?.length > 0 || normalAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
-        {renderLabel(t('synopsis'))}
         {children}
       </div>
     )}

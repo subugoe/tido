@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import { SyncedTargetRef, SynopsisConnection, useSynopsisStore } from '@/store/SynopsisStore.tsx'
-import { getSelectorValue, getSource, getSyncedTargets } from '@/utils/annotations.ts'
+import { SyncedTargetRef, SyncedTargetsMap, SynopsisConnection, useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { flattenSyncedTargets, getSelectorValue, getSource, getSyncedTargets } from '@/utils/annotations.ts'
 import { findFocusedTarget } from '@/utils/scroller.ts'
 import { isProgrammaticScroll } from '@/utils/dom.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
@@ -29,7 +29,7 @@ export interface SynopsisLogic {
   // the sync targets found in the text handed over - the component that renders it makes them
   // behave like its other targets
   syncTargets: HTMLElement[]
-  getOtherSyncedTargets: (targetEl: HTMLElement, source: string) => SyncedTargetRef[]
+  getOtherSyncedTargets: (targetEl: HTMLElement, source: string) => SyncedTargetsMap
   handleSynopsisSelection: (connection: SynopsisConnection) => void
   onHover: (targetEl: HTMLElement, source: string) => void
   onHoverEnd: () => void
@@ -184,7 +184,7 @@ function useSynopsis(): SynopsisLogic {
 
     // the connection's targets that live in this text, resolved from their selector - which may
     // match several elements
-    const ownTargets = otherSyncedTargets
+    const ownTargets = flattenSyncedTargets(otherSyncedTargets)
       .filter((syncedTarget) => syncedTarget.source.id === source)
       .flatMap((syncedTarget) => Array.from(text.querySelectorAll(syncedTarget.selector)) as HTMLElement[])
 
@@ -229,7 +229,7 @@ function useSynopsis(): SynopsisLogic {
   }, [])
 
   const onHover = useCallback((targetEl: HTMLElement, source: string) => {
-    const otherSyncedTargets = getOtherSyncedTargets(targetEl, source)
+    const otherSyncedTargets = flattenSyncedTargets(getOtherSyncedTargets(targetEl, source))
     if (otherSyncedTargets.length === 0) return
 
     // remove first the previous hover styles
@@ -255,7 +255,8 @@ function useSynopsis(): SynopsisLogic {
       if (!focusedTarget) return
 
       const syncedTargets = getOtherSyncedTargets(focusedTarget, source)
-      if (syncedTargets.length === 0) return
+      const syncedTargetsList = flattenSyncedTargets(syncedTargets)
+      if (syncedTargetsList.length === 0) return
 
       const yPos = focusedTarget.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
 
@@ -269,7 +270,7 @@ function useSynopsis(): SynopsisLogic {
           yPos,
           source: 'scroll'
         })
-        scrollInOtherTexts(resolveSyncedTargetElements(syncedTargets), yPos, text, direction)
+        scrollInOtherTexts(resolveSyncedTargetElements(syncedTargetsList), yPos, text, direction)
       }
 
     }
