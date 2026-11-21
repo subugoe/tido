@@ -1,6 +1,9 @@
 import { FC, RefObject, useEffect, useMemo, useRef, useState } from 'react'
 import {
   addCrossRefTargetStyle,
+  addSynopsisSelectedStyle,
+  removeActiveTargetStyle,
+  removeSynopsisSelectedStyle,
   getDiscoveredAnnotationTypes,
   assignNestedTargetsInFlippedMatched,
   flipMatchedAnnotationsMap,
@@ -15,6 +18,7 @@ import {
   getTargetVisualState
 } from '@/utils/target-visual-state.ts'
 import {
+  flattenSyncedTargets,
   getSelectorValue,
   getSource,
   isFiltered
@@ -29,6 +33,8 @@ import { SelectedAnnotation } from '@/types'
 import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
 import { useAnnotationPopover } from '@/components/panel/annotations/popover/useAnnotationPopover.tsx'
 import { getAnnotationTargets } from '@/utils/annotation-data.ts'
+import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { scrollProgrammatically } from '@/utils/dom.ts'
 
 interface Props {
   // the parsed text, already attached to the wrapper
@@ -79,6 +85,7 @@ const TextAnnotationsLayer: FC<Props> = ({
   // target does when it is clicked or hovered is decided here, the same for them as for the
   // annotation targets below.
   const { onHover, onHoverEnd, setText, syncTargets } = useSynopsis()
+  const activeSynopsisConnection = useSynopsisStore((state) => state.activeSynopsisConnection)
 
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
 
@@ -190,6 +197,49 @@ const TextAnnotationsLayer: FC<Props> = ({
       })
     }
   }, [syncTargets])
+
+  // The selected synopsis connection: its targets in this text get the selected style and are scrolled to.
+  // Runs only when the connection changes - the text and source are read as they are at that moment.
+  useEffect(() => {
+    if (sourceType !== 'text' || !parsedDom) return
+
+    const { navigatedTarget, otherSyncedTargets, yPos, source: connectionSource } = activeSynopsisConnection
+    if (!navigatedTarget) return
+
+    // A connection the user scrolled to is highlighted and aligned by the scroll listener of useSynopsis
+    // already - it is published so the rest of the app follows the scrolling, and all this effect does
+    // for it is drop the styles of the connection it replaces (the cleanup of its previous run).
+    if (connectionSource === 'scroll') return
+
+    const ownsNavigatedTarget = parsedDom.contains(navigatedTarget)
+
+    if (ownsNavigatedTarget) addSynopsisSelectedStyle(navigatedTarget)
+
+    // the connection's targets that live in this text, resolved from their selector - which may
+    // match several elements
+    const ownTargets = flattenSyncedTargets(otherSyncedTargets)
+      .filter((syncedTarget) => syncedTarget.source.id === source)
+      .flatMap((syncedTarget) => Array.from(parsedDom.querySelectorAll(syncedTarget.selector)) as HTMLElement[])
+
+    ownTargets.forEach((targetEl) => addSynopsisSelectedStyle(targetEl))
+
+    // All targets of this text share its scroll container, so it is scrolled once - the upper most
+    // target lands at yPos, the distance from the top that the navigated target has in its own text.
+    const scrollContainer = parsedDom.closest('[data-text-container]') as HTMLElement | null
+    if (scrollContainer && ownTargets.length > 0) {
+      const containerTop = scrollContainer.getBoundingClientRect().top
+      const upperMostTop = Math.min(...ownTargets.map((targetEl) => targetEl.getBoundingClientRect().top))
+      scrollProgrammatically(scrollContainer, scrollContainer.scrollTop + upperMostTop - containerTop - yPos)
+    }
+
+    return () => {
+      if (ownsNavigatedTarget) {
+        removeSynopsisSelectedStyle(navigatedTarget)
+        removeActiveTargetStyle(navigatedTarget)
+      }
+      ownTargets.forEach((targetEl) => removeSynopsisSelectedStyle(targetEl))
+    }
+  }, [activeSynopsisConnection, parsedDom])
 
   // What a target looks like depends on the hover, which changes on every pointer move - but which
   // targets exist, which ones sit inside which, and which ones may not be highlighted do not. That

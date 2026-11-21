@@ -5,10 +5,9 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { createNewPanel } from '@/utils/panel.ts'
 import { configureViews, showContent, viewsShowingContent, visibleTextSources } from '@/utils/panel-views.ts'
-import { SyncedTargetRef, SyncedTargetsMap, SynopsisConnection } from '@/store/SynopsisStore.tsx'
+import { SyncedTargetRef, SyncedTargetsMap, SynopsisConnection, useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { flattenSyncedTargets } from '@/utils/annotations.ts'
 import SynopsisContent from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContent.tsx'
-import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
 import { logError } from '@/utils/custom-error.ts'
 
 interface Props {
@@ -26,7 +25,6 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
   const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
   const config = useConfig()
-  const { handleSynopsisSelection } = useSynopsis()
 
   const targets = useMemo(() => flattenSyncedTargets(syncTargets.otherSyncedTargets), [syncTargets.otherSyncedTargets])
 
@@ -39,7 +37,7 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
   // the valid synced targets of the witness selected in the given sync connection
   function onSelectTarget(connectionKey: string, targets: SyncedTargetRef[]) {
     onSelect()
-    handleSynopsisSelection({ ...syncTargets, otherSyncedTargets: { [connectionKey]: targets } })
+    useSynopsisStore.getState().setActiveSynopsisConnection({ ...syncTargets, otherSyncedTargets: { [connectionKey]: targets } })
   }
 
   function onOpenPanelsClick(selectedTargets: SyncedTargetsMap, replacePanels: boolean) {
@@ -48,7 +46,7 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
     const textTargets = [...new Map(flattenSyncedTargets(selectedTargets).map((st) => [st.source.id, st])).values()]
     if (replacePanels) openWithSubstitute(textTargets)
     else openAdditionalPanel(textTargets)
-    handleSynopsisSelection({ ...syncTargets, otherSyncedTargets: selectedTargets })
+    useSynopsisStore.getState().setActiveSynopsisConnection({ ...syncTargets, otherSyncedTargets: selectedTargets })
   }
 
   // Replace the existing panels (except the current one) with a fresh panel per selected witness.

@@ -6,7 +6,7 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 import NavigationButton from '@/components/panel/synopsis/NavigationButton.tsx'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
-import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
+import { getOtherSyncedTargets } from '@/utils/synopsis.ts'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 import { flattenSyncedTargets } from '@/utils/annotations.ts'
 
@@ -15,7 +15,6 @@ const SyncTargetNavigation: FC = () => {
   const { showSynopsisNavigation } = useConfig()
   const { t } = usePanelTranslation()
   const activeSynopsisConnection = useSynopsisStore(state => state.activeSynopsisConnection)
-  const { getOtherSyncedTargets, handleSynopsisSelection } = useSynopsis()
   const [navigatedTargetIndex, setNavigatedTargetIndex] = useState(0)
 
   function findTargetSource(target: HTMLElement): string | undefined {
@@ -71,7 +70,7 @@ const SyncTargetNavigation: FC = () => {
       yPos = offsetTop - finalScrollTop
     }
 
-    handleSynopsisSelection({ navigatedTarget: target, otherSyncedTargets, yPos })
+    useSynopsisStore.getState().setActiveSynopsisConnection({ navigatedTarget: target, otherSyncedTargets, yPos })
   }
 
   return (

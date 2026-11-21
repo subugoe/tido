@@ -2,12 +2,12 @@ import { ReactNode, useEffect, useRef, useState } from 'react'
 import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
 import AnnotationPopoverContent from '@/components/panel/annotations/popover/AnnotationPopoverContent.tsx'
 import SynopsisContainer from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContainer.tsx'
-import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useSetHoveredAnnotations } from '@/contexts/TextContext.tsx'
-import { EMPTY_SYNOPSIS_CONNECTION, SynopsisConnection, SyncedTargetsMap } from '@/store/SynopsisStore.tsx'
+import { EMPTY_SYNOPSIS_CONNECTION, SynopsisConnection, SyncedTargetsMap, useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { flattenSyncedTargets, getSelectorValue } from '@/utils/annotations.ts'
+import { getOtherSyncedTargets } from '@/utils/synopsis.ts'
 import { ANNOTATION_IDS_ATTRIBUTE } from '@/utils/constants.ts'
 import {
   addActiveTargetStyle,
@@ -44,7 +44,6 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
   const { annotations: annotationsConfig } = useConfig()
   const { activeAnnotationTypes } = usePanel()
   const setHoveredAnnotations = useSetHoveredAnnotations()
-  const { getOtherSyncedTargets, handleSynopsisSelection } = useSynopsis()
 
   const [open, setOpen] = useState(false)
   const [targetElement, setTargetElement] = useState<HTMLElement | null>(null)
@@ -168,7 +167,7 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
       newCrossRefAnnotations.length === 0 && normalAnnotations.length === 0
 
     // a plain sync target - nothing to show in the popover, so the click selects the connection right away
-    if (areOnlySyncedTargets && syncedTargetsCount === 1) handleSynopsisSelection(clickedConnection)
+    if (areOnlySyncedTargets && syncedTargetsCount === 1) useSynopsisStore.getState().setActiveSynopsisConnection(clickedConnection)
     // several witnesses to choose from: the popover offers them, the click only marks the target
     if (areOnlySyncedTargets && syncedTargetsCount > 1) addSynopsisSelectedStyle(targetEl)
 
