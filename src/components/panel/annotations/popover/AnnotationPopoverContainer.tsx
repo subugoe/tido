@@ -1,7 +1,5 @@
 import React, { FC, memo } from 'react'
 import { Popover, PopoverContent, PopoverAnchor } from '@/components/ui/popover.tsx'
-import { Button } from '@/components/ui/button.tsx'
-import { X } from 'lucide-react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
@@ -46,24 +44,10 @@ const AnnotationPopoverContainer: FC<Props> = memo(({
         onOpenAutoFocus={(e) => e.preventDefault()}
         hideWhenDetached={true}
         container={panelRootRef.current}
-        className="relative flex max-h-(--radix-popover-content-available-height) max-w-(--radix-popover-content-available-width) flex-col overflow-hidden p-0"
+        className="flex max-h-(--radix-popover-content-available-height) max-w-(--radix-popover-content-available-width) flex-col gap-2 overflow-hidden p-4"
       >
-        <Button
-          variant="ghost"
-          size="iconSm"
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10"
-          aria-label="Close"
-          data-cy="annotation-popover-close"
-        >
-          <X size={16} />
-        </Button>
-        <div
-          data-cy="annotation-popover-scroll-area"
-          className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 break-words"
-        >
-          {children}
-        </div>
+        {/* the title row (AnnotationPopoverContent) does not scroll, the content below it does */}
+        {children}
       </PopoverContent>
     </Popover>
   )
