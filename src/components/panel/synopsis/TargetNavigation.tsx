@@ -6,15 +6,15 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 import NavigationButton from '@/components/panel/synopsis/NavigationButton.tsx'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
-import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
+import { getOtherSyncedTargets } from '@/utils/synopsis.ts'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
+import { flattenSyncedTargets } from '@/utils/annotations.ts'
 
 const SyncTargetNavigation: FC = () => {
   const { panelState, syncedTargets, syncedTargetsMap, usePanelTranslation } = usePanel()
   const { showSynopsisNavigation } = useConfig()
   const { t } = usePanelTranslation()
   const activeSynopsisConnection = useSynopsisStore(state => state.activeSynopsisConnection)
-  const { getOtherSyncedTargets, handleSynopsisSelection } = useSynopsis()
   const [navigatedTargetIndex, setNavigatedTargetIndex] = useState(0)
 
   function findTargetSource(target: HTMLElement): string | undefined {
@@ -27,7 +27,7 @@ const SyncTargetNavigation: FC = () => {
     const navigatedIndex = navigatedTarget ? syncedTargets.indexOf(navigatedTarget) : -1
     if (navigatedIndex !== -1) return navigatedIndex
 
-    return syncedTargets.findIndex((el) => otherSyncedTargets.some((syncedTarget) =>
+    return syncedTargets.findIndex((el) => flattenSyncedTargets(otherSyncedTargets).some((syncedTarget) =>
       syncedTargetsMap[syncedTarget.source.id]?.includes(el) && el.matches(syncedTarget.selector)
     ))
   }
@@ -60,7 +60,7 @@ const SyncTargetNavigation: FC = () => {
 
     const target = syncedTargets[nextIndex]
     const source = findTargetSource(target)
-    const otherSyncedTargets = source ? getOtherSyncedTargets(target, source) : []
+    const otherSyncedTargets = source ? getOtherSyncedTargets(target, source) : {}
 
     const scrollContainer = target.closest('[data-text-container]') as HTMLElement | null
     let yPos = 0
@@ -70,7 +70,7 @@ const SyncTargetNavigation: FC = () => {
       yPos = offsetTop - finalScrollTop
     }
 
-    handleSynopsisSelection({ navigatedTarget: target, otherSyncedTargets, yPos })
+    useSynopsisStore.getState().setActiveSynopsisConnection({ navigatedTarget: target, otherSyncedTargets, yPos })
   }
 
   return (

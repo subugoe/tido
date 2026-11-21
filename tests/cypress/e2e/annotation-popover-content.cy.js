@@ -558,10 +558,10 @@ describe('Annotation popover content', () => {
       target('#no-objection').click('left')
 
       popover().should('be.visible')
-      popover().find(selectors.sectionLabel).should('have.length', 3)
+      // the synopsis section has no label of its own
+      popover().find(selectors.sectionLabel).should('have.length', 2)
       popover().find(selectors.sectionLabel).eq(0).should('have.text', 'Tooltip')
       popover().find(selectors.sectionLabel).eq(1).should('have.text', 'More annotations')
-      popover().find(selectors.sectionLabel).eq(2).should('have.text', 'Synopsis')
 
       // the cross ref belongs to the link, which was not clicked
       section('reference').should('not.exist')
@@ -574,11 +574,11 @@ describe('Annotation popover content', () => {
       target('#objection').click()
 
       popover().should('be.visible')
-      popover().find(selectors.sectionLabel).should('have.length', 4)
+      // the synopsis section has no label of its own
+      popover().find(selectors.sectionLabel).should('have.length', 3)
       popover().find(selectors.sectionLabel).eq(0).should('have.text', 'Tooltip')
       popover().find(selectors.sectionLabel).eq(1).should('have.text', 'Reference')
       popover().find(selectors.sectionLabel).eq(2).should('have.text', 'More annotations')
-      popover().find(selectors.sectionLabel).eq(3).should('have.text', 'Synopsis')
 
       section('reference').within(() => {
         cy.contains('p', 'Moby-Dick').should('exist')

@@ -1,5 +1,5 @@
 import { getSource } from '@/utils/annotations.ts'
-import { isProgrammaticScroll, markProgrammaticScroll } from '@/utils/dom.ts'
+import { isProgrammaticScroll, scrollProgrammatically } from '@/utils/dom.ts'
 import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 
 export const SYNC_SCROLL_THRESHOLD_TOP = 0.35
@@ -93,8 +93,7 @@ class Scroller {
   syncScroll(source: HTMLElement, target: HTMLElement) {
     if (!source || !target) return
     this.isSyncing = true
-    markProgrammaticScroll(target)
-    target.scrollTop = source.scrollTop
+    scrollProgrammatically(target, source.scrollTop, 'instant')
     requestAnimationFrame(() => ( this.isSyncing = false))
   }
 
@@ -136,8 +135,7 @@ class Scroller {
 
       const targetTop = targetRect.top - otherTextRect.top + otherText.scrollTop
       const targetOffset = otherText.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
-      markProgrammaticScroll(otherText)
-      otherText.scrollTop = isNearBottom ? scrollTop : targetTop - targetOffset
+      scrollProgrammatically(otherText, isNearBottom ? scrollTop : targetTop - targetOffset, 'instant')
     }
 
     setTimeout(() => this.isSyncing = false, 20)
@@ -185,8 +183,7 @@ class Scroller {
       const targetRect = targetElement.getBoundingClientRect()
       const targetTop = targetRect.top - textRect.top + text.scrollTop
       const targetOffset = text.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
-      markProgrammaticScroll(text)
-      text.scrollTop = targetTop - targetOffset
+      scrollProgrammatically(text, targetTop - targetOffset, 'instant')
       this.scrollOtherTexts(contentUrl)
     }
     setTimeout(() => this.isSyncing = false, 20)
@@ -247,14 +244,14 @@ class Scroller {
     // to be lifted right here instead.
     const maxScrollTop = text.scrollHeight - text.clientHeight
     const top = Math.max(0, Math.min(text.scrollTop + delta, maxScrollTop))
-    if (top === text.scrollTop) {
+    // the same "nothing to scroll" scrollProgrammatically skips - its scrollend would never come
+    if (Math.abs(top - text.scrollTop) < 1) {
       this.isSyncing = false
       return
     }
 
     text.addEventListener('scrollend', () => (this.isSyncing = false), { once: true })
-    markProgrammaticScroll(text)
-    text.scrollTo({ top, behavior: 'smooth' })
+    scrollProgrammatically(text, top)
   }
 }
 

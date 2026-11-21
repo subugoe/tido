@@ -94,11 +94,13 @@ describe('Annotation disableSynopsisSelection', () => {
 
       getPopover().should('be.visible')
 
+      // the synopsis section has no label of its own - its witnesses title heads it
       getPopover()
         .find('[data-cy="popover-section-label"]')
-        .should('have.length', 2)
+        .should('have.length', 1)
         .then($labels => expect(Array.from($labels, label => label.textContent))
-          .to.deep.equal(['Annotations', 'Synopsis']))
+          .to.deep.equal(['Annotations']))
+      getPopover().find('[data-cy="popover-synopsis-section"]').should('exist')
 
       getPopover()
         .find('[data-cy="popover-annotations-section"] [data-cy="popover-annotation-item"]')
@@ -112,8 +114,9 @@ describe('Annotation disableSynopsisSelection', () => {
         .find('[data-cy="witness-label"]')
         .should('have.text', 'Country Manners', { timeout: 8000 })
 
-      // simplified UI: no WitnessesArea title, no "Open in panels" button
-      getPopover().find('[data-cy="synoptical-witnesses-title"]').should('not.exist')
+      // simplified UI: headed by the witnesses title only, no "Open in panels" button
+      getPopover().find('[data-cy="synoptical-witnesses-title"]').should('have.text', 'Synoptical Witnesses')
+      getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('not.exist')
       getPopover().find('[data-cy="open-synced-panels"]').should('not.exist')
 
       // no checkbox rendered inside the witness-item (selectOnly mode)
@@ -195,11 +198,13 @@ describe('Annotation disableSynopsisSelection', () => {
 
       getPopover().should('be.visible')
 
+      // the synopsis section has no label of its own - its witnesses title heads it
       getPopover()
         .find('[data-cy="popover-section-label"]')
-        .should('have.length', 2)
+        .should('have.length', 1)
         .then($labels => expect(Array.from($labels, label => label.textContent))
-          .to.deep.equal(['Annotations', 'Synopsis']))
+          .to.deep.equal(['Annotations']))
+      getPopover().find('[data-cy="popover-synopsis-section"]').should('exist')
 
       getPopover()
         .find('[data-cy="popover-annotations-section"] [data-cy="popover-annotation-item"]')

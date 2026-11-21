@@ -4,6 +4,8 @@ import CrossRefItem from '@/components/panel/annotations/popover/items/CrossRefI
 import BaseItem from '@/components/panel/annotations/popover/items/BaseItem.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { getAnnotationTargets } from '@/utils/annotation-data.ts'
+import { Button } from '@/components/ui/button.tsx'
+import { X } from 'lucide-react'
 
 interface Props {
   target: Element,
@@ -74,35 +76,59 @@ const AnnotationPopoverContent : FC<Props> = ({
     return <p data-cy="popover-section-label" className="py-1 mb-1 text-xs font-medium text-muted-foreground">{label}</p>
   }
 
-  if (loading) return <div>Loading ...</div>
-  return <div
-    data-cy="annotation-popover-content"
-    className="flex flex-col gap-4"
-    onClick={(e) => e.stopPropagation()}
-  >
-    {tooltipAnnotationsRef.current.length > 0 && (
-      <div data-cy="popover-tooltip-section" className={crossRefAnnotations.length > 0 ? 'border-b border-border' : ''}>
-        {renderLabel(t('tooltip'))}
-        {tooltipAnnotationsRef.current.map((ta) => <div className="mb-2"><TooltipItem key={ta.id} annotation={ta} /></div>)}
-      </div>
-    )}
-    {crossRefAnnotations.length > 0 && <div data-cy="popover-reference-section" className="flex flex-col gap-1">
-      {renderLabel(t('reference'))}
-      {crossRefAnnotations.map((annotation, i) => <CrossRefItem key={i} annotation={annotation} onSelect={handleCrossRefSelection} />)}
-    </div>}
-    {normalAnnotationsRef.current.length > 0 && (
-      <div data-cy="popover-annotations-section" className={`flex flex-col gap-2 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
-        {renderLabel(tooltipAnnotationsRef.current.length === 0 && crossRefAnnotations.length === 0 ? t('annotations') : t('more_annotations'))}
-        {normalAnnotationsRef.current.map(na => <BaseItem key={na.id} annotation={na} source={source} onSelect={() => onBaseItemSelect(isSourceText)}  />)}
-      </div>
-    )}
-    {children && (
-      <div data-cy="popover-synopsis-section" className={`flex flex-col gap-1 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current?.length > 0 || normalAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
-        {renderLabel(t('synopsis'))}
-        {children}
-      </div>
-    )}
+  const annotationsCount = tooltipAnnotations.length + crossRefAnnotations.length + relatedAnnotations.length
+
+  // the title row does not scroll - the content below it does, so the popover has one scrollbar
+  // only and it starts below the title and the close button
+  const titleRow = <div className="flex shrink-0 items-center justify-between gap-4">
+    <h3 data-cy="annotation-popover-title" className="text-sm font-semibold">
+      {t(annotationsCount === 1 ? 'annotation' : 'annotations')}
+    </h3>
+    {/* -mr-2.5 pulls the 28px wide button into the popover's padding, so the X is centered over the
+        content's scrollbar (~6-11px wide) that runs along the right edge of the padding */}
+    <Button
+      variant="ghost"
+      size="iconSm"
+      onClick={onClose}
+      className="-mr-2.5"
+      aria-label="Close"
+      data-cy="annotation-popover-close"
+    >
+      <X size={16} />
+    </Button>
   </div>
+
+  if (loading) return <>{titleRow}<div>Loading ...</div></>
+  return <>
+    {titleRow}
+    <div
+      data-cy="annotation-popover-content"
+      className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain pr-2 break-words"
+      onClick={(e) => e.stopPropagation()}
+    >
+      {tooltipAnnotationsRef.current.length > 0 && (
+        <div data-cy="popover-tooltip-section" className={crossRefAnnotations.length > 0 ? 'border-b border-border' : ''}>
+          {renderLabel(t('tooltip'))}
+          {tooltipAnnotationsRef.current.map((ta) => <div className="mb-2"><TooltipItem key={ta.id} annotation={ta} /></div>)}
+        </div>
+      )}
+      {crossRefAnnotations.length > 0 && <div data-cy="popover-reference-section" className="flex flex-col gap-1">
+        {renderLabel(t('reference'))}
+        {crossRefAnnotations.map((annotation, i) => <CrossRefItem key={i} annotation={annotation} onSelect={handleCrossRefSelection} />)}
+      </div>}
+      {normalAnnotationsRef.current.length > 0 && (
+        <div data-cy="popover-annotations-section" className={`flex flex-col gap-2 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
+          {renderLabel(tooltipAnnotationsRef.current.length === 0 && crossRefAnnotations.length === 0 ? t('annotations') : t('more_annotations'))}
+          {normalAnnotationsRef.current.map(na => <BaseItem key={na.id} annotation={na} source={source} onSelect={() => onBaseItemSelect(isSourceText)}  />)}
+        </div>
+      )}
+      {children && (
+        <div data-cy="popover-synopsis-section" className={`flex flex-col gap-1 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current?.length > 0 || normalAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
+          {children}
+        </div>
+      )}
+    </div>
+  </>
 }
 
 export default AnnotationPopoverContent

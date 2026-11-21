@@ -2,12 +2,12 @@ import { ReactNode, useEffect, useRef, useState } from 'react'
 import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
 import AnnotationPopoverContent from '@/components/panel/annotations/popover/AnnotationPopoverContent.tsx'
 import SynopsisContainer from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContainer.tsx'
-import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useSetHoveredAnnotations } from '@/contexts/TextContext.tsx'
-import { EMPTY_SYNOPSIS_CONNECTION, SynopsisConnection, SyncedTargetRef } from '@/store/SynopsisStore.tsx'
-import { getSelectorValue } from '@/utils/annotations.ts'
+import { EMPTY_SYNOPSIS_CONNECTION, SynopsisConnection, SyncedTargetsMap, useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { flattenSyncedTargets, getSelectorValue } from '@/utils/annotations.ts'
+import { getOtherSyncedTargets } from '@/utils/synopsis.ts'
 import { ANNOTATION_IDS_ATTRIBUTE } from '@/utils/constants.ts'
 import {
   addActiveTargetStyle,
@@ -44,7 +44,6 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
   const { annotations: annotationsConfig } = useConfig()
   const { activeAnnotationTypes } = usePanel()
   const setHoveredAnnotations = useSetHoveredAnnotations()
-  const { getOtherSyncedTargets, handleSynopsisSelection } = useSynopsis()
 
   const [open, setOpen] = useState(false)
   const [targetElement, setTargetElement] = useState<HTMLElement | null>(null)
@@ -78,7 +77,7 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
   // synced, else the closest element around it that is - looked for up to the outermost annotation
   // target containing the click and no further, so a target nested in a sync target (e.g. a cross ref
   // link) offers that one's synced targets, while an element around all of its targets does not.
-  function findSyncTarget(targetEl: HTMLElement, source: string): { syncTargetEl: HTMLElement, otherSyncedTargets: SyncedTargetRef[] } {
+  function findSyncTarget(targetEl: HTMLElement, source: string): { syncTargetEl: HTMLElement, otherSyncedTargets: SyncedTargetsMap } {
     const textContainer = targetEl.closest('[data-text-container]')
 
     // the outermost annotation target containing the click - the clicked target itself when it is not
@@ -90,10 +89,10 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
 
     for (let el: HTMLElement | null = targetEl; el; el = el === boundary ? null : el.parentElement) {
       const otherSyncedTargets = getOtherSyncedTargets(el, source)
-      if (otherSyncedTargets.length > 0) return { syncTargetEl: el, otherSyncedTargets }
+      if (Object.keys(otherSyncedTargets).length > 0) return { syncTargetEl: el, otherSyncedTargets }
     }
 
-    return { syncTargetEl: targetEl, otherSyncedTargets: [] }
+    return { syncTargetEl: targetEl, otherSyncedTargets: {} }
   }
 
   // Sort the annotations of a clicked target into the areas the popover shows - cross references,
@@ -131,11 +130,14 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
     // nested in a sync target (e.g. a cross ref link inside it) offers the synopsis of that sync target,
     // just as it offers the annotations of its parent targets.
     const { syncTargetEl, otherSyncedTargets } = synopsisSelectionDisabled
-      ? { syncTargetEl: targetEl, otherSyncedTargets: [] }
+      ? { syncTargetEl: targetEl, otherSyncedTargets: {} }
       : findSyncTarget(targetEl, source)
 
+    // how many targets it is synced with, across all of its sync connections
+    const syncedTargetsCount = flattenSyncedTargets(otherSyncedTargets).length
+
     const openTooltip = newTooltipAnnotations.length > 0 || newCrossRefAnnotations.length > 0 || normalAnnotations.length > 1
-      || (!synopsisSelectionDisabled && (otherSyncedTargets.length > 1 || otherSyncedTargets.length === 1 && normalAnnotations.length === 1))
+      || (!synopsisSelectionDisabled && (syncedTargetsCount > 1 || syncedTargetsCount === 1 && normalAnnotations.length === 1))
 
     if (openTooltip) {
       setOpen(true)
@@ -165,9 +167,9 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
       newCrossRefAnnotations.length === 0 && normalAnnotations.length === 0
 
     // a plain sync target - nothing to show in the popover, so the click selects the connection right away
-    if (areOnlySyncedTargets && otherSyncedTargets.length === 1) handleSynopsisSelection(clickedConnection)
+    if (areOnlySyncedTargets && syncedTargetsCount === 1) useSynopsisStore.getState().setActiveSynopsisConnection(clickedConnection)
     // several witnesses to choose from: the popover offers them, the click only marks the target
-    if (areOnlySyncedTargets && otherSyncedTargets.length > 1) addSynopsisSelectedStyle(targetEl)
+    if (areOnlySyncedTargets && syncedTargetsCount > 1) addSynopsisSelectedStyle(targetEl)
 
     return { openTooltip, normalAnnotations }
   }
@@ -206,7 +208,7 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
         onBaseItemSelection={onBaseItemSelection}
         onClose={closePopover}
       >
-        {!annotationsConfig?.disableSynopsisSelection && syncTargets.otherSyncedTargets.length > 0 &&
+        {!annotationsConfig?.disableSynopsisSelection && Object.keys(syncTargets.otherSyncedTargets).length > 0 &&
           <SynopsisContainer syncTargets={syncTargets} onSelect={onSynopsisItemClick} />}
       </AnnotationPopoverContent>
     </AnnotationPopoverContainer>

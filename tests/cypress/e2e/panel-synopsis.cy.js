@@ -510,11 +510,13 @@ describe('Panel Synopsis', () => {
       expect(hasActiveStyle($target[0]), `clicked '${OCEAN}' carries the active style`).to.be.true)
 
     // 3. '#ocean' has one annotation and one synced target, so the popover shows both sections
+    // the synopsis section has no label of its own - its witnesses title heads it
     getPopover()
       .find('[data-cy="popover-section-label"]')
-      .should('have.length', 2)
+      .should('have.length', 1)
       .then($labels => expect(Array.from($labels, label => label.textContent))
-        .to.deep.equal(['Annotations', 'Synopsis']))
+        .to.deep.equal(['Annotations']))
+    getPopover().find('[data-cy="popover-synopsis-section"]').should('exist')
 
     getPopover()
       .find('[data-cy="popover-annotations-section"] [data-cy="popover-annotation-item"]')

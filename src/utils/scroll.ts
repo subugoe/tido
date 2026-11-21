@@ -1,5 +1,5 @@
 import { AUTO_SCROLLING_ATTR_NAME } from './constants'
-import { markProgrammaticScroll } from '@/utils/dom.ts'
+import { scrollProgrammatically } from '@/utils/dom.ts'
 
 function syncScrollPosition(source: HTMLElement, target: HTMLElement) {
   if (!target) return
@@ -51,8 +51,7 @@ function scrollToTargets(targetEls: HTMLElement[], yPos: number, behavior: Scrol
 
     // ours, so the text's own scroll listener does not take it for the user's scrolling and sync
     // the panels back on top of it
-    markProgrammaticScroll(scrollContainer)
-    scrollContainer.scrollTo({ top, behavior })
+    scrollProgrammatically(scrollContainer, top, behavior)
   })
 }
 

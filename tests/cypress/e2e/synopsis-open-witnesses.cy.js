@@ -55,9 +55,10 @@ describe('Synopsis: opening the witnesses of a sync target', () => {
   it('Should open each selected witness in a new panel and align its target with the clicked one', () => {
     getPanel(0).find(textPaneSelector(source.contentUrl)).find(source.selector).click()
 
-    // 1. The target has synced targets only, so the popover shows the synopsis section alone
+    // 1. The target has synced targets only, so the popover shows the synopsis section alone - headed
+    // by its witnesses title, without a section label
     getPopover().should('be.visible')
-    getPopover().find('[data-cy="popover-section-label"]').should('have.length', 1).and('have.text', 'Synopsis')
+    getPopover().find('[data-cy="popover-section-label"]').should('not.exist')
     getPopover().find('[data-cy="popover-annotations-section"]').should('not.exist')
     getPopover().find('[data-cy="synoptical-witnesses-title"]').should('have.text', 'Synoptical Witnesses')
 
@@ -243,13 +244,11 @@ describe('Synopsis: disabled witnesses', () => {
   }
 
   function expectDisabledWitness(description) {
-    // 1. The broken witness is disabled and shows the error icon, the valid one doesn't
+    // 1. The broken witness is disabled, the valid one isn't
     getWitness(brokenWitness.title).should('have.attr', 'data-disabled')
     getWitness(brokenWitness.title).should('have.attr', 'aria-disabled', 'true')
-    getWitness(brokenWitness.title).find('[data-cy="witness-error-icon"]').should('exist')
 
     getWitness(validWitness.title).should('not.have.attr', 'data-disabled')
-    getWitness(validWitness.title).find('[data-cy="witness-error-icon"]').should('not.exist')
 
     // 2. Only the valid witness counts
     getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '0/1')
@@ -260,12 +259,13 @@ describe('Synopsis: disabled witnesses', () => {
     getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '0/1')
     getPopover().find('[data-cy="open-synced-panels"]').should('be.disabled')
 
-    // 4. Its tooltip tells what went wrong
+    // 4. Its tooltip tells what went wrong, with the error icon
     getWitness(brokenWitness.title).focus()
     cy.get('[data-cy="witness-error-tooltip"]')
       .should('be.visible')
       .and('contain.text', 'Synoptic target unavailable')
       .and('contain.text', description)
+    cy.get('[data-cy="witness-error-tooltip"]').find('[data-cy="witness-error-icon"]').should('exist')
 
     // 5. "Select all" only selects the valid witness
     getPopover().contains('label', 'Select all').click()
@@ -289,5 +289,181 @@ describe('Synopsis: disabled witnesses', () => {
     openSynopsisPopover()
 
     expectDisabledWitness('The synoptic target was not found in the text.')
+  })
+})
+
+// A sync target can be synced with several targets of the same witness (manifest). The popover then
+// lists the witness once, with a badge counting its targets. Its invalid targets are split off into a
+// disabled entry of their own.
+// Each test replaces the witness targets of synopsis-14 in the annotation page response with three
+// targets of the 'Whale Voyages' transcription, so 'Whale Voyages' is the only witness.
+describe('Synopsis: a witness with multiple synced targets', () => {
+
+  const annotationPageUrl = '**/example-synopsis-2/annotations/annotationPage/example.json'
+  const syncAnnotationId = `${base}/annotations/annotation/synopsis-14`
+  const [whaleVoyages] = witnesses
+  const whaleVoyagesSelectors = ['#manhatto', '#cape-horn', '#new-bedford']
+
+  const getValidWitness = () => getPopover().find('[data-cy="witness-item"]:not([data-disabled])')
+  const getDisabledWitness = () => getPopover().find('[data-cy="witness-item"][data-disabled]')
+
+  // Syncs the clicked target with the given selectors of the 'Whale Voyages' transcription only
+  function syncWithWhaleVoyages(selectors) {
+    cy.intercept('GET', annotationPageUrl, (req) => {
+      req.continue((res) => {
+        const page = typeof res.body === 'string' ? JSON.parse(res.body) : res.body
+        const annotation = page.items.find((a) => a.id === syncAnnotationId)
+        const ownTarget = annotation.target.find((t) => t.source.id === source.contentUrl)
+        const whaleVoyagesTarget = annotation.target.find((t) => t.source.id === whaleVoyages.contentUrl)
+        annotation.target = [
+          ownTarget,
+          ...selectors.map((value) => ({ ...whaleVoyagesTarget, selector: { ...whaleVoyagesTarget.selector, value } })),
+        ]
+        res.send(page)
+      })
+    })
+  }
+
+  function openSynopsisPopover() {
+    cy.visit('/e2e.html?' + config)
+    cy.get('[data-cy="panel"]').should('have.length', 1)
+    getPanel(0).find(textPaneSelector(source.contentUrl)).find(source.selector).should('exist').click()
+    getPopover().should('be.visible')
+  }
+
+  it('Should show one witness with a count of 3 when all of its synced targets are valid', () => {
+    syncWithWhaleVoyages(whaleVoyagesSelectors)
+    openSynopsisPopover()
+
+    // 1. The three targets are listed as one witness ...
+    getPopover().find('[data-cy="witness-item"]').should('have.length', 1)
+    getDisabledWitness().should('not.exist')
+    getValidWitness().find('[data-cy="witness-label"]').should('contain.text', whaleVoyages.title)
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '0/1')
+
+    // 2. ... counting its three targets
+    getValidWitness().find('[data-cy="witness-targets-count"]').should('have.text', '3')
+
+    // 3. Selecting it selects all three targets
+    getValidWitness().click()
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '1/1')
+    getPopover().find('[data-cy="open-synced-panels"]').should('contain.text', '(3)')
+  })
+
+  it('Should split a witness into a valid one with a count of 2 and a disabled one when one of its 3 targets is invalid', () => {
+    // the transcription of 'Whale Voyages', Chapter 2 has no '#not-in-text' element
+    syncWithWhaleVoyages([whaleVoyagesSelectors[0], '#not-in-text', whaleVoyagesSelectors[1]])
+    openSynopsisPopover()
+
+    // 1. The witness is listed twice: once for its valid targets, once for its invalid one
+    getPopover().find('[data-cy="witness-item"]').should('have.length', 2)
+    getPopover().find('[data-cy="witness-label"]').each(($label) => expect($label.text()).to.contain(whaleVoyages.title))
+
+    // 2. The valid entry counts its two valid targets
+    getValidWitness().should('have.length', 1)
+    getValidWitness().find('[data-cy="witness-targets-count"]').should('have.text', '2')
+
+    // 3. The invalid entry is disabled, without a count, and its tooltip tells what went wrong
+    getDisabledWitness().should('have.length', 1).and('have.attr', 'aria-disabled', 'true')
+    getDisabledWitness().find('[data-cy="witness-targets-count"]').should('not.exist')
+    getDisabledWitness().focus()
+    cy.get('[data-cy="witness-error-tooltip"]')
+      .should('be.visible')
+      .and('contain.text', 'Synoptic target unavailable')
+      .and('contain.text', 'The synoptic target was not found in the text.')
+    cy.get('[data-cy="witness-error-tooltip"]').find('[data-cy="witness-error-icon"]').should('exist')
+
+    // 4. Only the valid entry counts - and selecting it selects its two valid targets
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '0/1')
+    getDisabledWitness().click()
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '0/1')
+    getValidWitness().click()
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '1/1')
+    getPopover().find('[data-cy="open-synced-panels"]').should('contain.text', '(2)')
+  })
+})
+
+// A sync target can be part of several sync annotations - one sync connection each. The popover lists
+// the witnesses of every connection in a group of its own, each with its own "select all".
+// The test adds a second sync annotation for '#new-york' to the annotation page response, linking it
+// with other targets of both witnesses: '#cape-horn' (Whale Voyages) and '#no-answer' (Country Manners).
+describe('Synopsis: a sync target in several sync connections', () => {
+
+  const annotationPageUrl = '**/example-synopsis-2/annotations/annotationPage/example.json'
+  const syncAnnotationId = `${base}/annotations/annotation/synopsis-14`
+  const secondConnection = { 'Whale Voyages': '#cape-horn', 'Country Manners': '#no-answer' }
+
+  const getConnection = (index) => getPopover().find('[data-cy="synoptical-connection"]').eq(index)
+  const selectAllOf = (index) => getConnection(index).contains('label', 'Select all')
+
+  beforeEach(() => {
+    cy.intercept('GET', annotationPageUrl, (req) => {
+      req.continue((res) => {
+        const page = typeof res.body === 'string' ? JSON.parse(res.body) : res.body
+        const annotation = page.items.find((a) => a.id === syncAnnotationId)
+        const [ownTarget, ...witnessTargets] = annotation.target
+        page.items.push({
+          ...annotation,
+          id: `${base}/annotations/annotation/synopsis-14-second`,
+          target: [
+            ownTarget,
+            ...witnessTargets.map((target, i) => ({
+              ...target,
+              selector: { ...target.selector, value: secondConnection[witnesses[i].title] },
+            })),
+          ],
+        })
+        res.send(page)
+      })
+    })
+
+    cy.visit('/e2e.html?' + config)
+    cy.get('[data-cy="panel"]').should('have.length', 1)
+    getPanel(0).find(textPaneSelector(source.contentUrl)).find(source.selector).should('exist').click()
+    getPopover().should('be.visible')
+  })
+
+  it('Should group the witnesses by sync connection, each with its own select all', () => {
+    // 1. One group per sync connection, each listing both witnesses
+    getPopover().find('[data-cy="synoptical-connection"]').should('have.length', 2)
+    getConnection(0).find('[data-cy="synoptical-connection-title"]').should('have.text', 'Synoptical connection 1')
+    getConnection(1).find('[data-cy="synoptical-connection-title"]').should('have.text', 'Synoptical connection 2')
+    ;[0, 1].forEach((index) => {
+      getConnection(index).find('[data-cy="witness-item"]').should('have.length', 2)
+      witnesses.forEach(({ title }) => getConnection(index).find('[data-cy="witness-label"]').should('contain.text', title))
+    })
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '0/4')
+
+    // 2. "Select all" of the second connection selects its witnesses only
+    selectAllOf(1).click()
+    getConnection(1).find('[data-cy="witness-item"][data-selected]').should('have.length', 2)
+    getConnection(0).find('[data-cy="witness-item"][data-selected]').should('have.length', 0)
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '2/4')
+    getPopover().find('[data-cy="open-synced-panels"]').should('contain.text', '(2)')
+
+    // 3. ... and the one of the first connection selects the rest
+    selectAllOf(0).click()
+    getPopover().find('[data-cy="witness-item"][data-selected]').should('have.length', 4)
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '4/4')
+    getPopover().find('[data-cy="open-synced-panels"]').should('contain.text', '(4)')
+
+    // 4. Clicking "select all" of a fully selected connection unselects it again
+    selectAllOf(0).click()
+    getConnection(0).find('[data-cy="witness-item"][data-selected]').should('have.length', 0)
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '2/4')
+
+    // 5. Opening the witnesses of both connections opens each witness text once, highlighting the
+    // targets of both connections
+    selectAllOf(0).click()
+    getPopover().find('[data-cy="open-synced-panels"]').click()
+    getPopover().should('not.exist')
+    cy.get('[data-cy="panel"]').should('have.length', 1 + witnesses.length)
+
+    witnesses.forEach(({ title, contentUrl, selector }) => {
+      const panel = () => cy.contains('[data-cy="panel"]', title)
+      ;[selector, secondConnection[title]].forEach((targetSelector) => {
+        panel().find(textPaneSelector(contentUrl)).find(targetSelector).should('have.class', SYNOPSIS_STYLE_CLASS)
+      })
+    })
   })
 })
