@@ -28,7 +28,7 @@ const SynopsisContent: FC<Props> = ({ syncTargets, allWitnessesOpened, onOpenSyn
 
   // hooks can't be called conditionally: validate only when the select buttons are shown,
   // otherwise WitnessesArea validates its own list
-  const errors = useWitnessErrors(allWitnessesOpened ? allTargets : [])
+  const { errors, isPending } = useWitnessErrors(allWitnessesOpened ? allTargets : [])
   // per sync connection, one button per witness (manifest) for its valid targets and one for its invalid targets
   const connections = useMemo(
     () => groupConnectionsByWitness(syncTargets.otherSyncedTargets, errors),
@@ -50,6 +50,7 @@ const SynopsisContent: FC<Props> = ({ syncTargets, allWitnessesOpened, onOpenSyn
                   isOpened={true}
                   isSelected={false}
                   error={witness.error}
+                  pending={isPending(witness.targets)}
                   onSelect={() => onSelectTarget(connection.key, witness.targets)}
                   selectOnly
                 />

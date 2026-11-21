@@ -3,6 +3,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
+import { Skeleton } from '@/components/ui/skeleton.tsx'
 import { cn } from '@/lib/utils'
 import { WitnessError, WitnessTargets } from '@/utils/annotations.ts'
 import WitnessItemError from '@/components/panel/annotations/popover/items/Synopsis/WitnessItemError.tsx'
@@ -15,12 +16,14 @@ interface Props {
   onSelect: () => void
   // set when the witness can not be navigated to - the item is then shown disabled
   error?: WitnessError
+  // set while the witness is being checked - it is shown as a skeleton and can't be selected yet
+  pending?: boolean
   selectOnly?: boolean
 }
 
 const COUNT_BADGE_CLASSES = 'inline-flex items-center justify-center h-4 min-w-4 px-1 rounded-full text-[10px] font-medium leading-none text-primary'
 
-const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect, error, selectOnly = false }) => {
+const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect, error, pending = false, selectOnly = false }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
@@ -40,6 +43,21 @@ const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect, 
 
     loadLabel()
   }, [])
+
+  // the same box as the witness button below (border, padding, a text-sm line), so the list does not
+  // shift when the check finishes
+  if (pending) return (
+    <div
+      data-cy="witness-item-pending"
+      aria-busy
+      className="flex items-center gap-2 w-full rounded-md border border-border px-3 py-1.5"
+    >
+      {!selectOnly && <Skeleton className="size-4 shrink-0 rounded-[4px]" />}
+      <div className="flex h-5 flex-1 items-center">
+        <Skeleton className="h-3.5 w-2/3" />
+      </div>
+    </div>
+  )
 
   if (error) return <WitnessItemError label={label} error={error} selectOnly={selectOnly} />
 
