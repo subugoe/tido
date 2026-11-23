@@ -104,9 +104,7 @@ function validateImageNotes(input: string | undefined ) {
 }
 
 function getItemMetadata(item: Item | null) {
-  const titles = item?.titles
-  const firstTitle = titles && titles.length > 0 ? titles[0] : undefined
-  const label = validateItemLabel(firstTitle)
+  const label = validateItemLabel(item?.division ?? undefined)
   const lang = validateItemLanguage(item?.languages)
   const imageLicense = validateImageLicense(item?.images?.[0]?.license)
   const imageNotes = validateImageNotes(item?.images?.[0]?.copyright)
@@ -119,4 +117,27 @@ function getItemMetadata(item: Item | null) {
   ].filter(i => i.value)
 }
 
-export { getCollectionMetadata, getManifestMetadata, getItemMetadata, validateCollectorsName, validateTitles }
+const HEADING_KEYS = ['title', 'label']
+
+// Pulls the first title/label entry out of a metadata list, so it can be shown
+// as the heading of its level instead of as a regular field.
+function splitMetadataHeading(metadata: Metadata[]) {
+  const index = metadata.findIndex(
+    (meta) => HEADING_KEYS.includes(meta.key) && typeof meta.value === 'string' && meta.value !== ''
+  )
+  if (index === -1) return { heading: null, fields: metadata }
+
+  return {
+    heading: metadata[index].value as string,
+    fields: metadata.filter((_, i) => i !== index),
+  }
+}
+
+export {
+  getCollectionMetadata,
+  getManifestMetadata,
+  getItemMetadata,
+  splitMetadataHeading,
+  validateCollectorsName,
+  validateTitles,
+}
