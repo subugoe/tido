@@ -1,9 +1,8 @@
 import { FC } from 'react'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
-import MetadataItem from '@/components/metadata/MetadataItem.tsx'
+import MetadataSection from '@/components/metadata/MetadataSection.tsx'
 import { getManifestMetadata } from '@/utils/metadata.ts'
 
 const ManifestMetadata: FC = () => {
@@ -16,16 +15,7 @@ const ManifestMetadata: FC = () => {
 
   const metadata = getManifestMetadata(manifest)
 
-  if (metadata.length === 0) return null
-
-  return <Accordion type="single" collapsible>
-    <AccordionItem value="item-1">
-      <AccordionTrigger>{ t('manifest') }</AccordionTrigger>
-      <AccordionContent>
-        { metadata.map((meta, i) => <MetadataItem item={meta} key={i} />) }
-      </AccordionContent>
-    </AccordionItem>
-  </Accordion>
+  return <MetadataSection title={t('manifest')} metadata={metadata} />
 }
 
 export default ManifestMetadata

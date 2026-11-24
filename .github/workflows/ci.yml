@@ -45,6 +45,8 @@ jobs:
       run: npm ci
     - name: Run Linting
       run: npm run lint
+    - name: Run unit tests
+      run: npm run test:unit
     - name: Run tests
       run: |
         npm run api & npm run test

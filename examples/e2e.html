@@ -69,8 +69,8 @@
             }
           } else {
             // Normal property assignment
-            // Check if the value is an object
-            if (value.startsWith("{") && value.endsWith("}")) {
+            // Check if the value is an object or an array
+            if ((value.startsWith("{") && value.endsWith("}")) || (value.startsWith("[") && value.endsWith("]"))) {
               try {
                 current[key] = JSON.parse(value);
               } catch (e) {

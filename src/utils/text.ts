@@ -17,9 +17,10 @@ import {
   SYNC_ANNOTATION_ID_ATTRIBUTE,
   ACTIVE_TARGET_STYLE
 } from './constants'
-import { AnnotationsConfig, FilterNodeWithSelection, FilterType, PanelView } from '@/types'
+import { AnnotationsConfig, FilterNodeWithSelection, FilterType, PanelViewState } from '@/types'
 import { getAnnotationType } from '@/utils/annotation-data.ts'
-import { findContentByType } from '@/utils/panel.ts'
+import { visibleTextSources } from '@/utils/panel-views.ts'
+import { apiRequest } from '@/utils/api.ts'
 
 function addAnnotationId(target: Element, id: string) {
   const ids = getAnnotationIds(target)
@@ -119,6 +120,10 @@ function addCrossRefTargetStyle(target: Element) {
 
 function addCrossReferencedElStyle(target: Element) {
   target.classList.add(...CROSS_REF_REL_STYLE)
+}
+
+function removeCrossReferencedElStyle(target: Element) {
+  target.classList.remove(...CROSS_REF_REL_STYLE)
 }
 
 // Synopsis (synced target) highlight. Uses the cross-ref style for now, but kept separate
@@ -316,12 +321,6 @@ function isParentHovered(hoveredTargets: Element[], parentsEl: Element[]) {
   )
 }
 
-// Resolve the content url of a text view from its active content type - mirrors TextViewContext,
-// so the per-source syncedTargetsMap can be aggregated in panelViews order.
-function getContentUrlByType(contents: Content[], type: string | undefined) {
-  return findContentByType(contents, type)?.id
-}
-
 
 // Extract the annotation type filters occurring in a single text's matched annotations. Used when no
 // annotation filters were configured: each text contributes its own types (skipping tooltip types and
@@ -343,19 +342,13 @@ function getDiscoveredAnnotationTypes(
 
 // Collect the unique annotation types discovered across the currently visible text views. Used (when no
 // annotation filters were configured) both to build the visible filter list and to decide whether the
-// Filters button has anything to show. A view maps to its contentUrl via its active content type,
-// mirroring TextViewContext.
+// Filters button has anything to show.
 function getVisibleAnnotationTypes(
   annotationTypesBySource: { [contentUrl: string]: FilterNodeWithSelection[] },
-  panelViews: PanelView[],
-  contents: Content[]
+  panelViews: PanelViewState[],
+  item: Item | null
 ): FilterType[] {
-  const visibleContentUrls = new Set(
-    panelViews
-      .filter(view => view.visible ?? true)
-      .map(view => getContentUrlByType(contents, view.activeContentType))
-      .filter(Boolean)
-  )
+  const visibleContentUrls = new Set(visibleTextSources({ panelViews, item }).map(source => source.contentUrl))
 
   const types = Object
     .entries(annotationTypesBySource)
@@ -367,7 +360,30 @@ function getVisibleAnnotationTypes(
 }
 
 
+// Inflight map tracks ongoing text fetches by content url. When several witness checks request the same
+// text (e.g. several synced targets of one text) before the first fetch completes, they share the same
+// promise instead of firing duplicate requests. Entries are cleaned up once the promise settles, so no
+// parsed text is kept in memory.
+const inflightParsedTexts = new Map<string, Promise<Document>>()
+
+async function getParsedText(url: string): Promise<Document> {
+  if (inflightParsedTexts.has(url)) return inflightParsedTexts.get(url)!
+
+  const promise = (async () => {
+    const html = await apiRequest<string>(url)
+    return new DOMParser().parseFromString(`${html}`, 'text/html')
+  })()
+
+  inflightParsedTexts.set(url, promise)
+  try {
+    return await promise
+  } finally {
+    inflightParsedTexts.delete(url)
+  }
+}
+
 export {
+  getParsedText,
   addAnnotationId,
   removeAnnotationIds,
   addAnnotationBaseStyle,
@@ -397,6 +413,7 @@ export {
   isParentHovered,
   addCrossRefTargetStyle,
   addCrossReferencedElStyle,
+  removeCrossReferencedElStyle,
   addSynopsisStyle,
   removeSynopsisStyle,
   addSynopsisSelectedStyle,
@@ -407,7 +424,6 @@ export {
   addSyncAnnotationId,
   addActiveTargetStyle,
   removeActiveTargetStyle,
-  getContentUrlByType,
   getDiscoveredAnnotationTypes,
   getVisibleAnnotationTypes
 }

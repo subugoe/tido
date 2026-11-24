@@ -56,9 +56,7 @@ const MetadataValue: FC<MetadataValueProps> = ( { value } ) => {
   }, [parsedDom])
 
 
-  return <div className="ml-1 mb-4">
-    {children}
-  </div>
+  return <>{children}</>
 }
 
 export default MetadataValue

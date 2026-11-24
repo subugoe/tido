@@ -17,12 +17,21 @@ Two build outputs from one source tree:
 | `npm run lint` | ESLint flat config (`eslint.config.js`), src only. |
 | `npm run typecheck` | `tsc --noEmit` (separate from lint). |
 | `npm run test` | Full E2E suite: builds lib & embed, starts examples server on `:2222`, runs Cypress headless. |
+| `npm run test:unit` | Vitest unit tests, `src/**/*.test.ts`. |
 | `npm run api` | Mock API on `:8181` from `tests/mocks/`. Required for tests. |
 | `npm run preview:examples` | Build + copy to `examples/dist/` + serve examples on `:2222`. |
 
-## Testing (Cypress E2E only)
+## Testing
 
-No unit tests. All tests run against production builds only.
+### Unit (Vitest)
+
+- Specs next to the module they test (`src/**/*.test.ts`), run with `npm run test:unit` — on the source, no build or mock API needed
+- Node environment without a DOM (`vitest.config.ts`): stub `window` where the code under test reads it
+- For logic that needs no browser (utils, config validation, stores)
+
+### E2E (Cypress)
+
+All E2E tests run against production builds only.
 
 - Specs at `tests/cypress/e2e/`
 - Helpers in `tests/cypress/support/` (globals.js, tree-helpers.js, panel-helpers.js)

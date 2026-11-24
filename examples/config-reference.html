@@ -152,6 +152,13 @@
     </ul>
     <p>Specifies the CSS selector where we should append the TIDO app to.</p>
     <hr>
+    <h5><code>hideEmptyViews</code></h5>
+    <ul>
+    <li><strong>Type:</strong> (<code>image</code> | <code>text</code>)[]</li>
+    <li><strong>Default:</strong> <code>[&quot;image&quot;, &quot;text&quot;]</code></li>
+    </ul>
+    <p>The kinds of views a panel leaves out on an item they have nothing to show for: an image view on an item without images (no <code>images</code> key, an empty <code>images</code> array or an image without <code>id</code>), a text view on an item offering none of its <code>contentTypes</code>. This is evaluated again on every item navigation, and a view left out on one item comes back on the next item it has something to show for. When every view of a panel is left out, the panel shows that there is nothing to show on this item. Kinds not listed keep their views: an image view shows a &quot;No image available&quot; empty state, a text view a notice about the missing content types. Can be overridden per panel with <code>panels[i].hideEmptyViews</code>.</p>
+    <hr>
     <h5><code>lang</code></h5>
     <ul>
     <li><strong>Type:</strong> String (ISO 639-1 language code)</li>
@@ -171,6 +178,12 @@
     <li><strong>Type:</strong> String</li>
     </ul>
     <p>TextAPI collection URL.</p>
+    <hr>
+    <h5><code>panels[i].hideEmptyViews</code></h5>
+    <ul>
+    <li><strong>Type:</strong> (<code>image</code> | <code>text</code>)[]</li>
+    </ul>
+    <p>Overrides the global <code>hideEmptyViews</code> config for this specific panel.</p>
     <hr>
     <h5><code>panels[i].item</code></h5>
     <ul>
@@ -220,7 +233,7 @@
     <ul>
     <li><strong>Type:</strong> PanelViewConfig[]</li>
     </ul>
-    <p>Overrides the global <code>panelViews</code> config for this specific panel. Use this to customize views per panel while still inheriting unset properties from the global config.</p>
+    <p>Overrides the global <code>panelViews</code> config for this specific panel. When given, the panel uses these views only - nothing of the global <code>panelViews</code> is taken over.</p>
     <hr>
     <h5><code>panelViews</code></h5>
     <ul>
@@ -228,7 +241,7 @@
     <li><strong>Default:</strong> <code>[{label: &quot;Image&quot;, view: &quot;image&quot;}, {label: &quot;Text&quot;, view: &quot;text&quot;}]</code></li>
     </ul>
     <p>Configures an initial distribution of content views inside each panel. The defined views here can then be toggled on/off in the &quot;View&quot; dropdown in the panel header. See <a href="#panel-views">Panel Views</a> chapter.</p>
-    <p>If <code>panelViews</code> is not specified, TIDO decides for each item whether to show the image view: an item with images shows the image and the text view, an item without images (no <code>images</code> key, an empty <code>images</code> array or an image without <code>id</code>) shows only the text view. This is evaluated again on every item navigation. If some items have images but others don&#39;t, it is recommended not to specify <code>panelViews</code> at all and let TIDO discover whether to show the image view. When <code>panelViews</code> is specified, the configured views are shown for every item, i.e. a configured image view shows a &quot;No image available&quot; empty state for items without images, and an error only when the given image cannot be loaded.</p>
+    <p>Which of the views are shown on an item is decided by <code>hideEmptyViews</code>: by default an image view is left out on items without images and a text view on items offering none of its content types.</p>
     <hr>
     <h5><code>panelViews[i].activeContentType</code></h5>
     <ul>
@@ -297,6 +310,13 @@
     <li><strong>Default:</strong> <code>true</code></li>
     </ul>
     <p>Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.</p>
+    <hr>
+    <h5><code>showShareButton</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Toggles the display of the &quot;Share&quot; button. Set it to false when your application provides its own share UI, see <a href="#creating-the-share-url-programmatically">Creating the share URL programmatically</a>.</p>
     <hr>
     <h5><code>showSynopsisNavigation</code></h5>
     <ul>

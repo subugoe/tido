@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { Info, X } from 'lucide-react'
+import { Info } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
 
@@ -35,18 +35,14 @@ const PanelFooter: FC = () => {
               <span className="@max-[560px]/panel:hidden">Metadata</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent side="top" align="end" className="w-[400px] pr-0" container={panelRootRef.current}>
-            <Metadata />
-            <Button
-              variant="ghost"
-              size="iconSm"
-              onClick={() => setShowMetadataModal(false)}
-              className="absolute right-3 top-4"
-              aria-label="Close"
-              data-cy="metadata-close"
-            >
-              <X size={15} />
-            </Button>
+          <PopoverContent
+            side="top"
+            align="start"
+            collisionPadding={8}
+            className="w-[min(400px,calc(100vw-2rem))] p-0 overflow-hidden"
+            container={panelRootRef.current}
+          >
+            <Metadata onClose={() => setShowMetadataModal(false)} />
           </PopoverContent>
         </Popover>
       </div>

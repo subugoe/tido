@@ -5,7 +5,7 @@
   "partOf": {
     "id": "http://localhost:8181/example-synopsis-2/annotations/annotationCollection/example.json",
     "label": "Synopsis connections for Synopsis-2 Library",
-    "total": 13
+    "total": 16
   },
   "next": null,
   "prev": null,
@@ -558,6 +558,153 @@
             "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
             "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
             "item": "http://localhost:8181/example-synopsis-2/items/book2-page1.json"
+          },
+          "format": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/annotations/annotation/synopsis-14",
+      "type": "Annotation",
+      "motivation": "linking",
+      "target": [
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#new-york"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book3-page2_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book3.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book3-page2.json"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#manhatto"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book2-page2_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book2-page2.json"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#feelings-or-views"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book1.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book1-page1.json"
+          },
+          "format": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/annotations/annotation/synopsis-15",
+      "type": "Annotation",
+      "motivation": "linking",
+      "target": [
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#west-egg2"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book3-page2_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book3.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book3-page2.json"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#cape-horn"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book2-page2_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book2-page2.json"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#no-answer"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book1.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book1-page1.json"
+          },
+          "format": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/annotations/annotation/synopsis-16",
+      "type": "Annotation",
+      "motivation": "linking",
+      "target": [
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#motor-road"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book3-page2_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book3.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book3-page2.json"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#saturday-night"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book2-page2_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book2-page2.json"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#same-composure"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book1.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book1-page1.json"
           },
           "format": "text/html"
         }

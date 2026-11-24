@@ -9,15 +9,21 @@ export interface SyncedTargetRef {
   selector: string
 }
 
+// The synced targets of a sync target, grouped by the sync annotation they come from: one entry per
+// sync annotation that contains the sync target, keyed by the annotation id, in the order of the
+// annotations. Use flattenSyncedTargets for all of them in one list.
+export type SyncedTargetsMap = Record<string, SyncedTargetRef[]>
+
 // The sync connection currently navigated to. Established by clicking a sync target, scrolling a
 // panel, choosing witnesses in a synopsis popover or the TargetNavigation arrows. Every renderer
 // highlights the connection's targets that live in its own text and scrolls its one into alignment.
 export interface SynopsisConnection {
   // the target the connection was navigated from - the clicked, scrolled-to or arrow-navigated element
   navigatedTarget: HTMLElement | null
-  // the targets it is synced with, kept as selector refs: each renderer resolves the ones of its
-  // own source within its own DOM, so a source rendered in several panels is handled everywhere
-  otherSyncedTargets: SyncedTargetRef[]
+  // the targets it is synced with, grouped by sync connection and kept as selector refs: each
+  // renderer resolves the ones of its own source within its own DOM, so a source rendered in several
+  // panels is handled everywhere
+  otherSyncedTargets: SyncedTargetsMap
   // y-position of navigatedTarget within its scroll container's visible height (ignoring scroll
   // position), so every panel can scroll its own synced target to the same y-position
   yPos: number
@@ -26,7 +32,7 @@ export interface SynopsisConnection {
 
 export const EMPTY_SYNOPSIS_CONNECTION: SynopsisConnection = {
   navigatedTarget: null,
-  otherSyncedTargets: [],
+  otherSyncedTargets: {},
   yPos: 0
 }
 

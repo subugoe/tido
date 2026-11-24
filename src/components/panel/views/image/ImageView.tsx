@@ -4,13 +4,13 @@ import { ErrorBoundary } from 'react-error-boundary'
 import ImageRendererError from '@/components/panel/renderers/image/ImageRendererError.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import EmptyImage from '@/components/panel/views/image/EmptyImage.tsx'
-import { hasImage } from '@/utils/panel.ts'
+import { hasImage } from '@/utils/panel-views.ts'
 
 
 const ImageView: FC = () => {
   const { panelState } = usePanel()
 
-  // The image view only exists without images when it is configured explicitly in panelViews.
+  // The image view is only shown without images when 'image' is not in hideEmptyViews.
   // Then an item without an image (no images key, an empty array or an image without url) shows an empty state instead of an error.
   const hasNoImages = !!panelState.item && !hasImage(panelState.item)
 

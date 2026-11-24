@@ -144,6 +144,8 @@ describe('Content types of a text view', () => {
     visit([
       `panels[0].collection=${apiUrl}/example/collections/content-types.json`,
       viewParams([{ label: 'Text', view: 'text', contentTypes: ['translation'] }]),
+      // empty text views are not hidden, so the view shows its notice
+      `hideEmptyViews=${encodeURIComponent('[]')}`,
     ])
 
     cy.get(selectors.itemLabel).should('contain.text', 'One Content Type Page')
@@ -166,6 +168,25 @@ describe('Content types of a text view', () => {
     // translation is the only configured content type, so the view shows its plain label again
     cy.get(selectors.contentType).should('contain.text', 'Text').click()
     cy.get(selectors.contentTypesDropdown).should('not.exist')
+  })
+
+  // By default an empty text view is left out - here it is the only view, so the panel shows that there
+  // is nothing to show, until the next item offers its content type.
+  it('Should leave out a text view when the item offers none of its content types', () => {
+    visit([
+      `panels[0].collection=${apiUrl}/example/collections/content-types.json`,
+      viewParams([{ label: 'Text', view: 'text', contentTypes: ['translation'] }]),
+    ])
+
+    cy.get(selectors.itemLabel).should('contain.text', 'One Content Type Page')
+    cy.get('[data-cy="panel-views-empty"]').should('be.visible')
+    cy.get(selectors.missingContentTypes).should('not.exist')
+    cy.get(selectors.textContainer).should('not.exist')
+
+    cy.get(selectors.nextItemButton).click()
+    cy.get(selectors.itemLabel).should('contain.text', 'Three Content Types Page')
+    cy.get('[data-cy="panel-views-empty"]').should('not.exist')
+    cy.get(selectors.textContainer).find('#page2-translation').should('be.visible')
   })
 
   // 5. The view is restricted to two of the three content types of book 2. The content type the

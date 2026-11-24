@@ -85,6 +85,7 @@
     "tw-animate-css": "^1.2.9",
     "typescript-eslint": "^8.56.1",
     "vite": "^7.3.5",
+    "vitest": "^3.2.7",
     "zustand": "^5.0.2"
   },
   "browserslist": [
@@ -115,6 +116,7 @@
     "preview": "npm run build && vite preview",
     "preview:examples": "npm run build:test && cp -r dist/. examples/dist/ && node .build/copy-api-mocks.js && node .build/generate-config-html.js --fragment > examples/config-reference.html && npm run examples",
     "test": "start-server-and-test preview:examples 2222 cypress:headless",
+    "test:unit": "vitest run",
     "ui": "node ./build/shadcn.js",
     "changelog": "commit-and-tag-version",
     "toc": "doctoc README.md"

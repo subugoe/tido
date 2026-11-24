@@ -1,4 +1,5 @@
-import { PanelConfig, TidoContentState, TidoContentStatePanelState, TidoContentStateTarget } from '@/types'
+import { viewOverrides } from '@/utils/panel-views.ts'
+import { PanelConfig, PanelView, TidoContentState, TidoContentStatePanelState, TidoContentStateTarget } from '@/types'
 
 function hasContentState() {
   const params = new URL(window.location.href).searchParams
@@ -56,8 +57,11 @@ async function decodeState(encoded: string): Promise<TidoContentState> {
   return JSON.parse(jsonStr)
 }
 
-function extractPanelConfig(target: TidoContentStateTarget): PanelConfig {
-  const result: PanelConfig = {
+// A panel as a bookmark holds it - its views only carry what was changed on them, by view key
+type BookmarkedPanel = Omit<PanelConfig, 'views'> & { views: Partial<PanelView>[] }
+
+function extractPanelConfig(target: TidoContentStateTarget): BookmarkedPanel {
+  const result: BookmarkedPanel = {
     item: null,
     manifest: null,
     collection: null,
@@ -71,7 +75,7 @@ function extractPanelConfig(target: TidoContentStateTarget): PanelConfig {
     if (t.type === 'Item') {
       result.item = t.id
       if (t.state?.annotation) result.selectedAnnotationId = t.state.annotation
-      if (t.state?.views) result.views = t.state.views.map(({ visible, activeContentType }) => ({ visible, activeContentType, view: 'text' }))
+      if (t.state?.views) result.views = t.state.views
     } else if (t.type === 'Manifest') {
       result.manifest = t.id
     } else if (t.type === 'Collection') {
@@ -97,7 +101,7 @@ function createContentState(panelStates: PanelState[]): TidoContentState {
     }
 
     if (panelViews) {
-      state.views = panelViews.map(({ visible, activeContentType }) => ({ visible, activeContentType }))
+      state.views = viewOverrides(panelViews)
     }
 
     return {

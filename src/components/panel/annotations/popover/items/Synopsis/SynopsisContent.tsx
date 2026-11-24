@@ -1,39 +1,63 @@
-import { FC, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
-import { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
+import { SyncedTargetRef, SyncedTargetsMap, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import WitnessesArea from '@/components/panel/annotations/popover/items/Synopsis/WitnessesArea.tsx'
 import WitnessItem from '@/components/panel/annotations/popover/items/Synopsis/WitnessItem.tsx'
+import ConnectionGroup from '@/components/panel/annotations/popover/items/Synopsis/ConnectionGroup.tsx'
+import useWitnessErrors from '@/components/panel/annotations/popover/items/Synopsis/useWitnessErrors.ts'
+import { flattenSyncedTargets, groupConnectionsByWitness } from '@/utils/annotations.ts'
 
 interface Props {
   syncTargets: SynopsisConnection
   allWitnessesOpened: boolean
-  onOpenSyncedPanels: (selectedTargets: SyncedTargetRef[], replacePanels: boolean) => void
-  onSelectTarget: (target: SyncedTargetRef) => void
+  onOpenSyncedPanels: (selectedTargets: SyncedTargetsMap, replacePanels: boolean) => void
+  // all valid synced targets of the witness selected in the given sync connection
+  onSelectTarget: (connectionKey: string, targets: SyncedTargetRef[]) => void
 }
 
 const SynopsisContent: FC<Props> = ({ syncTargets, allWitnessesOpened, onOpenSyncedPanels, onSelectTarget }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
-  const [selectedTargets, setSelectedTargets] = useState<SyncedTargetRef[]>([])
+  const [selectedTargets, setSelectedTargets] = useState<SyncedTargetsMap>({})
+  const selectedCount = useMemo(() => flattenSyncedTargets(selectedTargets).length, [selectedTargets])
+  const allTargets = useMemo(() => flattenSyncedTargets(syncTargets.otherSyncedTargets), [syncTargets.otherSyncedTargets])
   const [replacePanels, setReplacePanels] = useState(false)
+
+  // hooks can't be called conditionally: validate only when the select buttons are shown,
+  // otherwise WitnessesArea validates its own list
+  const { errors, isPending } = useWitnessErrors(allWitnessesOpened ? allTargets : [])
+  // per sync connection, one button per witness (manifest) for its valid targets and one for its invalid targets
+  const connections = useMemo(
+    () => groupConnectionsByWitness(syncTargets.otherSyncedTargets, errors),
+    [syncTargets.otherSyncedTargets, errors]
+  )
 
   // All witnesses already loaded in the current panel — show simple select buttons.
   if (allWitnessesOpened) {
     return (
-      <div className="flex flex-col gap-2 w-[360px]">
-        {syncTargets.otherSyncedTargets.map((st) => (
-          <WitnessItem
-            key={st.source.id}
-            syncedTarget={st}
-            isOpened={true}
-            isSelected={false}
-            onSelect={() => onSelectTarget(st)}
-            selectOnly
-          />
-        ))}
+      <div className="flex flex-col gap-3 w-[360px]">
+        <h3 data-cy="synoptical-witnesses-title" className="text-sm font-semibold">{t('synoptical_witnesses')}</h3>
+        <div data-cy="synoptical-connections" className="flex flex-col gap-3">
+          {connections.map((connection, i) => (
+            <ConnectionGroup key={connection.key} number={i + 1}>
+              {connection.witnesses.map((witness) => (
+                <WitnessItem
+                  key={witness.key}
+                  syncedTarget={{ syncTarget: witness.targets[0], count: witness.targets.length }}
+                  isOpened={true}
+                  isSelected={false}
+                  error={witness.error}
+                  pending={isPending(witness.targets)}
+                  onSelect={() => onSelectTarget(connection.key, witness.targets)}
+                  selectOnly
+                />
+              ))}
+            </ConnectionGroup>
+          ))}
+        </div>
       </div>
     )
   }
@@ -56,12 +80,12 @@ const SynopsisContent: FC<Props> = ({ syncTargets, allWitnessesOpened, onOpenSyn
 
       <Button
         data-cy="open-synced-panels"
-        disabled={selectedTargets.length === 0}
+        disabled={selectedCount === 0}
         onClick={() => onOpenSyncedPanels(selectedTargets, replacePanels)}
         className="w-full h-auto py-2 justify-center text-sm disabled:bg-muted disabled:text-muted-foreground disabled:opacity-100"
       >
         {t('open_synced_panels')}
-        {selectedTargets.length > 0 && ` (${selectedTargets.length})`}
+        {selectedCount > 0 && ` (${selectedCount})`}
       </Button>
     </div>
   )

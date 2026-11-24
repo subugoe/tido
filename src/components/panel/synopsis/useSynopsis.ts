@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import { SyncedTargetRef, SynopsisConnection, useSynopsisStore } from '@/store/SynopsisStore.tsx'
-import { getSelectorValue, getSource, getSyncedTargets } from '@/utils/annotations.ts'
+import { SyncedTargetRef, useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { flattenSyncedTargets, getSelectorValue, getSource } from '@/utils/annotations.ts'
+import { getOtherSyncedTargets } from '@/utils/synopsis.ts'
 import { findFocusedTarget } from '@/utils/scroller.ts'
 import { isProgrammaticScroll } from '@/utils/dom.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
@@ -10,10 +11,7 @@ import { scrollToTargets } from '@/utils/scroll.ts'
 import {
   addAnnotationBaseStyle,
   addSynopsisHoverStyle,
-  addSynopsisSelectedStyle,
-  removeActiveTargetStyle,
-  removeSynopsisHoverStyle,
-  removeSynopsisSelectedStyle
+  removeSynopsisHoverStyle
 } from '@/utils/text.ts'
 import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 import { createAnnotationErrorReport, reportAnnotationError } from '@/utils/annotation-errors.ts'
@@ -29,8 +27,6 @@ export interface SynopsisLogic {
   // the sync targets found in the text handed over - the component that renders it makes them
   // behave like its other targets
   syncTargets: HTMLElement[]
-  getOtherSyncedTargets: (targetEl: HTMLElement, source: string) => SyncedTargetRef[]
-  handleSynopsisSelection: (connection: SynopsisConnection) => void
   onHover: (targetEl: HTMLElement, source: string) => void
   onHoverEnd: () => void
 }
@@ -61,7 +57,6 @@ function useSynopsis(): SynopsisLogic {
   const { addSyncedTargets } = usePanel()
   // null when the text is not rendered inside a text view (e.g. in the annotations sidebar)
   const textView = useTextView()
-  const activeSynopsisConnection = useSynopsisStore((state) => state.activeSynopsisConnection)
   // the targets we gave the hover style, so onHoverEnd can drop it from exactly those again
   const hoveredTargetsRef = useRef<HTMLElement[]>([])
   const [synopsisText, setSynopsisText] = useState<SynopsisText | null>(null)
@@ -166,50 +161,6 @@ function useSynopsis(): SynopsisLogic {
     report.flush()
   }, [synopsisText, sourceSyncAnnotations, addSyncedTargets])
 
-  useEffect(() => {
-    if (!synopsisText?.text) return
-    const { text, source } = synopsisText
-
-    const { navigatedTarget, otherSyncedTargets, yPos, source: connectionSource } = activeSynopsisConnection
-    if (!navigatedTarget) return
-
-    // A connection the user scrolled to is highlighted and aligned by handleScroll already - it is
-    // published so the rest of the app follows the scrolling, and all this effect does for it is
-    // drop the styles of the connection it replaces (the cleanup of its previous run).
-    if (connectionSource === 'scroll') return
-
-    const ownsNavigatedTarget = text.contains(navigatedTarget)
-
-    if (ownsNavigatedTarget) addSynopsisSelectedStyle(navigatedTarget)
-
-    // the connection's targets that live in this text, resolved from their selector - which may
-    // match several elements
-    const ownTargets = otherSyncedTargets
-      .filter((syncedTarget) => syncedTarget.source.id === source)
-      .flatMap((syncedTarget) => Array.from(text.querySelectorAll(syncedTarget.selector)) as HTMLElement[])
-
-    ownTargets.forEach((targetEl) => addSynopsisSelectedStyle(targetEl))
-    scrollToTargets(ownTargets, yPos)
-
-    return () => {
-      if (ownsNavigatedTarget) {
-        removeSynopsisSelectedStyle(navigatedTarget)
-        removeActiveTargetStyle(navigatedTarget)
-      }
-      ownTargets.forEach((targetEl) => removeSynopsisSelectedStyle(targetEl))
-    }
-  }, [activeSynopsisConnection, synopsisText])
-
-  // The targets the given one is synced with, resolved from the sync annotations of its source.
-  const getOtherSyncedTargets = useCallback((targetEl: HTMLElement, source: string) => {
-    const { syncAnnotationsBySource } = useSynopsisStore.getState()
-    return getSyncedTargets(targetEl, source, syncAnnotationsBySource.get(source) ?? [])
-  }, [])
-
-  const handleSynopsisSelection = useCallback((connection: SynopsisConnection) => {
-    useSynopsisStore.getState().setActiveSynopsisConnection(connection)
-  }, [])
-
   // The hover style is its own class, so adding and dropping it never touches the highlight a
   // target carries as part of the selected synopsis connection.
   const onHoverEnd = useCallback(() => {
@@ -229,13 +180,13 @@ function useSynopsis(): SynopsisLogic {
   }, [])
 
   const onHover = useCallback((targetEl: HTMLElement, source: string) => {
-    const otherSyncedTargets = getOtherSyncedTargets(targetEl, source)
+    const otherSyncedTargets = flattenSyncedTargets(getOtherSyncedTargets(targetEl, source))
     if (otherSyncedTargets.length === 0) return
 
     // remove first the previous hover styles
     onHoverEnd()
     addSynopsisHoverStyles([targetEl, ...resolveSyncedTargetElements(otherSyncedTargets)])
-  }, [addSynopsisHoverStyles, getOtherSyncedTargets])
+  }, [addSynopsisHoverStyles])
 
   // Bound here rather than by the component that renders the text, because the listener has to hold
   // the text it belongs to and this is where that text arrives: the effect reruns with every text
@@ -255,7 +206,8 @@ function useSynopsis(): SynopsisLogic {
       if (!focusedTarget) return
 
       const syncedTargets = getOtherSyncedTargets(focusedTarget, source)
-      if (syncedTargets.length === 0) return
+      const syncedTargetsList = flattenSyncedTargets(syncedTargets)
+      if (syncedTargetsList.length === 0) return
 
       const yPos = focusedTarget.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
 
@@ -269,7 +221,7 @@ function useSynopsis(): SynopsisLogic {
           yPos,
           source: 'scroll'
         })
-        scrollInOtherTexts(resolveSyncedTargetElements(syncedTargets), yPos, text, direction)
+        scrollInOtherTexts(resolveSyncedTargetElements(syncedTargetsList), yPos, text, direction)
       }
 
     }
@@ -300,9 +252,9 @@ function useSynopsis(): SynopsisLogic {
 
     scrollContainer.addEventListener('scroll', onScroll, { passive: true })
     return () => scrollContainer.removeEventListener('scroll', onScroll)
-  }, [synopsisText, getOtherSyncedTargets, getSourceTargetElements])
+  }, [synopsisText, getSourceTargetElements])
 
-  return { getOtherSyncedTargets, handleSynopsisSelection, onHover, onHoverEnd, setText, syncTargets }
+  return { onHover, onHoverEnd, setText, syncTargets }
 }
 
 export { useSynopsis }

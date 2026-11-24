@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { getFilteredAnnotations } from '@/utils/annotations.ts'
-import { getContentUrlByType } from '@/utils/text.ts'
-import { PanelView } from '@/types'
+import { visibleTextSources } from '@/utils/panel-views.ts'
+import { PanelViewState } from '@/types'
 import { getAnnotationType } from '@/utils/annotation-data.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 
@@ -20,13 +20,8 @@ type State = {
 const AnnotationsContext = createContext<State>(null)
 
 // Deduplicated in case two views show the same text.
-function getVisibleContentUrls(panelViews: PanelView[] | undefined, contents: Content[] | undefined): string[] {
-  return [...new Set(
-    (panelViews ?? [])
-      .filter(view => view.view === 'text' && (view.visible ?? true))
-      .map(view => getContentUrlByType(contents ?? [], view.activeContentType))
-      .filter(Boolean)
-  )]
+function getVisibleContentUrls(panelViews: PanelViewState[] | undefined, item: Item | undefined): string[] {
+  return [...new Set(visibleTextSources({ panelViews: panelViews ?? [], item: item ?? null }).map(source => source.contentUrl))]
 }
 
 // Derives the filtered annotations of the visible text views (in panelViews order), without tooltip types.
@@ -34,17 +29,17 @@ function getVisibleContentUrls(panelViews: PanelView[] | undefined, contents: Co
 // (e.g. for the header badge)
 export function useFilteredAnnotations(
   textMatchedMaps: MatchedMaps,
-  panelViews: PanelView[] | undefined,
-  contents: Content[] | undefined,
+  panelViews: PanelViewState[] | undefined,
+  item: Item | undefined,
   tooltipTypes: string[] | undefined
 ): Annotation[] {
   return useMemo(() => {
-    return getVisibleContentUrls(panelViews, contents).flatMap(contentUrl => {
+    return getVisibleContentUrls(panelViews, item).flatMap(contentUrl => {
       const map = textMatchedMaps[contentUrl]
       if (!map) return []
       return getFilteredAnnotations(map).filter(a => !(tooltipTypes ?? []).includes(getAnnotationType(a)))
     })
-  }, [textMatchedMaps, panelViews, contents, tooltipTypes])
+  }, [textMatchedMaps, panelViews, item, tooltipTypes])
 }
 
 // True while the filtered annotations are not final yet: the panel is still loading, or a visible text has
@@ -52,7 +47,7 @@ export function useFilteredAnnotations(
 // be loaded, no match is waited for.
 export function useAnnotationsPending(
   textMatchedMaps: MatchedMaps,
-  panelViews: PanelView[] | undefined,
+  panelViews: PanelViewState[] | undefined,
   item: Item | undefined,
   loading: boolean,
   annotationsError: CustomError | null
@@ -60,7 +55,7 @@ export function useAnnotationsPending(
   return useMemo(() => {
     if (loading) return true
     if (!item?.annotationCollection || annotationsError) return false
-    return getVisibleContentUrls(panelViews, item.contents).some(contentUrl => !textMatchedMaps[contentUrl])
+    return getVisibleContentUrls(panelViews, item).some(contentUrl => !textMatchedMaps[contentUrl])
   }, [textMatchedMaps, panelViews, item, loading, annotationsError])
 }
 

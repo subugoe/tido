@@ -22,7 +22,7 @@ const MultipleRootFilter: FC = () => {
   useEffect(() => {
     if (annotationsConfig.filters) return
 
-    const types = getVisibleAnnotationTypes(annotationTypesBySource, panelState.panelViews, panelState?.item?.contents ?? [])
+    const types = getVisibleAnnotationTypes(annotationTypesBySource, panelState.panelViews, panelState?.item ?? null)
 
     // The visible types come from the texts on screen, their selection state from the aggregated
     // dynamicAnnotationTypes, so a type keeps the state the user gave it across item navigation.

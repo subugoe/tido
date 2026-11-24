@@ -33,6 +33,7 @@ and also view our production examples.
   - [How it works](#how-it-works)
   - [Working with the state object](#working-with-the-state-object)
   - [Encoding/Decoding](#encodingdecoding)
+  - [Creating the share URL programmatically](#creating-the-share-url-programmatically)
 - [Text Sanitization](#text-sanitization)
   - [Forbidden Tags](#forbidden-tags)
   - [Allowed Attributes](#allowed-attributes)
@@ -50,6 +51,7 @@ and also view our production examples.
   - [Testing](#testing)
     - [Quick Test Run](#quick-test-run)
     - [Testing In Detail](#testing-in-detail)
+    - [Unit Tests](#unit-tests)
   - [Linting](#linting)
   - [Generate TextAPI support table](#generate-textapi-support-table)
 - [TextAPI Support](#textapi-support)
@@ -346,6 +348,15 @@ Specifies the CSS selector where we should append the TIDO app to.
 
 ---
 
+##### `hideEmptyViews`
+
+- **Type:** (`image` | `text`)[]
+- **Default:** `["image", "text"]`
+
+The kinds of views a panel leaves out on an item they have nothing to show for: an image view on an item without images (no `images` key, an empty `images` array or an image without `id`), a text view on an item offering none of its `contentTypes`. This is evaluated again on every item navigation, and a view left out on one item comes back on the next item it has something to show for. When every view of a panel is left out, the panel shows that there is nothing to show on this item. Kinds not listed keep their views: an image view shows a "No image available" empty state, a text view a notice about the missing content types. Can be overridden per panel with `panels[i].hideEmptyViews`.
+
+---
+
 ##### `lang`
 
 - **Type:** String (ISO 639-1 language code)
@@ -369,6 +380,14 @@ Defines an array of panel objects. The panels will appear in the same order.
 - **Type:** String
 
 TextAPI collection URL.
+
+---
+
+##### `panels[i].hideEmptyViews`
+
+- **Type:** (`image` | `text`)[]
+
+Overrides the global `hideEmptyViews` config for this specific panel.
 
 ---
 
@@ -434,7 +453,7 @@ Sets the width of each view relative to the others, with one value per view of t
 
 - **Type:** PanelViewConfig[]
 
-Overrides the global `panelViews` config for this specific panel. Use this to customize views per panel while still inheriting unset properties from the global config.
+Overrides the global `panelViews` config for this specific panel. When given, the panel uses these views only - nothing of the global `panelViews` is taken over.
 
 ---
 
@@ -445,7 +464,7 @@ Overrides the global `panelViews` config for this specific panel. Use this to cu
 
 Configures an initial distribution of content views inside each panel. The defined views here can then be toggled on/off in the "View" dropdown in the panel header. See [Panel Views](#panel-views) chapter.
 
-If `panelViews` is not specified, TIDO decides for each item whether to show the image view: an item with images shows the image and the text view, an item without images (no `images` key, an empty `images` array or an image without `id`) shows only the text view. This is evaluated again on every item navigation. If some items have images but others don't, it is recommended not to specify `panelViews` at all and let TIDO discover whether to show the image view. When `panelViews` is specified, the configured views are shown for every item, i.e. a configured image view shows a "No image available" empty state for items without images, and an error only when the given image cannot be loaded.
+Which of the views are shown on an item is decided by `hideEmptyViews`: by default an image view is left out on items without images and a text view on items offering none of its content types.
 
 ---
 
@@ -534,6 +553,15 @@ Toggles the display of the content type toggle in TextViews. When false, the who
 - **Default:** `true`
 
 Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.
+
+---
+
+##### `showShareButton`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Toggles the display of the "Share" button. Set it to false when your application provides its own share UI, see [Creating the share URL programmatically](#creating-the-share-url-programmatically).
 
 ---
 
@@ -1001,6 +1029,32 @@ In case you want to implement the mechanism yourself, here is the procedure:
   3. GZIP-decompress the binary
   4. Parse JSON string to object
 
+### Creating the share URL programmatically
+If your application brings its own share UI, you can hide the "Share" button with [`showShareButton`](#showsharebutton)
+and create the URL yourself. `getShareUrl` returns the same URL as the share dialog: the current state of all panels,
+set as `tido` GET-parameter.
+
+```JavaScript
+import { Tido, getShareUrl } from 'tido'
+
+<Tido config={{ showShareButton: false }} />
+
+// e.g. in the click handler of your own dialog
+const url = await getShareUrl()
+```
+
+With the embedded bundle the function is available as `Tido.getShareUrl()`.
+
+By default the parameter is added to the current location. Pass a `baseUrl` if the page to share has a different URL:
+
+```JavaScript
+const url = await getShareUrl({ baseUrl: 'https://example.com/edition' })
+```
+
+The returned promise rejects while a panel is still loading, so call the function after `onReady` has fired.
+
+A complete page with its own share button and dialog is in [`examples/share.html`](examples/share.html).
+
 ## Text Sanitization
 
 TIDO uses [DOMPurify](https://github.com/cure53/DOMPurify) to sanitize the incoming text in order to provide
@@ -1150,6 +1204,12 @@ Now you can run the tests on your local machine with a proper Cypress UI and sel
 or run the tests only in headless mode which will prompt the results on the console.
 
 - `npm run cypress` or `npm run cypress:headless`
+
+#### Unit Tests
+
+Logic that does not need a browser is covered by unit tests next to the modules they test (`src/**/*.test.ts`). They run on the source code with [Vitest](https://vitest.dev) and need neither a build nor the mock API:
+
+- `npm run test:unit`
 
 ### Linting
 

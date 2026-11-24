@@ -555,7 +555,7 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Mrs. Long functions as a node in the novel's information network, through which news of new arrivals circulates.",
+        "value": "Mrs. Long functions as <span id=\"information-network\">a node in the novel's information network</span>, through which news of new arrivals circulates.",
         "format": "text/html",
         "annotationType": "Character"
       },
@@ -684,6 +684,337 @@
       ]
     },
     {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-text-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "text/html",
+        "selector": {
+          "type": "CssSelector",
+          "conformsTo": "http://tools.ietf.org/rfc/rfc3236",
+          "value": "#dipl-phantom"
+        },
+        "source": {
+          "id": "http://localhost:8181/example/html/book2-page1_diplomatic.html",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#had-not"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-text-to-annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "application/json",
+        "source": {
+          "id": "http://localhost:8181/example/book2/page1/rev1/annotation-diplomatic-3",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#returned-she"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-11",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The exchange sets Mr. Bennet's silence against his wife's eagerness, the comedy at the heart of their marriage.",
+        "format": "text/html",
+        "annotationType": "Narrative Technique"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#para6"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-12",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Mr. Bennet's silence is a deliberate provocation - teasing his wife is a habit of his.",
+        "format": "text/html",
+        "annotationType": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#made-no-answer"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-13",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The adverb closing the sentence underlines Mrs. Bennet's restless temperament.",
+        "format": "text/html",
+        "annotationType": "Rhetorical Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#impatiently"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-14",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Mr. Bennet's dry consent turns his wife's news into an invitation he pretends not to give.",
+        "format": "text/html",
+        "annotationType": "Narrative Technique"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#para7"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-15",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Editorial note: the phrase is unchanged in all early editions.",
+        "format": "text/html",
+        "annotationType": "Editorial Note"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#no-objection"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-16",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Mr. Bennet feigns indifference while handing his wife the opening she wants.",
+        "format": "text/html",
+        "annotationType": "Historical Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#no-objection"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-text-nested-2",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "text/html",
+        "selector": {
+          "type": "CssSelector",
+          "conformsTo": "http://tools.ietf.org/rfc/rfc3236",
+          "value": "#ishmael"
+        },
+        "source": {
+          "id": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#objection"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-text-nested-1",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "text/html",
+        "selector": {
+          "type": "CssSelector",
+          "conformsTo": "http://tools.ietf.org/rfc/rfc3236",
+          "value": "#spleen"
+        },
+        "source": {
+          "id": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#replied"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-text-only-1",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "text/html",
+        "selector": {
+          "type": "CssSelector",
+          "conformsTo": "http://tools.ietf.org/rfc/rfc3236",
+          "value": "#ishmael"
+        },
+        "source": {
+          "id": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#all-about-it"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-from-annotation-to-text-1",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "text/html",
+        "selector": {
+          "type": "CssSelector",
+          "conformsTo": "http://tools.ietf.org/rfc/rfc3236",
+          "value": "#dipl-phantom"
+        },
+        "source": {
+          "id": "http://localhost:8181/example/html/book2-page1_diplomatic.html",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/annotation-6",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#neighbourhood-visiting"
+          },
+          "format": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-from-annotation-to-annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "application/json",
+        "source": {
+          "id": "http://localhost:8181/example/book2/page1/rev1/annotation-diplomatic-3",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/annotation-10",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#information-network"
+          },
+          "format": "application/json"
+        }
+      ]
+    },
+    {
       "id": "http://localhost:8181/example/book1/page1/rev1/annotation-diplomatic-nested-1",
       "type": "Annotation",
       "body": {
@@ -698,6 +1029,58 @@
           "selector": {
             "type": "CssSelector",
             "value": "#dipl-however-nested"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-text-two-spans-1",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "text/html",
+        "selector": {
+          "type": "CssSelector",
+          "conformsTo": "http://tools.ietf.org/rfc/rfc3236",
+          "value": "#ishmael"
+        },
+        "source": {
+          "id": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#bingley-link"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-17",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Editorial note: Mr. Bingley is named here for the first time.",
+        "format": "text/html",
+        "annotationType": "Editorial Note"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#bingley-name"
           },
           "format": "text/html",
           "language": "eng"

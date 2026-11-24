@@ -2,10 +2,11 @@ import { AnnotationFiltersConfig, FilterNodeWithSelection, VariantType } from '@
 import { apiRequest } from '@/utils/api.ts'
 import { getTypeValue } from '@/utils/filter-tree.ts'
 import { CustomError } from '@/utils/custom-error.ts'
-import type { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
+import type { SyncedTargetRef, SyncedTargetsMap, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { ANNOTATION_TARGET_JSON_FORMAT } from '@/utils/constants.ts'
-import { getContentType } from '@/utils/panel.ts'
+import { getContentType } from '@/utils/panel-views.ts'
+import { getParsedText } from '@/utils/text.ts'
 import {
   getAnnotationTargets,
   getAnnotationType,
@@ -192,9 +193,10 @@ function isAnnotationTarget(target: AnnotationTarget): target is AnnotationInAnn
 
 // Resolve the targets that `clickedEl` (which lives in `source`) is synced with, on demand: from
 // the clicked target's sync annotations, keep the ones whose own-source target is the clicked
-// element, and collect that target's siblings (retrieved by source.id + selector).
-function getSyncedTargets(clickedEl: HTMLElement, source: string, targetSyncAnnotations: Annotation[]): SyncedTargetRef[] {
-  const result: SyncedTargetRef[] = []
+// element, and collect that target's siblings (retrieved by source.id + selector) - grouped by the
+// sync annotation they come from, one sync connection each, keyed by the annotation id.
+function getSyncedTargets(clickedEl: HTMLElement, source: string, targetSyncAnnotations: Annotation[]): SyncedTargetsMap {
+  const result: SyncedTargetsMap = {}
 
   targetSyncAnnotations.forEach((annotation) => {
     // the annotation's target that belongs to this source and is the clicked element
@@ -205,17 +207,34 @@ function getSyncedTargets(clickedEl: HTMLElement, source: string, targetSyncAnno
     })
     if (!ownTarget) return
 
+    const connectionTargets: SyncedTargetRef[] = []
     targets
       .filter((sibling) => sibling !== ownTarget)
       .map((sibling) => ({ source: getSource(sibling), selector: getSelectorValue(sibling) }))
-      .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector))
+      .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector)) // && ref.source.id !== source)
       .forEach((ref) => {
-        const exists = result.some((e) => e.source.id === ref.source.id && e.selector === ref.selector)
-        if (!exists) result.push(ref)
+        const exists = connectionTargets.some((e) => getTargetKey(e) === getTargetKey(ref))
+        if (!exists) connectionTargets.push(ref)
       })
+
+    // an annotation without an id still gets a connection of its own
+    if (connectionTargets.length > 0) {
+      result[annotation.id ?? `sync_connection_${Object.keys(result).length + 1}`] = connectionTargets
+    }
   })
 
   return result
+}
+
+// All synced targets of the given sync connections in one list - a target that is part of several
+// connections only once.
+function flattenSyncedTargets(syncedTargets: SyncedTargetsMap): SyncedTargetRef[] {
+  const result = new Map<string, SyncedTargetRef>()
+  Object.values(syncedTargets).forEach((targets) => targets.forEach((target) => {
+    const key = getTargetKey(target)
+    if (!result.has(key)) result.set(key, target)
+  }))
+  return [...result.values()]
 }
 
 // Whether an element belongs to the given synopsis connection - either as its navigated target or
@@ -228,14 +247,101 @@ function isPartOfActiveSynopsisConnection(
   container: HTMLElement | null
 ): boolean {
   return el === connection.navigatedTarget ||
-    connection.otherSyncedTargets.some((syncedTarget) =>
+    flattenSyncedTargets(connection.otherSyncedTargets).some((syncedTarget) =>
       syncedTarget.source.id === source &&
       !!container?.contains(el) &&
       el.matches(syncedTarget.selector)
     )
 }
+// why a witness can not be navigated to - each is also the translation key of its tooltip description
+type WitnessError = 'witness_text_not_in_item' | 'witness_target_not_found'
+
+// Identifies a synced target: a text (source.id) can have several targets, distinguished by their selector
+function getTargetKey({ source, selector }: SyncedTargetRef): string {
+  return `${source.id}|${selector}`
+}
+
+// A witness (manifest) with its synced targets: syncTarget is the first of them, count how many there are
+interface WitnessTargets {
+  syncTarget: SyncedTargetRef
+  count: number
+}
+
+// Identifies the witness of a synced target: its manifest, or its text when it has no manifest
+function getWitnessKey({ source }: SyncedTargetRef): string {
+  return source.manifest ?? source.id
+}
+
+// An entry of the witness list: the valid or the invalid synced targets of one witness (manifest)
+interface WitnessEntry {
+  // getWitnessKey for the valid entry, suffixed with '|invalid' for the invalid one
+  key: string
+  targets: SyncedTargetRef[]
+  // set on the invalid entry - the error of its first target
+  error?: WitnessError
+}
+
+// Groups synced targets by their witness (manifest), in the order of the first target of each witness.
+// The valid and the invalid targets of a witness are split into two entries: the valid one first,
+// then the invalid one, which is shown disabled.
+function groupTargetsByWitness(targets: SyncedTargetRef[], errors: Record<string, WitnessError>): WitnessEntry[] {
+  const witnesses = new Map<string, { valid: SyncedTargetRef[], invalid: SyncedTargetRef[] }>()
+  targets.forEach((st) => {
+    const key = getWitnessKey(st)
+    if (!witnesses.has(key)) witnesses.set(key, { valid: [], invalid: [] })
+    const witness = witnesses.get(key)!
+    if (errors[getTargetKey(st)]) witness.invalid.push(st)
+    else witness.valid.push(st)
+  })
+
+  return [...witnesses.entries()].flatMap(([key, { valid, invalid }]) => {
+    const entries: WitnessEntry[] = []
+    if (valid.length > 0) entries.push({ key, targets: valid })
+    if (invalid.length > 0) entries.push({ key: `${key}|invalid`, targets: invalid, error: errors[getTargetKey(invalid[0])] })
+    return entries
+  })
+}
+
+// A sync connection of the popover: its key in the SyncedTargetsMap and its witness entries
+interface ConnectionEntry {
+  key: string
+  witnesses: WitnessEntry[]
+}
+
+// Groups the synced targets of every sync connection by their witness (see groupTargetsByWitness),
+// in the order of the connections.
+function groupConnectionsByWitness(syncedTargets: SyncedTargetsMap, errors: Record<string, WitnessError>): ConnectionEntry[] {
+  return Object.entries(syncedTargets).map(([key, targets]) => ({ key, witnesses: groupTargetsByWitness(targets, errors) }))
+}
+
+// Checks that the witness text (source.id) is a content of its item (source.item) and that the
+// synced target (selector) exists in that text. Returns the first failing check, or null.
+async function validateWitness({ source, selector }: SyncedTargetRef): Promise<WitnessError | null> {
+  if (!source.item) return 'witness_text_not_in_item'
+
+  const item = await useDataStore.getState().initItem(source.item)
+  if (!item.contents?.some((content) => content.id === source.id)) return 'witness_text_not_in_item'
+
+  const doc = await getParsedText(source.id)
+  let targetEl: Element | null = null
+  try {
+    targetEl = doc.querySelector(selector)
+  } catch {
+    // invalid css selector - treated as target not found
+  }
+  if (!targetEl) return 'witness_target_not_found'
+
+  return null
+}
+
+export type { ConnectionEntry, WitnessEntry, WitnessError, WitnessTargets }
 
 export {
+  getTargetKey,
+  getWitnessKey,
+  groupTargetsByWitness,
+  groupConnectionsByWitness,
+  validateWitness,
   getSelectedTypes,
   getSelectedTypesFromNode,
   mergeTypes,
@@ -249,5 +355,6 @@ export {
   getSelectorValue,
   isAnnotationTarget,
   getSyncedTargets,
+  flattenSyncedTargets,
   isPartOfActiveSynopsisConnection
 }

@@ -22,7 +22,7 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
   // the currently visible texts discovered types (the same visibility rule the filter list uses).
   const hasFilters = annotationsConfig.filters
     ? (annotationFilters && annotationFilters.length > 0)
-    : getVisibleAnnotationTypes(annotationTypesBySource, panelState?.panelViews ?? [], panelState?.item?.contents ?? []).length > 0
+    : getVisibleAnnotationTypes(annotationTypesBySource, panelState?.panelViews ?? [], panelState?.item ?? null).length > 0
 
   return <div className={cn('flex flex-col items-center', className)}>
     <Popover onOpenChange={(value) => setOpen(value)}>

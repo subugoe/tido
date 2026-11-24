@@ -11,6 +11,7 @@ const defaultConfig: TidoConfig = {
   showContentTypeToggle: true,
   showGlobalTree: true,
   showPanelPlaceholder: true,
+  showShareButton: true,
   showThemeToggle: true,
   showCrossRefLabels: true,
   showSynopsisNavigation: true,
@@ -24,6 +25,7 @@ const defaultConfig: TidoConfig = {
     showItemLevel: true,
     showRootNode: true
   },
+  hideEmptyViews: ['image', 'text'],
   panelViews: [
     {
       label: 'Image',

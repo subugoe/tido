@@ -25,7 +25,7 @@ interface RailAction {
 }
 
 const RailSidebar: FC = () => {
-  const { showGlobalTree, showAddNewPanelButton, allowNewCollections, title: configuredTitle } = useConfig()
+  const { showGlobalTree, showAddNewPanelButton, showShareButton, allowNewCollections, title: configuredTitle } = useConfig()
   const activeView = useRailStore(state => state.activeView)
   const toggleView = useRailStore(state => state.toggleView)
   const setActiveView = useRailStore(state => state.setActiveView)
@@ -75,14 +75,16 @@ const RailSidebar: FC = () => {
     })
   }
 
-  bottomActions.push({
-    id: 'share',
-    active: false,
-    onClick: () => setShareOpen(true),
-    dataCy: 'share',
-    tooltip: t('generate_share_url'),
-    icon: <Share2 />
-  })
+  if (showShareButton) {
+    bottomActions.push({
+      id: 'share',
+      active: false,
+      onClick: () => setShareOpen(true),
+      dataCy: 'share',
+      tooltip: t('generate_share_url'),
+      icon: <Share2 />
+    })
+  }
 
 
 
