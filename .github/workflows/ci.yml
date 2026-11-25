@@ -15,14 +15,14 @@ jobs:
      matrix:
        node-version: [22, 24]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Get npm cache directory
       id: npm-cache-dir
       run: |
         echo "dir=$(npm config get cache)" >> "$GITHUB_OUTPUT"
     - name: Cache node modules
       id: npm-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ${{ steps.npm-cache-dir.outputs.dir }}
         key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
@@ -30,7 +30,7 @@ jobs:
           ${{ runner.os }}-node${{ matrix.node-version }}-
 
     - name: Cache Cypress binary
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ~/.cache/Cypress
         key: cypress-${{ runner.os }}-cypress-node${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
@@ -38,7 +38,7 @@ jobs:
           cypress-${{ runner.os }}-cypress-node${{ matrix.node-version }}-
 
     - name: Setup node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
        node-version: ${{ matrix.node-version }}
     - name: Install dependencies
@@ -52,7 +52,7 @@ jobs:
         npm run api & npm run test
     - name: Save test video folder
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: video-${{ runner.os }}-node${{ matrix.node-version }}
         if-no-files-found: error
