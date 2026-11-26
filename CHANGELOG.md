@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.13](https://github.com/subugoe/tido/compare/v5.0.0-beta.12...v5.0.0-beta.13) (2026-11-26)
+
+
+### Features
+
+* add a skeleton for WitnessItem while the witness is being checked ([d4b6d69](https://github.com/subugoe/tido/commit/d4b6d690afaa2ffd596402db6020a8b2419119e3))
+* add all synoptical connections in popover when clicking the sync target ([066decd](https://github.com/subugoe/tido/commit/066decd8750773e4aeb149b3e86b1dadc0e96b5e))
+* expose the share url as getShareUrl and hide the share button by config ([#1189](https://github.com/subugoe/tido/issues/1189)) ([3ca08fb](https://github.com/subugoe/tido/commit/3ca08fb3a12f11d874d7640eae140b255c310e59))
+* remove the cross ref style after 3s when the target is shown ([#1213](https://github.com/subugoe/tido/issues/1213)) ([0651109](https://github.com/subugoe/tido/commit/0651109ab7e846c64512bd23010f0b4e49998bbd))
+* replace metadata accordion layout with flat content sections ([80617d9](https://github.com/subugoe/tido/commit/80617d98de41b633d29f0661421f0463877cdfd1))
+* resolve panel views in one module and hide empty views by config ([f5096db](https://github.com/subugoe/tido/commit/f5096db1a2a573f5ed365a369456034a9df516ec))
+* show a disabled witness in popover when there are errors + an info tooltip ([208b9c9](https://github.com/subugoe/tido/commit/208b9c921b2d7f673a4df7d22c0ae06bcb8bdf48))
+* update metadata popover content design ([185cf54](https://github.com/subugoe/tido/commit/185cf54dd740d3f7f025738a0bbb09a77d178228))
+
+
+### Bug Fixes
+
+* add a title for annotation popover and place the content below it ([9cd5ef4](https://github.com/subugoe/tido/commit/9cd5ef43f392057fbf52c09e463739f9d30fac3d))
+* add the active style to a target which has annotation popover ([4e0a5fb](https://github.com/subugoe/tido/commit/4e0a5fb00a8df9900d35052196014d5fa6472393))
+* should show cross ref annotation in popover when clicking a target inside cross ref ([#943](https://github.com/subugoe/tido/issues/943)) ([7a473c7](https://github.com/subugoe/tido/commit/7a473c7cb2b12d307dc5ff89039541defb4df900))
+* **synopsis:** avoid programmatic scroll from creating new sync connection while scrolling ([ab6b577](https://github.com/subugoe/tido/commit/ab6b5776d0ca48fcb19f177800b5e0a2091ea40e))
+
 ## [5.0.0-beta.12](https://github.com/subugoe/tido/compare/v5.0.0-beta.11...v5.0.0-beta.12) (2026-11-10)
 
 
