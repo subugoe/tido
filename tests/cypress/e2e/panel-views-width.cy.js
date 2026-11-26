@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Panel views width ratio', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -7,8 +9,7 @@ describe('Panel views width ratio', () => {
 
   // Every item of the manifest has an image, so the panel shows the default image and text views.
   const selectors = {
-    itemLabel: '[data-cy="item-label"]',
-    nextItemButton: '[data-cy="next-item-button"]',
+    ...panelSelectors,
     panes: '[data-cy="panel-container"] .split-view-view',
   };
 

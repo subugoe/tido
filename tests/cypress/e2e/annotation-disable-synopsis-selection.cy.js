@@ -55,6 +55,7 @@ describe('Annotation disableSynopsisSelection', () => {
       'showContentTypeToggle=false',
       `panelViews[]=${encodeURIComponent(JSON.stringify(textView('transcription')))}`,
       `panelViews[]=${encodeURIComponent(JSON.stringify(textView('diplomatic')))}`,
+      `panelViews[]=${encodeURIComponent(JSON.stringify({ view: 'annotations' }))}`,
     ].join('&')
 
     beforeEach(() => visit(config))
@@ -86,6 +87,7 @@ describe('Annotation disableSynopsisSelection', () => {
       'showContentTypeToggle=false',
       `panelViews[]=${encodeURIComponent(JSON.stringify(textView('transcription')))}`,
       `panelViews[]=${encodeURIComponent(JSON.stringify(textView('diplomatic')))}`,
+      `panelViews[]=${encodeURIComponent(JSON.stringify({ view: 'annotations' }))}`,
     ].join('&')
 
     it('Opens a popover with simplified UI when all witnesses are opened', () => {
@@ -155,6 +157,7 @@ describe('Annotation disableSynopsisSelection', () => {
       'showContentTypeToggle=false',
       `panelViews[]=${encodeURIComponent(JSON.stringify(multiTextView('transcription')))}`,
       `panelViews[]=${encodeURIComponent(JSON.stringify(multiTextView('diplomatic')))}`,
+      `panelViews[]=${encodeURIComponent(JSON.stringify({ view: 'annotations' }))}`,
       ...extra,
     ].join('&')
 

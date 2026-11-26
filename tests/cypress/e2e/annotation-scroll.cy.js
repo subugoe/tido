@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Annotation scrolling and alignment', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -6,7 +8,7 @@ describe('Annotation scrolling and alignment', () => {
 
   // Aligned mode is what positions every annotation card against its target in the text - the list
   // mode renders the cards in normal flow instead. Both react to a selection the same way: the
-  // sidebar scrolls to the card first and the text is lined up with it afterwards, so the tests
+  // annotations view scrolls to the card first and the text is lined up with it afterwards, so the tests
   // below run the shared parts of that in either mode.
   const configFor = (mode) => `annotations.defaultMode=${mode}&panels[0].collection=${collection}&panels[0].manifest=${manifest}`;
 
@@ -31,7 +33,7 @@ describe('Annotation scrolling and alignment', () => {
   const card = cardFor('annotation-19')
 
   // "Narcissus" sits several paragraphs further down, so selecting it means moving on from the
-  // position "watery part of the world" left the text and the sidebar in.
+  // position "watery part of the world" left the text and the annotations view in.
   const secondTargetSelector = '#narcissus'
   const secondCard = cardFor('annotation-29')
 
@@ -42,12 +44,12 @@ describe('Annotation scrolling and alignment', () => {
 
   // "stuffed a shirt or two" opens Chapter 2 and is spelled out as its own target in the diplomatic
   // text only, so clicking it is only possible in a view showing that content type. That text is
-  // three paragraphs long, so it stays put no matter how far the sidebar is scrolled.
+  // three paragraphs long, so it stays put no matter how far the annotations view is scrolled.
   const shirtTargetSelector = '#dipl-shirt'
   const shirtCard = cardFor('annotation-diplomatic-1', 'page2')
 
   // "Lazarus" sits near the end of Chapter 2's transcription, so a panel that opens with this
-  // annotation already selected has to scroll both the sidebar and the text to reach it.
+  // annotation already selected has to scroll both the annotations view and the text to reach it.
   const lazarusTargetSelector = '#lazarus'
   const lazarusAnnotationId = `${apiUrl}/example/book2/page2/rev1/annotation-24`
   const lazarusCard = cardFor('annotation-24', 'page2')
@@ -64,7 +66,7 @@ describe('Annotation scrolling and alignment', () => {
     { label: 'Text', view: 'text', activeContentType: 'transcription', contentTypes: ['diplomatic', 'transcription', 'translation'] },
     { label: 'Text', view: 'text', activeContentType: 'diplomatic', contentTypes: ['diplomatic', 'transcription', 'translation', 'normalized'] },
   ]
-  const twoTextViewsConfig = twoTextViews
+  const twoTextViewsConfig = [...twoTextViews, { view: 'annotations' }]
     .map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`)
     .join('')
 
@@ -91,43 +93,30 @@ describe('Annotation scrolling and alignment', () => {
   const ishmaelTargetSelector = '#ishmael'
 
   const selectors = {
-    panel: '[data-cy="panel"]',
-    panelsWrapper: '[data-cy="panels-wrapper"]',
-    popover: '[data-slot="popover-content"]',
-    sidebarContainer: '[data-sidebar-view]',
-    sidebarLoading: '[data-cy="sidebar-loading"]',
-    sidebarScroll: '[data-sidebar-scroll-container]',
-    sidebarToggle: '[data-cy="sidebar-toggle"]',
-    textContainer: '[data-text-container]',
-    viewsMenu: '[data-cy="panel-menu-dropdown"]',
-    viewsMenuToggle: '[data-cy="panel-menu"]',
-    viewSwitch: '[data-cy="panel-view-toggle"]',
+    ...panelSelectors,
+    viewsMenu: '[data-cy="panel"]:first [data-cy="panel-views"]',
   }
 
-  // Vertical distance from the top of the panel - the frame both the text and the sidebar live in.
+  // Vertical distance from the top of the panel - the frame both the text and the annotations view live in.
   const yInPanel = (el, panel) => el.getBoundingClientRect().top - panel.getBoundingClientRect().top
 
-  // Vertical distance from the top of the sidebar's viewport. With the sidebar at scrollTop 0 this
+  // Vertical distance from the top of the annotations view's viewport. With the annotations view at scrollTop 0 this
   // is also the card's own `top`, since the cards are positioned against this container and it
   // carries no vertical padding.
-  const yInSidebar = (el, sidebar) => el.getBoundingClientRect().top - sidebar.getBoundingClientRect().top
+  const yInAnnotations = (el, annotationsScrollContainer) => el.getBoundingClientRect().top - annotationsScrollContainer.getBoundingClientRect().top
 
-  // The overlay covers the sidebar while the annotations load and while the cards are being
+  // The overlay covers the annotations view while the annotations load and while the cards are being
   // positioned. Nothing about their placement is final until it is gone.
-  const waitForSidebar = () => {
-    cy.get(selectors.sidebarContainer).should('be.visible')
-    cy.get(selectors.sidebarLoading).should('not.exist')
+  const waitForAnnotations = () => {
+    cy.get(selectors.annotationsView).should('be.visible')
+    cy.get(selectors.annotationsLoading).should('not.exist')
   }
 
-  // Flips the visibility switch of one of the panel's views. The menu holds one switch per view in
-  // panelViews order, so index 1 is the second text view. It stays open after the click, so it is
-  // dismissed before returning - otherwise it covers the panel for whatever asserts next.
+  // Flips the visibility toggle of one of the panel's views. The header holds one toggle per text or
+  // image view in panelViews order, so index 1 is the second text view.
   const toggleView = (index) => {
-    cy.get(selectors.viewsMenuToggle).click()
-    cy.get(selectors.viewsMenu).find(selectors.viewSwitch).should('have.length', 2)
-    cy.get(selectors.viewsMenu).find(selectors.viewSwitch).eq(index).click()
-    cy.get('body').type('{esc}')
-    cy.get(selectors.viewsMenu).should('not.exist')
+    cy.get(selectors.viewsMenu).find(selectors.viewToggle).should('have.length', 2)
+    cy.get(selectors.viewsMenu).find(selectors.viewToggle).eq(index).click()
   }
 
   // Puts the target at a given fraction of the text container height, measured from its top, so
@@ -151,53 +140,53 @@ describe('Annotation scrolling and alignment', () => {
     })
   }
 
-  // Puts the annotation card at a given fraction of the sidebar height, measured from its top, so
-  // the click starts from a scrolled sidebar rather than from the top of the annotation list.
-  const scrollCardIntoSidebarAt = (annotationCard, fraction) => {
-    cy.get(selectors.sidebarScroll).then(($sidebar) => {
-      const sidebar = $sidebar[0]
-      const cardEl = sidebar.querySelector(annotationCard)
-      const cardTop = cardEl.getBoundingClientRect().top - sidebar.getBoundingClientRect().top + sidebar.scrollTop
+  // Puts the annotation card at a given fraction of the annotations view height, measured from its top, so
+  // the click starts from a scrolled annotations view rather than from the top of the annotation list.
+  const scrollCardIntoAnnotationsAt = (annotationCard, fraction) => {
+    cy.get(selectors.annotationsScrollContainer).then(($annotationsScrollContainer) => {
+      const annotationsScrollContainer = $annotationsScrollContainer[0]
+      const cardEl = annotationsScrollContainer.querySelector(annotationCard)
+      const cardTop = cardEl.getBoundingClientRect().top - annotationsScrollContainer.getBoundingClientRect().top + annotationsScrollContainer.scrollTop
 
-      cy.wrap(sidebar).scrollTo(0, cardTop - (sidebar.clientHeight * fraction), { duration: 1000 })
+      cy.wrap(annotationsScrollContainer).scrollTo(0, cardTop - (annotationsScrollContainer.clientHeight * fraction), { duration: 1000 })
     })
 
-    cy.get(selectors.sidebarScroll).should(($sidebar) => {
-      const sidebar = $sidebar[0]
-      const cardEl = sidebar.querySelector(annotationCard)
-      const cardY = cardEl.getBoundingClientRect().top - sidebar.getBoundingClientRect().top
+    cy.get(selectors.annotationsScrollContainer).should(($annotationsScrollContainer) => {
+      const annotationsScrollContainer = $annotationsScrollContainer[0]
+      const cardEl = annotationsScrollContainer.querySelector(annotationCard)
+      const cardY = cardEl.getBoundingClientRect().top - annotationsScrollContainer.getBoundingClientRect().top
 
-      expect(cardY, `card sits at ${fraction * 100}% of the sidebar height`)
-        .to.be.closeTo(sidebar.clientHeight * fraction, 2)
+      expect(cardY, `card sits at ${fraction * 100}% of the annotations view height`)
+        .to.be.closeTo(annotationsScrollContainer.clientHeight * fraction, 2)
     })
   }
 
-  // A selection made in the text syncs the sidebar to the text scroll position.
-  const expectSidebarToFollowText = () => {
+  // A selection made in the text syncs the annotations view to the text scroll position.
+  const expectAnnotationsToFollowText = () => {
     cy.get(selectors.textContainer).then(($text) => {
-      cy.get(selectors.sidebarScroll).should(($sidebar) => {
-        expect($sidebar[0].scrollTop, 'sidebar scrollTop follows text scrollTop')
+      cy.get(selectors.annotationsScrollContainer).should(($annotationsScrollContainer) => {
+        expect($annotationsScrollContainer[0].scrollTop, 'annotations view scrollTop follows text scrollTop')
           .to.be.closeTo($text[0].scrollTop, 1)
       })
     })
   }
 
-  // The card sits in the visible part of the sidebar rather than above or below it.
-  const expectCardInsideSidebar = (annotationCard) => {
-    cy.get(selectors.sidebarScroll).then(($sidebar) => {
+  // The card sits in the visible part of the annotations view rather than above or below it.
+  const expectCardInsideAnnotations = (annotationCard) => {
+    cy.get(selectors.annotationsScrollContainer).then(($annotationsScrollContainer) => {
       cy.get(annotationCard).should(($card) => {
-        const sidebarRect = $sidebar[0].getBoundingClientRect()
+        const annotationsRect = $annotationsScrollContainer[0].getBoundingClientRect()
         const cardTop = $card[0].getBoundingClientRect().top
 
-        expect(cardTop, 'card is inside the sidebar viewport').to.be.within(sidebarRect.top, sidebarRect.bottom)
+        expect(cardTop, 'card is inside the annotations view viewport').to.be.within(annotationsRect.top, annotationsRect.bottom)
       })
     })
   }
 
-  // The card ends up inside the visible part of the sidebar, at the same height as its target.
+  // The card ends up inside the visible part of the annotations view, at the same height as its target.
   // Pass a tolerance of 0 to require the two to sit on exactly the same y position.
   const expectCardAlignedWithTarget = (annotationCard, target, tolerance = 1) => {
-    expectCardInsideSidebar(annotationCard)
+    expectCardInsideAnnotations(annotationCard)
 
     cy.get(selectors.panel).then(($panel) => {
       cy.get(annotationCard).should(($card) => {
@@ -218,7 +207,7 @@ describe('Annotation scrolling and alignment', () => {
   const expectNoOverlappingCards = () => {
     // Only the top level cards are positioned - a nested annotation flows inside the card it
     // belongs to - so the list wrapper's own children are what has to be checked.
-    cy.get(selectors.sidebarScroll).find('> div > [data-annotation]').should(($cards) => {
+    cy.get(selectors.annotationsScrollContainer).find('> div > [data-annotation]').should(($cards) => {
       const boxes = [...$cards]
         .map((cardEl) => ({
           id: cardEl.getAttribute('data-annotation').split('/').pop(),
@@ -235,7 +224,7 @@ describe('Annotation scrolling and alignment', () => {
   }
 
   // Scrolls "watery part of the world" into the middle of the text and clicks it, which opens the
-  // sidebar and aligns its card with the target. Test 1 asserts this end state; the tests after it
+  // annotations view and aligns its card with the target. Test 1 asserts this end state; the tests after it
   // start from there.
   const selectFirstAnnotationInText = () => {
     scrollTargetTo(targetSelector, 0.5)
@@ -244,55 +233,55 @@ describe('Annotation scrolling and alignment', () => {
     // before clicking, and there the content type toolbar floats over the text.
     cy.get(selectors.textContainer).find(targetSelector).click({ scrollBehavior: 'center' })
 
-    waitForSidebar()
+    waitForAnnotations()
     cy.get(card).should('have.attr', 'data-selected', 'true')
       .wait(100)
   }
 
   // Loads a chapter. Tests needing a different panel layout pass their own config on top, and the
-  // ones covering the plain annotation list open the sidebar in list mode.
+  // ones covering the plain annotation list open the annotations view in list mode.
   const visitItem = ({ item, label, ready }, extraConfig = '', mode = 'aligned') => {
     cy.visit(`/e2e.html?${configFor(mode)}&panels[0].item=${item}${extraConfig}`)
     cy.get('[data-cy="item-label"]').contains(label)
     cy.get(selectors.textContainer).find(ready).should('exist')
   }
 
-  it('Should click a target and open the sidebar + align the annotation with its target', () => {
+  it('Should click a target and open the annotations view + align the annotation with its target', () => {
     visitItem(chapter1)
 
     selectFirstAnnotationInText()
 
-    expectSidebarToFollowText()
+    expectAnnotationsToFollowText()
     expectCardAlignedWithTarget(card, targetSelector)
   })
 
-  it('Should scroll the text to the target when the annotation is selected in the sidebar', () => {
+  it('Should scroll the text to the target when the annotation is selected in the annotations view', () => {
     visitItem(chapter1)
 
-    // Open the sidebar without touching the text, so the target is still off screen.
-    cy.get(selectors.sidebarToggle).click()
-    waitForSidebar()
+    // Open the annotations view without touching the text, so the target is still off screen.
+    cy.get(selectors.annotationsToggle).click()
+    waitForAnnotations()
 
     cy.get(selectors.textContainer).its('0.scrollTop').should('equal', 0)
 
-    // Bring the card 20% down the sidebar before selecting it, so the selection happens from a
-    // scrolled sidebar position.
-    scrollCardIntoSidebarAt(card, 0.2)
+    // Bring the card 20% down the annotations view before selecting it, so the selection happens from a
+    // scrolled annotations view position.
+    scrollCardIntoAnnotationsAt(card, 0.2)
 
-    cy.get(selectors.sidebarScroll).its('0.scrollTop').as('sidebarScrollTopBeforeClick')
+    cy.get(selectors.annotationsScrollContainer).its('0.scrollTop').as('annotationsScrollTopBeforeClick')
 
     cy.get(card).click({ scrollBehavior: false }).should('have.attr', 'data-selected', 'true')
 
-    // Selecting in the sidebar marks the target in the text too.
+    // Selecting in the annotations view marks the target in the text too.
     cy.get(selectors.textContainer).find(targetSelector)
       .should('have.attr', 'data-annotation-selected', 'true')
 
     // The text scrolls down to bring the target up to the card.
     cy.get(selectors.textContainer).its('0.scrollTop').should('be.greaterThan', 200)
 
-    // Only the text moves: the card stays exactly where the sidebar was scrolled to.
-    cy.get('@sidebarScrollTopBeforeClick').then((scrollTopBeforeClick) => {
-      cy.get(selectors.sidebarScroll).its('0.scrollTop')
+    // Only the text moves: the card stays exactly where the annotations view was scrolled to.
+    cy.get('@annotationsScrollTopBeforeClick').then((scrollTopBeforeClick) => {
+      cy.get(selectors.annotationsScrollContainer).its('0.scrollTop')
         .should('equal', scrollTopBeforeClick)
     })
 
@@ -310,7 +299,7 @@ describe('Annotation scrolling and alignment', () => {
   it('Should follow a second target clicked further down the text', () => {
     visitItem(chapter1)
 
-    // Start from the end state of the first test: sidebar open, "watery part of the world"
+    // Start from the end state of the first test: annotations view open, "watery part of the world"
     // selected and aligned in the middle of the panel.
     selectFirstAnnotationInText()
 
@@ -325,7 +314,7 @@ describe('Annotation scrolling and alignment', () => {
       .wait(100)
     cy.get(card).should('not.have.attr', 'data-selected', 'true')
 
-    expectSidebarToFollowText()
+    expectAnnotationsToFollowText()
     expectCardAlignedWithTarget(secondCard, secondTargetSelector)
 
     // Now select the target sitting just above it, without scrolling the text first: the card has
@@ -336,11 +325,11 @@ describe('Annotation scrolling and alignment', () => {
       .wait(100)
     cy.get(secondCard).should('not.have.attr', 'data-selected', 'true')
 
-    expectSidebarToFollowText()
+    expectAnnotationsToFollowText()
     expectCardAlignedWithTarget(thirdCard, thirdTargetSelector, 0)
   })
 
-  it('Should scroll the sidebar back to the annotation when a target in the second text view is clicked', () => {
+  it('Should scroll the annotations view back to the annotation when a target in the second text view is clicked', () => {
     // Chapter 2: a long list of annotations against a transcription that runs well past the fold,
     // and a diplomatic text of three paragraphs that never scrolls.
     visitItem(chapter2, twoTextViewsConfig)
@@ -348,25 +337,25 @@ describe('Annotation scrolling and alignment', () => {
     cy.get(selectors.textContainer).should('have.length', 2)
     cy.get(selectors.textContainer).eq(1).find(shirtTargetSelector).should('exist')
 
-    cy.get(selectors.sidebarToggle).click()
-    waitForSidebar()
+    cy.get(selectors.annotationsToggle).click()
+    waitForAnnotations()
 
-    // Scroll the sidebar at the very bottom, far away from where the diplomatic text target sits.
-    cy.get(selectors.sidebarScroll).scrollTo('bottom', { duration: 1000 })
-    cy.get(selectors.sidebarScroll).its('0.scrollTop').should('be.greaterThan', 0)
-      .as('sidebarScrollTopAtBottom')
+    // Scroll the annotations view at the very bottom, far away from where the diplomatic text target sits.
+    cy.get(selectors.annotationsScrollContainer).scrollTo('bottom', { duration: 1000 })
+    cy.get(selectors.annotationsScrollContainer).its('0.scrollTop').should('be.greaterThan', 0)
+      .as('annotationsScrollTopAtBottom')
 
     // The card belongs to the first paragraph of the diplomatic text, so from the bottom of the
     // list it has been scrolled clean off the top - there is a real scroll to make.
-    cy.get(selectors.sidebarScroll).then(($sidebar) => {
+    cy.get(selectors.annotationsScrollContainer).then(($annotationsScrollContainer) => {
       cy.get(shirtCard).should(($card) => {
-        const sidebarTop = $sidebar[0].getBoundingClientRect().top
-        expect($card[0].getBoundingClientRect().bottom, 'card starts above the sidebar viewport')
-          .to.be.lessThan(sidebarTop)
+        const annotationsTop = $annotationsScrollContainer[0].getBoundingClientRect().top
+        expect($card[0].getBoundingClientRect().bottom, 'card starts above the annotations view viewport')
+          .to.be.lessThan(annotationsTop)
       })
     })
 
-    // Scrolling the sidebar drags the text views along with it, but the diplomatic text is shorter
+    // Scrolling the annotations view drags the text views along with it, but the diplomatic text is shorter
     // than its view, so the target has not moved and can be clicked where it stands.
     cy.get(selectors.textContainer).eq(1).its('0.scrollTop').should('equal', 0)
     cy.get(selectors.textContainer).eq(1).find(shirtTargetSelector).click({ scrollBehavior: false })
@@ -374,9 +363,9 @@ describe('Annotation scrolling and alignment', () => {
     cy.get(shirtCard).should('have.attr', 'data-selected', 'true')
       .wait(100)
 
-    // The sidebar has to leave the bottom to bring the card back into view.
-    cy.get('@sidebarScrollTopAtBottom').then((scrollTopAtBottom) => {
-      cy.get(selectors.sidebarScroll).its('0.scrollTop').should('be.lessThan', scrollTopAtBottom)
+    // The annotations view has to leave the bottom to bring the card back into view.
+    cy.get('@annotationsScrollTopAtBottom').then((scrollTopAtBottom) => {
+      cy.get(selectors.annotationsScrollContainer).its('0.scrollTop').should('be.lessThan', scrollTopAtBottom)
     })
 
     expectCardAlignedWithTarget(shirtCard, shirtTargetSelector, 0)
@@ -386,44 +375,44 @@ describe('Annotation scrolling and alignment', () => {
   it('Should place the diplomatic annotation at the same position after its view is toggled off and on', () => {
     visitItem(chapter2, twoTextViewsConfig)
 
-    cy.get(selectors.sidebarToggle).click()
-    waitForSidebar()
+    cy.get(selectors.annotationsToggle).click()
+    waitForAnnotations()
 
-    // Nothing has scrolled the sidebar, so distances measured from its top edge are the cards' own
+    // Nothing has scrolled the annotations view, so distances measured from its top edge are the cards' own
     // top values.
-    cy.get(selectors.sidebarScroll).its('0.scrollTop').should('equal', 0)
+    cy.get(selectors.annotationsScrollContainer).its('0.scrollTop').should('equal', 0)
 
     expectNoOverlappingCards()
 
     // Where the card lands in the freshly opened list is the reference the toggle has to reproduce.
     // It is read at runtime rather than pinned to a number, since the cards are as tall as the
     // machine's fonts make them.
-    cy.get(selectors.sidebarScroll).then(($sidebar) => {
+    cy.get(selectors.annotationsScrollContainer).then(($annotationsScrollContainer) => {
       cy.get(shirtCard).then(($card) => {
-        cy.wrap(yInSidebar($card[0], $sidebar[0])).as('shirtCardTopBeforeToggle')
+        cy.wrap(yInAnnotations($card[0], $annotationsScrollContainer[0])).as('shirtCardTopBeforeToggle')
       })
     })
 
     // The annotation targets the diplomatic text, so switching that view off takes its card out of
-    // the sidebar entirely.
+    // the annotations view entirely.
     toggleView(1)
-    waitForSidebar()
+    waitForAnnotations()
     cy.get(shirtCard).should('not.exist')
 
     // Switching it back on rebuilds the list and re-runs the alignment from scratch.
     toggleView(1)
-    waitForSidebar()
+    waitForAnnotations()
     cy.get(shirtCard).should('exist')
 
-    cy.get(selectors.sidebarScroll).its('0.scrollTop').should('equal', 0)
+    cy.get(selectors.annotationsScrollContainer).its('0.scrollTop').should('equal', 0)
 
     // Same top as before: the rebuilt list has to measure the cards at the width they are rendered
     // at, otherwise they wrap a line taller than the stacking allowed for and the card is pushed
     // down.
     cy.get('@shirtCardTopBeforeToggle').then((topBeforeToggle) => {
-      cy.get(selectors.sidebarScroll).then(($sidebar) => {
+      cy.get(selectors.annotationsScrollContainer).then(($annotationsScrollContainer) => {
         cy.get(shirtCard).should(($card) => {
-          const top = yInSidebar($card[0], $sidebar[0])
+          const top = yInAnnotations($card[0], $annotationsScrollContainer[0])
           expect(top, `card top ${top} vs ${topBeforeToggle} before the toggle`)
             .to.be.closeTo(topBeforeToggle, 0.5)
         })
@@ -436,16 +425,16 @@ describe('Annotation scrolling and alignment', () => {
   it('Selecting an annotation should scroll the text in second view to its target', () => {
     visitItem(chapter1, twoTextViewsConfig)
 
-    cy.get(selectors.sidebarToggle).click()
-    waitForSidebar()
+    cy.get(selectors.annotationsToggle).click()
+    waitForAnnotations()
 
     // Neither view has been touched, so the diplomatic text still starts at its top.
     cy.get(selectors.textContainer).eq(1).its('0.scrollTop').should('equal', 0)
 
-    // Park the sidebar halfway down its scrollable height.
-    cy.get(selectors.sidebarScroll).then(($sidebar) => {
-      const sidebar = $sidebar[0]
-      cy.wrap(sidebar).scrollTo(0, (sidebar.scrollHeight - sidebar.clientHeight) / 2, { duration: 1000 })
+    // Park the annotations view halfway down its scrollable height.
+    cy.get(selectors.annotationsScrollContainer).then(($annotationsScrollContainer) => {
+      const annotationsScrollContainer = $annotationsScrollContainer[0]
+      cy.wrap(annotationsScrollContainer).scrollTo(0, (annotationsScrollContainer.scrollHeight - annotationsScrollContainer.clientHeight) / 2, { duration: 1000 })
     })
 
     cy.get(diplomaticMiddleCard).click()
@@ -459,19 +448,19 @@ describe('Annotation scrolling and alignment', () => {
   })
 
   it('Should open with the configured annotation already selected, scrolled to and aligned', () => {
-    // selectedAnnotationId opens the sidebar on its own, so nothing here clicks anything.
+    // selectedAnnotationId opens the annotations view on its own, so nothing here clicks anything.
     visitItem(chapter2, twoTextViewsConfig + preselectedLazarusConfig)
-    waitForSidebar()
+    waitForAnnotations()
 
-    // 1. The sidebar scrolled down the list to the card instead of staying at the top.
-    cy.get(selectors.sidebarScroll).should(($sidebar) => {
-      const sidebar = $sidebar[0]
-      const cardEl = sidebar.querySelector(lazarusCard)
-      const cardOffsetTop = cardEl.getBoundingClientRect().top - sidebar.getBoundingClientRect().top + sidebar.scrollTop
+    // 1. The annotations view scrolled down the list to the card instead of staying at the top.
+    cy.get(selectors.annotationsScrollContainer).should(($annotationsScrollContainer) => {
+      const annotationsScrollContainer = $annotationsScrollContainer[0]
+      const cardEl = annotationsScrollContainer.querySelector(lazarusCard)
+      const cardOffsetTop = cardEl.getBoundingClientRect().top - annotationsScrollContainer.getBoundingClientRect().top + annotationsScrollContainer.scrollTop
 
-      expect(sidebar.scrollTop, 'sidebar scrollTop reached the card').to.be.greaterThan(0)
-      expect(sidebar.scrollTop, 'sidebar scrollTop sits within a viewport of the card')
-        .to.be.closeTo(cardOffsetTop, sidebar.clientHeight)
+      expect(annotationsScrollContainer.scrollTop, 'annotations view scrollTop reached the card').to.be.greaterThan(0)
+      expect(annotationsScrollContainer.scrollTop, 'annotations view scrollTop sits within a viewport of the card')
+        .to.be.closeTo(cardOffsetTop, annotationsScrollContainer.clientHeight)
     })
 
     // 2. The card is the selected one.
@@ -497,10 +486,10 @@ describe('Annotation scrolling and alignment', () => {
     cy.get('[data-cy="item-label"]').contains(prideChapter1.label)
     cy.get(selectors.textContainer).eq(0).find(prideChapter1.ready).should('exist')
 
-    cy.get(selectors.sidebarToggle).click()
-    waitForSidebar()
+    cy.get(selectors.annotationsToggle).click()
+    waitForAnnotations()
 
-    // The cross reference hangs off a span inside the annotation body in the sidebar, not off a
+    // The cross reference hangs off a span inside the annotation body in the annotations view, not off a
     // target in the text - so the click happens on the card.
     cy.get(crossRefSourceCard).find(crossRefSpan).click()
 
@@ -533,7 +522,7 @@ describe('Annotation scrolling and alignment', () => {
     secondPanel().find('[data-cy="manifest-label"]').should('contain.text', 'Moby-Dick')
     secondPanel().find('[data-cy="item-label"]').should('contain.text', 'Page 1')
 
-    // d. The sidebar scrolled down the list to the referenced annotation and selected it.
+    // d. The annotations view scrolled down the list to the referenced annotation and selected it.
     secondPanel().find(ishmaelCard).should('have.attr', 'data-selected', 'true')
 
     // e. The target lives in the transcription, which is the first of the two text views the panel
@@ -543,7 +532,7 @@ describe('Annotation scrolling and alignment', () => {
       .should('have.attr', 'data-annotation-selected', 'true')
 
     // f. Both areas left their top, and card and target sit on exactly the same y position.
-    secondPanel().find(selectors.sidebarScroll).its('0.scrollTop').should('be.greaterThan', 100)
+    secondPanel().find(selectors.annotationsScrollContainer).its('0.scrollTop').should('be.greaterThan', 100)
     secondPanel().find(selectors.textContainer).eq(0).its('0.scrollTop').should('be.greaterThan', 100)
 
     secondPanel().should(($panel) => {
@@ -558,23 +547,23 @@ describe('Annotation scrolling and alignment', () => {
   })
 
   // The list mode renders the same cards in normal document flow, so there is no per card
-  // positioning to check - but a selection has to move the sidebar and the text exactly as it does
+  // positioning to check - but a selection has to move the annotations view and the text exactly as it does
   // in aligned mode. The tests below are the list mode counterparts of the ones above.
 
   it('Should scroll the text to the target when the annotation is selected in the list', () => {
     visitItem(chapter1, '', 'list')
 
-    // Open the sidebar without touching the text, so the target is still off screen.
-    cy.get(selectors.sidebarToggle).click()
-    waitForSidebar()
+    // Open the annotations view without touching the text, so the target is still off screen.
+    cy.get(selectors.annotationsToggle).click()
+    waitForAnnotations()
 
     cy.get(selectors.textContainer).its('0.scrollTop').should('equal', 0)
 
-    // Bring the card 20% down the sidebar before selecting it, so the selection happens from a
-    // scrolled sidebar position.
-    scrollCardIntoSidebarAt(card, 0.2)
+    // Bring the card 20% down the annotations view before selecting it, so the selection happens from a
+    // scrolled annotations view position.
+    scrollCardIntoAnnotationsAt(card, 0.2)
 
-    cy.get(selectors.sidebarScroll).its('0.scrollTop').as('sidebarScrollTopBeforeClick')
+    cy.get(selectors.annotationsScrollContainer).its('0.scrollTop').as('annotationsScrollTopBeforeClick')
 
     cy.get(card).click({ scrollBehavior: false }).should('have.attr', 'data-selected', 'true')
 
@@ -584,9 +573,9 @@ describe('Annotation scrolling and alignment', () => {
     // The text scrolls down to bring the target up to the card.
     cy.get(selectors.textContainer).its('0.scrollTop').should('be.greaterThan', 200)
 
-    // Only the text moves: the card stays exactly where the sidebar was scrolled to.
-    cy.get('@sidebarScrollTopBeforeClick').then((scrollTopBeforeClick) => {
-      cy.get(selectors.sidebarScroll).its('0.scrollTop')
+    // Only the text moves: the card stays exactly where the annotations view was scrolled to.
+    cy.get('@annotationsScrollTopBeforeClick').then((scrollTopBeforeClick) => {
+      cy.get(selectors.annotationsScrollContainer).its('0.scrollTop')
         .should('equal', scrollTopBeforeClick)
     })
 
@@ -596,24 +585,24 @@ describe('Annotation scrolling and alignment', () => {
   it('Should scroll the list back to the annotation when its target is clicked in the text', () => {
     visitItem(chapter1, '', 'list')
 
-    cy.get(selectors.sidebarToggle).click()
-    waitForSidebar()
+    cy.get(selectors.annotationsToggle).click()
+    waitForAnnotations()
 
-    // The text has to be moved first: scrolling it drags the sidebar along with it, which would
-    // undo the sidebar position the click is supposed to start from.
+    // The text has to be moved first: scrolling it drags the annotations view along with it, which would
+    // undo the annotations view position the click is supposed to start from.
     scrollTargetTo(targetSelector, 0.5)
 
-    // Park the sidebar at the very bottom, away from the card of the target about to be clicked.
-    cy.get(selectors.sidebarScroll).scrollTo('bottom', { duration: 1000 })
-    cy.get(selectors.sidebarScroll).its('0.scrollTop').should('be.greaterThan', 0)
+    // Park the annotations view at the very bottom, away from the card of the target about to be clicked.
+    cy.get(selectors.annotationsScrollContainer).scrollTo('bottom', { duration: 1000 })
+    cy.get(selectors.annotationsScrollContainer).its('0.scrollTop').should('be.greaterThan', 0)
 
-    // From down there the card has been scrolled out of the sidebar viewport, so there is a real
+    // From down there the card has been scrolled out of the annotations view viewport, so there is a real
     // scroll to make.
-    cy.get(selectors.sidebarScroll).then(($sidebar) => {
+    cy.get(selectors.annotationsScrollContainer).then(($annotationsScrollContainer) => {
       cy.get(card).should(($card) => {
-        const sidebarRect = $sidebar[0].getBoundingClientRect()
-        expect($card[0].getBoundingClientRect().top, 'card sits outside the sidebar viewport')
-          .to.not.be.within(sidebarRect.top, sidebarRect.bottom)
+        const annotationsRect = $annotationsScrollContainer[0].getBoundingClientRect()
+        expect($card[0].getBoundingClientRect().top, 'card sits outside the annotations view viewport')
+          .to.not.be.within(annotationsRect.top, annotationsRect.bottom)
       })
     })
 
@@ -630,7 +619,7 @@ describe('Annotation scrolling and alignment', () => {
       cy.get(selectors.textContainer).its('0.scrollTop').should('equal', scrollTopBeforeClick)
     })
 
-    // Only the sidebar moves, and it moves far enough for the card to end up on exactly the same y
+    // Only the annotations view moves, and it moves far enough for the card to end up on exactly the same y
     // position as the clicked target - the same end state the aligned list positions its cards in.
     expectCardAlignedWithTarget(card, targetSelector, 0)
   })
@@ -638,10 +627,10 @@ describe('Annotation scrolling and alignment', () => {
   it('Should scroll the text and the annotation list independently of each other', () => {
     visitItem(chapter1, '', 'list')
 
-    cy.get(selectors.sidebarToggle).click()
-    waitForSidebar()
+    cy.get(selectors.annotationsToggle).click()
+    waitForAnnotations()
 
-    // Select in the text first: this is the state in which the aligned list keeps the sidebar glued
+    // Select in the text first: this is the state in which the aligned list keeps the annotations view glued
     // to the text scroll position, and the one the plain list has to stay out of.
     scrollTargetTo(targetSelector, 0.5)
     cy.get(selectors.textContainer).find(targetSelector).click({ scrollBehavior: false })
@@ -652,18 +641,18 @@ describe('Annotation scrolling and alignment', () => {
     expectCardAlignedWithTarget(card, targetSelector, 0)
 
     // Scrolling the text leaves the list where it is.
-    cy.get(selectors.sidebarScroll).its('0.scrollTop').then((sidebarScrollTopBefore) => {
+    cy.get(selectors.annotationsScrollContainer).its('0.scrollTop').then((annotationsScrollTopBefore) => {
       cy.get(selectors.textContainer).then(($text) => {
         cy.wrap($text[0]).scrollTo(0, $text[0].scrollTop + 400, { duration: 500 })
       })
       cy.wait(200)
-      cy.get(selectors.sidebarScroll).its('0.scrollTop').should('equal', sidebarScrollTopBefore)
+      cy.get(selectors.annotationsScrollContainer).its('0.scrollTop').should('equal', annotationsScrollTopBefore)
     })
 
     // And scrolling the list leaves the text where it is.
     cy.get(selectors.textContainer).its('0.scrollTop').then((textScrollTopBefore) => {
-      cy.get(selectors.sidebarScroll).then(($sidebar) => {
-        cy.wrap($sidebar[0]).scrollTo(0, $sidebar[0].scrollTop + 400, { duration: 500 })
+      cy.get(selectors.annotationsScrollContainer).then(($annotationsScrollContainer) => {
+        cy.wrap($annotationsScrollContainer[0]).scrollTo(0, $annotationsScrollContainer[0].scrollTop + 400, { duration: 500 })
       })
       cy.wait(200)
       cy.get(selectors.textContainer).its('0.scrollTop').should('equal', textScrollTopBefore)
@@ -671,13 +660,13 @@ describe('Annotation scrolling and alignment', () => {
   })
 
   it('Should open the list with the configured annotation already selected, scrolled to and aligned', () => {
-    // selectedAnnotationId opens the sidebar on its own, so nothing here clicks anything.
+    // selectedAnnotationId opens the annotations view on its own, so nothing here clicks anything.
     visitItem(chapter2, twoTextViewsConfig + preselectedLazarusConfig, 'list')
-    waitForSidebar()
+    waitForAnnotations()
 
-    // 1. The sidebar scrolled down the list to the card instead of staying at the top.
-    cy.get(selectors.sidebarScroll).its('0.scrollTop').should('be.greaterThan', 0)
-    expectCardInsideSidebar(lazarusCard)
+    // 1. The annotations view scrolled down the list to the card instead of staying at the top.
+    cy.get(selectors.annotationsScrollContainer).its('0.scrollTop').should('be.greaterThan', 0)
+    expectCardInsideAnnotations(lazarusCard)
 
     // 2. The card is the selected one.
     cy.get(lazarusCard).should('have.attr', 'data-selected', 'true')
@@ -690,7 +679,7 @@ describe('Annotation scrolling and alignment', () => {
     cy.get(selectors.textContainer).eq(0).find(lazarusTargetSelector)
       .should('have.attr', 'data-annotation-selected', 'true')
 
-    // 5. The text was aligned with the card only after the sidebar had come to a stop, so both end
+    // 5. The text was aligned with the card only after the annotations view had come to a stop, so both end
     // up on the same y position.
     expectCardAlignedWithTarget(lazarusCard, lazarusTargetSelector)
   })
@@ -700,10 +689,10 @@ describe('Annotation scrolling and alignment', () => {
     cy.get('[data-cy="item-label"]').contains(prideChapter1.label)
     cy.get(selectors.textContainer).eq(0).find(prideChapter1.ready).should('exist')
 
-    cy.get(selectors.sidebarToggle).click()
-    waitForSidebar()
+    cy.get(selectors.annotationsToggle).click()
+    waitForAnnotations()
 
-    // The cross reference hangs off a span inside the annotation body in the sidebar, not off a
+    // The cross reference hangs off a span inside the annotation body in the annotations view, not off a
     // target in the text - so the click happens on the card.
     cy.get(crossRefSourceCard).find(crossRefSpan).click()
     cy.get(selectors.popover).should('be.visible')
@@ -722,7 +711,7 @@ describe('Annotation scrolling and alignment', () => {
       .should('have.attr', 'data-annotation-selected', 'true')
 
     // Both areas left their top, and card and target sit on the same y position.
-    secondPanel().find(selectors.sidebarScroll).its('0.scrollTop').should('be.greaterThan', 100)
+    secondPanel().find(selectors.annotationsScrollContainer).its('0.scrollTop').should('be.greaterThan', 100)
     secondPanel().find(selectors.textContainer).eq(0).its('0.scrollTop').should('be.greaterThan', 100)
 
     secondPanel().should(($panel) => {

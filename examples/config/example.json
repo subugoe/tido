@@ -37,6 +37,8 @@
         "translation",
         "normalized"
       ]
+    }, {
+      "view": "annotations"
     }
   ],
   "title": "This is an example digital edition project"

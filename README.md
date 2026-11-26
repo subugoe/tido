@@ -67,7 +67,7 @@ and also view our production examples.
 - **Multi-Panel Viewer** — Open and compare multiple texts side-by-side in resizable panels
 - **Text Viewing** — Render transcriptions, editions, and translations with content type switching
 - **Image Viewing** — Deep-zoom image viewer with IIIF support via OpenSeadragon
-- **Annotations** — Interactive annotation sidebar with highlighting, filtering, and aligned/list display modes
+- **Annotations** — Interactive annotations view with highlighting, filtering, and aligned/list display modes
 - **Synoptical Comparison** — Sync and align corresponding text passages across panels for witness comparison
 - **Library & Navigation** — Global collection tree for browsing and opening items, manifests, and collections
 - **Sharing & Bookmarking** — Save and share the current view state via a URL-encoded link
@@ -319,7 +319,7 @@ Specifies only one annotations mode, which can be either `aligned` or `list`.
 
 - **Type:** String[]
 
-Annotation types to display as a tooltip when clicked instead of in the sidebar. These types will be excluded from the filters.
+Annotation types to display as a tooltip when clicked instead of in the annotations view. These types will be excluded from the filters.
 
 ---
 
@@ -415,14 +415,6 @@ Specifies the ID of a specific annotation to select/display when the panel loads
 
 ---
 
-##### `panels[i].showSidebar`
-
-- **Type:** Boolean
-
-Controls whether the annotations sidebar is visible for this panel.
-
----
-
 ##### `panels[i].showSynopsisNavigation`
 
 - **Type:** Boolean
@@ -437,7 +429,7 @@ Controls whether the Sync Target Navigation is rendered for this panel, overridi
 - **Type:** Boolean
 - **Default:** `false`
 
-Lets the panel open at the full width of the viewport. No room is kept for the annotations sidebar: when the sidebar is opened, it is added beside the panel content, beyond the viewport. Panels without this option share the width among themselves as usual.
+Lets the panel open at the full width of the viewport. Panels without this option share the width among themselves as usual. The annotations are shown inside the panel, so opening them does not change its width.
 
 ---
 
@@ -445,7 +437,7 @@ Lets the panel open at the full width of the viewport. No room is kept for the a
 
 - **Type:** Number[]
 
-Sets the width of each view relative to the others, with one value per view of the panel. With `[1, 3]` the first view takes 1/4 and the second 3/4 of the panel width. The ratio is kept when navigating to another item. When a view is hidden, the visible views share the width by their ratios. If the number of values does not match the number of views, or a value is not a positive number, the views get equal widths.
+Sets the width of each text and image view relative to the others, with one value per text or image view of the panel - the annotations view counts for none. With `[1, 3]` the first view takes 1/4 and the second 3/4 of the panel width. The annotations view opens at its last width and the text and image views share the rest. The ratio is kept when navigating to another item. When a view is hidden, the visible views share the width by their ratios. If the number of values does not match the number of views, or a value is not a positive number, the views get equal widths.
 
 ---
 
@@ -460,9 +452,13 @@ Overrides the global `panelViews` config for this specific panel. When given, th
 ##### `panelViews`
 
 - **Type:** PanelViewConfig[]
-- **Default:** `[{label: "Image", view: "image"}, {label: "Text", view: "text"}]`
+- **Default:** `[{label: "Image", view: "image"}, {label: "Text", view: "text", showContentTypesToggle: true}, {label: "Annotations", view: "annotations"}]`
 
-Configures an initial distribution of content views inside each panel. The defined views here can then be toggled on/off in the "View" dropdown in the panel header. See [Panel Views](#panel-views) chapter.
+Configures an initial distribution of views inside each panel. The defined views here can then be toggled on/off with the view toggles in the panel header. See [Panel Views](#panel-views) chapter.
+
+The annotations are a view too (`view: "annotations"`): its position, label and width ratio are configured like those of any other view. A panel shows annotations only when its views include one - without an annotations view the annotations of its items are not loaded, highlighted or listed. Only the first annotations view counts.
+
+> **Breaking change in 5.0:** annotations used to be shown for every panel, in a sidebar switched by `panels[i].showSidebar`. If you configure your own `panelViews` or `panels[i].views`, add `{ "view": "annotations" }` to them to keep the annotations. `panels[i].showSidebar` is no longer supported: set `visible` on the annotations view instead. A panel config that still sets it is migrated - the panel gets an annotations view with that visibility - and the option is reported as a config error. A second annotations view is reported as well and ignored.
 
 Which of the views are shown on an item is decided by `hideEmptyViews`: by default an image view is left out on items without images and a text view on items offering none of its content types.
 
@@ -487,18 +483,27 @@ Specifies a list of TextAPI content type identifiers. If multiple are given, a c
 ##### `panelViews[i].label`
 
 - **Type:** String
-- **Default:** `Image` | `Text`
+- **Default:** `Image` | `Text` | `Annotations`
 
-Specifies a label for a view. It appears as title prefix in the content type toggle and in the "View" selection dropdown in the panel header.
+Specifies a label for a view. It appears as title prefix in the content type toggle, next to its icon in the view toggles of the panel header (in wide panels) and, for the annotations view, in its toolbar.
+
+---
+
+##### `panelViews[i].showContentTypesToggle`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Controls whether a text view names its content type in its header, with the dropdown to switch it when there are several. A text view that does not set it gets `true`; a value that is not a boolean is reported as a config error and replaced by `true`. When false, the header of this view shows its label only - e.g. for a view configured with a single content type. Applies to `panels[i].views` as well. The global `showContentTypeToggle` hides it for all views.
 
 ---
 
 ##### `panelViews[i].view`
 
-- **Type:** `image` | `text`
+- **Type:** `image` | `text` | `annotations`
 - **Default:** `image` | `text`
 
-Specifies a view identifier that should be loaded into a split pane.
+Specifies a view identifier that should be loaded into a split pane. `annotations` shows the annotations of the item; `activeContentType` and `contentTypes` do not apply to it.
 
 ---
 
@@ -507,7 +512,7 @@ Specifies a view identifier that should be loaded into a split pane.
 - **Type:** Boolean
 - **Default:** `true`
 
-Controls whether this view is visible in the panel. When false, the view will be hidden but can be toggled on via the "View" dropdown.
+Controls whether this view is visible in the panel. When false, the view will be hidden but can be toggled on in the panel header. For the annotations view the default is `false`: `true` opens the panel with its annotations shown. Afterwards they are shown and hidden by the user, a selected annotation or a cross-reference.
 
 ---
 
@@ -696,9 +701,26 @@ Toggles the display of the root node in the trees (global tree, collection selec
 ### Panel Views
 This array of `PanelViewConfig` objects defines the actual visible content inside a panel. It is a list of
 objects, each of which creates a resizable split pane inside the panel. This configuration will be applied to all
-additionally added panels. Users can toggle on/off each split pane by the "View" dropdown in the panel header.
-It will show your configured labels of each `PanelViewConfig` as options. If no label is stated, it will show the raw
-content type identifier instead.
+additionally added panels. Users can toggle on/off each split pane in the panel header: a group of toggles, one per view in the order of the
+panes, of which several can be on at once. Each toggle shows your configured label next to its icon (in narrow panels
+only the icon). If no label is stated, it will show the kind of the view instead. At least one text or image view
+stays on.
+
+The annotations are a view as well. Add one with `"view": "annotations"` to choose where they appear and how they are
+labelled; panels without one show no annotations at all. Their toggle is part of the same group and
+can be switched on only when the item has annotations; while they are shown it stays enabled, so they can be closed.
+
+**Example:**
+
+```json
+{
+  "panelViews": [
+    { "view": "annotations", "label": "Commentary" },
+    { "view": "text", "label": "Transcription", "activeContentType": "transcription" },
+    { "view": "image", "label": "Facsimile" }
+  ]
+}
+```
 
 ### Annotations
 We provide configuration options to customize both the display and filtering of annotations.
@@ -722,7 +744,7 @@ The visible types and filters are highly dependent on the loaded  panel content.
 
 A map of config objects for annotation types. Each key represents the annotation type string ("x-content-type").
 Each value is an `AnnotationTypeConfig` object for setting a custom label and icon.
-These values will be used in the UI to customize the display of annotations items in the panel sidebar.
+These values will be used in the UI to customize the display of annotations items in the annotations view of the panel.
 
 As mentioned above, variant annotations are a special case. In order to configure the witnesses display,
 you can set a the `idno` value from the `refs`-Array in the annotationsPage response.
@@ -746,7 +768,7 @@ you can set a the `idno` value from the `refs`-Array in the annotationsPage resp
 |---------|-------------------------|
 | filters | AnnotationFiltersConfig |
 
-Annotations displayed in the sidebar can be filtered by their type. You can define a hierarchical structure for these
+Annotations displayed in the annotations view can be filtered by their type. You can define a hierarchical structure for these
 filter options, referred to as a filter tree.
 Each node in the filter tree can control multiple annotation types simultaneously. Therefore, you need to
 specify an array of annotation types that should be affected by a given filter node.

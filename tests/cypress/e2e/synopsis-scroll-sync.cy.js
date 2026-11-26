@@ -26,7 +26,7 @@ const panels = [
 const config = panels.flatMap(({ book, views }, i) => [
   `panels[${i}].collection=${collection}`,
   `panels[${i}].manifest=${base}/manifests/${book}.json`,
-  ...views.map((view) => `panels[${i}].views[]=${encodeURIComponent(JSON.stringify(view))}`),
+  ...[...views, { view: 'annotations' }].map((view) => `panels[${i}].views[]=${encodeURIComponent(JSON.stringify(view))}`),
 ]).join('&')
 
 // The pane the user scrolls: the first pane of the second panel ...

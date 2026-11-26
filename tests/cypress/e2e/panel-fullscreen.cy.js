@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 /**
  * Panel fullscreen.
  *
@@ -26,7 +28,7 @@
 const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181'
 const collection = `${apiUrl}/example/collections/example.json`
 const manifest = `${apiUrl}/example/manifests/book2.json`
-// Page 3 is the item of book2 that carries annotations, so the sidebar toggle is rendered
+// Page 3 is the item of book2 that carries annotations, so the annotations view toggle is rendered
 // (PanelHeader hides it entirely when there is nothing to list).
 const annotatedItem = `${apiUrl}/example/items/book2-page3.json`
 
@@ -45,18 +47,13 @@ const twoPanelConfig = [
 ].join('&')
 
 const selectors = {
-  panel: '[data-cy="panel"]',
+  ...panelSelectors,
   panelMenu: '[data-cy="panel-menu"]',
   panelMenuDropdown: '[data-cy="panel-menu-dropdown"]',
   fullscreenToggle: '[data-cy="fullscreen-toggle"]',
-  sidebarToggle: '[data-cy="sidebar-toggle"]',
-  sidebarView: '[data-sidebar-view]',
-  sidebarLoading: '[data-cy="sidebar-loading"]',
-  itemLabel: '[data-cy="item-label"]',
   itemsDropdown: '[data-cy="items-dropdown"]',
   resizeHandle: '[data-panel-resize-handle]',
   panelCard: '.panel-card',
-  sidebarContainer: '[data-sidebar-container]',
   mainContent: '.main-content',
 }
 
@@ -160,10 +157,10 @@ function closePanelMenu() {
   cy.get(selectors.panelMenuDropdown).should('not.exist')
 }
 
-function openSidebar(index = 0) {
-  panel(index).find(selectors.sidebarToggle).click()
-  cy.get(selectors.sidebarView).should('be.visible')
-  cy.get(selectors.sidebarLoading).should('not.exist')
+function openAnnotations(index = 0) {
+  panel(index).find(selectors.annotationsToggle).click()
+  cy.get(selectors.annotationsView).should('be.visible')
+  cy.get(selectors.annotationsLoading).should('not.exist')
 }
 
 describe('Panel fullscreen', () => {
@@ -201,15 +198,15 @@ describe('Panel fullscreen', () => {
     })
   })
 
-  describe('The sidebar while fullscreen', () => {
+  describe('The annotations view while fullscreen', () => {
     beforeEach(() => visit())
 
-    it('Should open the sidebar while fullscreen', () => {
+    it('Should open the annotations view while fullscreen', () => {
       clickFullscreenToggle()
       shouldBeFullscreen()
 
-      openSidebar()
-      // Still fullscreen - opening the sidebar resizes the panel, which must not drop fullscreen.
+      openAnnotations()
+      // Still fullscreen - opening the annotations relayouts the panes, which must not drop fullscreen.
       shouldBeFullscreen()
     })
 
@@ -218,15 +215,15 @@ describe('Panel fullscreen', () => {
   describe('State across the fullscreen round trip', () => {
     beforeEach(() => visit())
 
-    it('Should keep the sidebar open after leaving fullscreen', () => {
+    it('Should keep the annotations view open after leaving fullscreen', () => {
       clickFullscreenToggle()
-      openSidebar()
+      openAnnotations()
 
       clickFullscreenToggle()
       shouldNotBeFullscreen()
 
-      cy.get(selectors.sidebarView).should('be.visible')
-      panel().find('[data-sidebar-container]').should('have.attr', 'style').and('not.contain', 'width: 0px')
+      cy.get(selectors.annotationsView).should('be.visible')
+      panel().find(selectors.annotationsView).invoke('outerWidth').should('be.greaterThan', 0)
     })
 
     it('Should restore the windowed panel width after leaving fullscreen', () => {
@@ -259,8 +256,6 @@ describe('Panel fullscreen', () => {
     // (see injectFullscreenUaStyles), so these assert the part that is ours: that the fullscreen
     // rules override the windowed inline widths and derive the panel's layout from its root.
     const SCREEN_WIDTH = Cypress.config('viewportWidth')
-    // PanelResizer's SIDEBAR_DEFAULT_WIDTH.
-    const SIDEBAR_WIDTH = 400
 
     beforeEach(() => visit())
 
@@ -271,29 +266,23 @@ describe('Panel fullscreen', () => {
       panel().should('not.have.css', 'width', `${SCREEN_WIDTH}px`)
     })
 
-    it('Should give the whole width to the main content when the sidebar is closed', () => {
+    it('Should give the whole width to the main content when the annotations view is closed', () => {
       clickFullscreenToggle()
       panel().find(selectors.mainContent).should('have.css', 'width', `${SCREEN_WIDTH}px`)
     })
 
-    it('Should split the width between main content and sidebar when the sidebar is open', () => {
+    it('Should keep the whole width for the main content when the annotations are open', () => {
+      // The annotations are a pane inside the main content, so opening them takes their room from
+      // the views next to them and leaves the main content at the full width.
       clickFullscreenToggle()
-      openSidebar()
+      openAnnotations()
 
-      const mainWidth = SCREEN_WIDTH - SIDEBAR_WIDTH
-      panel().find(selectors.mainContent).should('have.css', 'width', `${mainWidth}px`)
-      panel().find(selectors.sidebarContainer)
-        .should('have.css', 'width', `${SIDEBAR_WIDTH}px`)
-        .and('have.css', 'left', `${mainWidth}px`)
-    })
-
-    it('Should publish the sidebar width the layout is derived from', () => {
-      // The split point is the one value the CSS cannot know by itself, so PanelResizer publishes
-      // it; if it went stale the two assertions above would drift apart.
-      panel().should('have.css', '--panel-sidebar-width', '0px')
-
-      openSidebar()
-      panel().should('have.css', '--panel-sidebar-width', `${SIDEBAR_WIDTH}px`)
+      panel().find(selectors.mainContent).should('have.css', 'width', `${SCREEN_WIDTH}px`)
+      panel().find(selectors.annotationsView).then(($view) => {
+        const viewRect = $view[0].getBoundingClientRect()
+        expect(viewRect.width).to.be.greaterThan(0)
+        expect(Math.round(viewRect.right)).to.equal(SCREEN_WIDTH)
+      })
     })
 
     it('Should drop the windowed card chrome while fullscreen', () => {

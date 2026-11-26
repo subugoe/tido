@@ -1,3 +1,4 @@
+import { panelSelectors } from '../support/panel-helpers'
 import { Tree } from '../support/tree-helpers'
 
 const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181'
@@ -8,7 +9,7 @@ const manifest = `${apiUrl}/example/manifests/book2.json`
 const otherCollection = `${apiUrl}/4w/collections/transcriptions.json`
 
 const selectors = {
-  collectionTitle: '[data-cy="collection-title"]',
+  ...panelSelectors,
   globalTreeModal: '[data-cy="global-tree-modal"]',
   nodeLabel: '[data-cy="node-label"]',
   panel: '[data-cy="panels-wrapper"] [data-cy="panel"]',

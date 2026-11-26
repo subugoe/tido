@@ -117,7 +117,6 @@ declare global {
     imageUrl?: string
     activeTargetIndex: number
     config: PanelConfig
-    showSidebar: boolean
     selectedAnnotation?: SelectedAnnotation
     panelViews: PanelViewState[]
   }
@@ -185,6 +184,38 @@ declare global {
     id: string
     label: string
   }
+
+  interface SyncedTargetRef {
+    source: AnnotationTargetSource
+    selector: string
+  }
+
+  // The synced targets of a sync target, grouped by the sync annotation they come from: one entry per
+  // sync annotation that contains the sync target, keyed by the annotation id, in the order of the
+  // annotations. Use flattenSyncedTargets for all of them in one list.
+  type SyncedTargetsMap = Record<string, SyncedTargetRef[]>
+
+  // The sync connection currently navigated to. Established by clicking a sync target, scrolling a
+  // panel, choosing witnesses in a synopsis popover or the TargetNavigation arrows. Every renderer
+  // highlights the connection's targets that live in its own text and scrolls its one into alignment.
+  interface SynopsisConnection {
+    // the target the connection was navigated from - the clicked, scrolled-to or arrow-navigated element
+    navigatedTarget: HTMLElement | null
+    // the targets it is synced with, grouped by sync connection and kept as selector refs: each
+    // renderer resolves the ones of its own source within its own DOM, so a source rendered in several
+    // panels is handled everywhere
+    otherSyncedTargets: SyncedTargetsMap
+    // y-position of navigatedTarget within its scroll container's visible height (ignoring scroll
+    // position), so every panel can scroll its own synced target to the same y-position
+    yPos: number
+    source?: string
+  }
+
+  // How a label of the panel breadcrumb looks - the manifest and the item label are styled alike
+  interface LabelStyleProps {
+    variant?: 'outline' | 'ghost'
+    className?: string
+  }
 }
 
 export interface PanelConfig {
@@ -193,23 +224,26 @@ export interface PanelConfig {
   item?: string,
   views?: PanelView[]
   selectedAnnotationId?: string
-  showSidebar?: boolean
   showSynopsisNavigation?: boolean
   // the width of each view relative to the others, one value per view: [1, 3] gives the first view
-  // 1/4 and the second 3/4 of the panel width
+  // 1/4 and the second 3/4 of the room the views take in the panel
   viewsWidthRatio?: number[]
-  // the panel takes the full width of the viewport, without the room otherwise kept for the sidebar
+  // the panel takes the full width of the viewport
   showViewportWidth?: boolean
   // the kinds of views this panel leaves out on an item they have nothing to show for - overrides the global hideEmptyViews
   hideEmptyViews?: PanelViewType[]
 }
 
-export type PanelViewType = 'text' | 'image'
+// annotations: the annotations of the item, shown at the position of the view - a panel without one has no
+// annotations: they are not loaded, highlighted or listed.
+export type PanelViewType = 'text' | 'image' | 'annotations'
 
 export interface PanelView {
   activeContentType?: string
   contentTypes?: string[]
   label?: string
+  // whether a text view names its content type in its header, with the dropdown to switch it - default true
+  showContentTypesToggle?: boolean
   view: PanelViewType
   visible?: boolean
   // set by the panel from its viewsWidthRatio config - the share of the panel width this view gets

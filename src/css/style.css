@@ -86,7 +86,7 @@ Elevation hierarchy:
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(96.5% 0 0);
   --muted-foreground: var(--color-gray-600);
-  --accent: oklch(92% 0.004 286.32);;
+  --accent: oklch(93.5% 0.004 286.32);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: var(--color-red-500);
   --success: var(--color-green-600);
@@ -134,7 +134,7 @@ Elevation hierarchy:
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(23% 0.006 285.885);;
+  --muted: oklch(23% 0.006 285.885);
   --muted-foreground: var(--color-gray-400);
   --accent: var(--color-gray-800);
   --accent-foreground: var(--color-gray-100);
@@ -185,10 +185,9 @@ Elevation hierarchy:
    true once a fullscreenchange event confirmed the browser granted fullscreen, so it never applies
    to a panel that is not really fullscreen. Both selectors carry identical declarations.
 
-   --panel-sidebar-width is published by PanelResizer: the sidebar is
-   user-resizable, so the split point is the one value CSS cannot derive on its
-   own. Percentages below resolve against the card's content box, which already
-   excludes its border, so no border arithmetic is needed. */
+   The annotations are an Allotment pane inside .main-content, so the panes follow
+   its width on their own. Percentages below resolve against the card's content
+   box, which already excludes its border, so no border arithmetic is needed. */
 
 .tido :fullscreen .panel,
 .tido [data-fullscreen] .panel {
@@ -197,13 +196,7 @@ Elevation hierarchy:
 
 .tido :fullscreen .panel .main-content,
 .tido [data-fullscreen] .panel .main-content {
-  width: calc(100% - var(--panel-sidebar-width, 0px)) !important;
-}
-
-.tido :fullscreen .panel [data-sidebar-container],
-.tido [data-fullscreen] .panel [data-sidebar-container] {
-  left: calc(100% - var(--panel-sidebar-width, 0px)) !important;
-  width: var(--panel-sidebar-width, 0px) !important;
+  width: 100% !important;
 }
 
 /* A fullscreen panel is the whole screen, so the windowed card chrome only

@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 // Annotations whose target references another annotation instead of a text content file.
 //
 // Such a target is told apart by its format: `application/ld+json` means the source is an
@@ -27,7 +29,8 @@ describe('Annotation in annotation', () => {
   // DOM and nothing has to be positioned before the assertions can run.
   const listConfig = `annotations.defaultMode=list`
     + `&panels[0].collection=${collection}`
-    + `&panelViews[]=${encodeURIComponent(JSON.stringify(transcriptionView))}`;
+    + `&panelViews[]=${encodeURIComponent(JSON.stringify(transcriptionView))}`
+    + `&panelViews[]=${encodeURIComponent(JSON.stringify({ view: 'annotations' }))}`;
 
   const idFor = (annotation) => `${apiUrl}/example/book3/page2/rev1/${annotation}`;
   const cardFor = (annotation) => `[data-annotation="${idFor(annotation)}"]`;
@@ -42,10 +45,7 @@ describe('Annotation in annotation', () => {
   ];
 
   const selectors = {
-    sidebarToggle: '[data-cy="sidebar-toggle"]',
-    sidebarContainer: '[data-sidebar-view]',
-    sidebarLoading: '[data-cy="sidebar-loading"]',
-    textContainer: '[data-text-container]',
+    ...panelSelectors,
     // The footer of a card, holding its "n nested annotation(s)" label and toggling the nested cards.
     footer: '.footer-stripe',
     nestedList: '.nested-annotations',
@@ -54,7 +54,7 @@ describe('Annotation in annotation', () => {
     targetSelected: 'data-annotation-selected'
   };
 
-  const sidebar = () => cy.get(selectors.sidebarContainer);
+  const annotationsView = () => cy.get(selectors.annotationsView);
 
   // Opens the item at itemIndex of the manifest at manifestIndex of the example collection, reading
   // both URLs from the API so the spec names what it opens by position instead of by URL.
@@ -69,28 +69,28 @@ describe('Annotation in annotation', () => {
   };
 
   // The Great Gatsby (the third manifest) Page 2 (its second item) showing the transcription, with
-  // the sidebar open and done loading its cards.
+  // the annotations view open and done loading its cards.
   const openPage2 = () => {
     openItem(2, 1);
     cy.get('[data-cy="item-label"]').contains('Page 2');
     cy.get(selectors.textContainer).should('exist');
     cy.get(selectors.textContainer).find('#valley').should('exist');
 
-    cy.get(selectors.sidebarToggle).click();
-    sidebar().should('be.visible');
-    cy.get(selectors.sidebarLoading).should('not.exist');
+    cy.get(selectors.annotationsToggle).click();
+    annotationsView().should('be.visible');
+    cy.get(selectors.annotationsLoading).should('not.exist');
   };
 
   // Expands the nested annotations of the card of the given annotation by clicking its own footer -
   // the first one in the card, since the footers of already expanded descendants follow it.
   const expandNested = (annotation) => {
-    sidebar().find(cardFor(annotation)).find(selectors.footer).first().click();
+    annotationsView().find(cardFor(annotation)).find(selectors.footer).first().click();
   };
 
   // Clicks the card of the given annotation itself: in its top left padding, which belongs to the
   // card and holds neither a target of a nested annotation nor one of the cards nested in it.
   const clickCard = (annotation) => {
-    sidebar().find(cardFor(annotation)).click(5, 5);
+    annotationsView().find(cardFor(annotation)).click(5, 5);
   };
 
   beforeEach(() => {
@@ -98,12 +98,12 @@ describe('Annotation in annotation', () => {
   });
 
   it('Should list the annotation of the text but not the annotations nested in it', () => {
-    sidebar().find(cardFor('annotation-1')).should('exist');
+    annotationsView().find(cardFor('annotation-1')).should('exist');
 
     // The nested ones target an annotation, not the text, so they are no cards of their own until
     // their parent is expanded.
     chain.forEach(({ child }) => {
-      sidebar().find(cardFor(child)).should('not.exist');
+      annotationsView().find(cardFor(child)).should('not.exist');
     });
   });
 
@@ -116,7 +116,7 @@ describe('Annotation in annotation', () => {
   });
 
   it('Should announce the annotation nested in the annotation of the text', () => {
-    sidebar()
+    annotationsView()
       .find(cardFor('annotation-1'))
       .find(selectors.footer)
       .first()
@@ -126,7 +126,7 @@ describe('Annotation in annotation', () => {
   it('Should show the nested annotation inside the card of its parent when expanded', () => {
     expandNested('annotation-1');
 
-    sidebar()
+    annotationsView()
       .find(cardFor('annotation-1'))
       .find(selectors.nestedList)
       .find(cardFor('annotation-L2-1'))
@@ -135,10 +135,10 @@ describe('Annotation in annotation', () => {
 
   it('Should hide the nested annotation again when collapsed', () => {
     expandNested('annotation-1');
-    sidebar().find(cardFor('annotation-L2-1')).should('exist');
+    annotationsView().find(cardFor('annotation-L2-1')).should('exist');
 
     expandNested('annotation-1');
-    sidebar().find(cardFor('annotation-L2-1')).should('not.exist');
+    annotationsView().find(cardFor('annotation-L2-1')).should('not.exist');
   });
 
   it('Should resolve an application/ld+json target to the element it selects in the body of the referenced annotation', () => {
@@ -147,7 +147,7 @@ describe('Annotation in annotation', () => {
     // target in a text does.
     expandNested('annotation-1');
 
-    sidebar()
+    annotationsView()
       .find(cardFor('annotation-1'))
       .find('#ash-valley-decay')
       .should('have.attr', selectors.annotationIds)
@@ -159,10 +159,10 @@ describe('Annotation in annotation', () => {
       expandNested(annotation);
 
       // the child is rendered within the card of its parent
-      sidebar().find(cardFor(annotation)).find(cardFor(child)).should('exist');
+      annotationsView().find(cardFor(annotation)).find(cardFor(child)).should('exist');
 
       // and its target is the element of the parent's body that it selects via refinedBy
-      sidebar()
+      annotationsView()
         .find(cardFor(annotation))
         .find(target)
         .first()
@@ -171,7 +171,7 @@ describe('Annotation in annotation', () => {
     });
 
     // the whole chain is open at once: the deepest annotation sits inside every annotation above it
-    sidebar()
+    annotationsView()
       .find(cardFor('annotation-1'))
       .find(cardFor('annotation-L2-1'))
       .find(cardFor('annotation-L3-1'))
@@ -180,11 +180,11 @@ describe('Annotation in annotation', () => {
   });
 
   it('Should expand the nested annotations when clicking their target in the body of the parent', () => {
-    sidebar().find(cardFor('annotation-L2-1')).should('not.exist');
+    annotationsView().find(cardFor('annotation-L2-1')).should('not.exist');
 
-    sidebar().find(cardFor('annotation-1')).find('#ash-valley-decay').click();
+    annotationsView().find(cardFor('annotation-1')).find('#ash-valley-decay').click();
 
-    sidebar()
+    annotationsView()
       .find(cardFor('annotation-1'))
       .find(cardFor('annotation-L2-1'))
       .should('exist');
@@ -194,18 +194,18 @@ describe('Annotation in annotation', () => {
     expandNested('annotation-1');
 
     clickCard('annotation-L2-1');
-    sidebar().find(cardFor('annotation-L2-1')).should('have.attr', 'data-selected');
+    annotationsView().find(cardFor('annotation-L2-1')).should('have.attr', 'data-selected');
   });
 
   it('Should select the target in the parent annotation when selecting the nested annotation', () => {
     expandNested('annotation-1');
 
     clickCard('annotation-L2-1');
-    sidebar().find(cardFor('annotation-L2-1')).should('have.attr', 'data-selected');
+    annotationsView().find(cardFor('annotation-L2-1')).should('have.attr', 'data-selected');
 
     // Selecting a card marks the target of that annotation, which for a nested annotation lives in
     // the body of its parent - reached through the refinedBy selector of its application/ld+json target.
-    sidebar()
+    annotationsView()
       .find(cardFor('annotation-1'))
       .find('#ash-valley-decay')
       .should('have.attr', selectors.targetSelected, 'true');
@@ -216,16 +216,16 @@ describe('Annotation in annotation', () => {
 
     // "post-war wasteland tradition" in the body of annotation-L2-1 is the target of annotation-L3-1,
     // the only annotation on it - so the click selects it right away instead of opening the popover.
-    sidebar().find(cardFor('annotation-L2-1')).find('#wasteland-tradition').click();
+    annotationsView().find(cardFor('annotation-L2-1')).find('#wasteland-tradition').click();
 
-    sidebar()
+    annotationsView()
       .find(cardFor('annotation-L2-1'))
       .find('[data-annotation$="annotation-L3-1"]')
       .should('exist')
       .and('have.attr', 'data-selected');
 
     // and the clicked target is marked as the selected one
-    sidebar()
+    annotationsView()
       .find(cardFor('annotation-L2-1'))
       .find('#wasteland-tradition')
       .should('have.attr', selectors.targetSelected, 'true');
@@ -234,29 +234,29 @@ describe('Annotation in annotation', () => {
   it('Should deselect the child annotation when clicking its target again', () => {
     expandNested('annotation-1');
 
-    const target = () => sidebar().find(cardFor('annotation-L2-1')).find('#wasteland-tradition');
+    const target = () => annotationsView().find(cardFor('annotation-L2-1')).find('#wasteland-tradition');
 
     target().click();
-    sidebar().find(cardFor('annotation-L3-1')).should('have.attr', 'data-selected');
+    annotationsView().find(cardFor('annotation-L3-1')).should('have.attr', 'data-selected');
 
     // clicking the target of the already selected annotation drops the selection again
     target().click();
 
-    sidebar().find(cardFor('annotation-L3-1')).should('not.have.attr', 'data-selected');
+    annotationsView().find(cardFor('annotation-L3-1')).should('not.have.attr', 'data-selected');
     target().should('not.have.attr', selectors.targetSelected);
   });
 
   it('Should deselect the target in the parent annotation when deselecting the child annotation', () => {
     expandNested('annotation-1');
 
-    sidebar().find(cardFor('annotation-L2-1')).find('#wasteland-tradition').click();
-    sidebar().find(cardFor('annotation-L3-1')).should('have.attr', 'data-selected');
+    annotationsView().find(cardFor('annotation-L2-1')).find('#wasteland-tradition').click();
+    annotationsView().find(cardFor('annotation-L3-1')).should('have.attr', 'data-selected');
 
     // deselecting the card has to clear the mark on its target in the body of the parent annotation
     clickCard('annotation-L3-1');
 
-    sidebar().find(cardFor('annotation-L3-1')).should('not.have.attr', 'data-selected');
-    sidebar()
+    annotationsView().find(cardFor('annotation-L3-1')).should('not.have.attr', 'data-selected');
+    annotationsView()
       .find(cardFor('annotation-L2-1'))
       .find('#wasteland-tradition')
       .should('not.have.attr', selectors.targetSelected);

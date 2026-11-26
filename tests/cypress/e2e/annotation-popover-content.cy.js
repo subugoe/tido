@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Annotation popover content', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -7,8 +9,7 @@ describe('Annotation popover content', () => {
   const annotation = (id) => `${apiUrl}/example/book1/page1/rev1/${id}`;
 
   const selectors = {
-    textContainer: '[data-text-container]',
-    sidebarContainer: '[data-sidebar-view]',
+    ...panelSelectors,
     popover: '[data-cy="annotation-popover-content"]',
     tooltipSection: '[data-cy="popover-tooltip-section"]',
     tooltipItem: '[data-cy="popover-tooltip-item"]',
@@ -29,6 +30,7 @@ describe('Annotation popover content', () => {
       activeContentType: 'transcription',
       contentTypes: ['transcription', 'diplomatic', 'normalized'],
     }))
+    params.append('panelViews[]', JSON.stringify({ view: 'annotations' }))
     tooltipTypes.forEach((type) => params.append('annotations.tooltipTypes[]', type))
 
     cy.visit(`/e2e.html?${params.toString()}`)
@@ -62,8 +64,8 @@ describe('Annotation popover content', () => {
         .and('contain.text', 'Mr. Bennet - The patriarch of the Bennet family')
         .and('contain.text', 'Character')
 
-      // a tooltip annotation is shown in place - it is not selected in the sidebar
-      cy.get(selectors.sidebarContainer).should('not.exist')
+      // a tooltip annotation is shown in place - it is not selected in the annotations view
+      cy.get(selectors.annotationsView).should('not.exist')
     })
   })
 
@@ -99,15 +101,15 @@ describe('Annotation popover content', () => {
         .should('contain.text', 'The opening sentence is a classic example of free indirect discourse')
         .and('contain.text', 'Rhetorical Analysis')
 
-      // no annotations section - tooltip annotations are not offered for the sidebar
+      // no annotations section - tooltip annotations are not offered for the annotations view
       popover().find('[data-cy="popover-annotations-section"]').should('not.exist')
-      cy.get(selectors.sidebarContainer).should('not.exist')
+      cy.get(selectors.annotationsView).should('not.exist')
     })
   })
 
   describe('1 tooltip and 1 normal annotation', () => {
     // #truth with only Literary Analysis as tooltip type: annotation-1 is shown as tooltip,
-    // annotation-7 (Rhetorical Analysis) stays a normal annotation offered for the sidebar
+    // annotation-7 (Rhetorical Analysis) stays a normal annotation offered for the annotations view
     beforeEach(() => {
       openPage1({ tooltipTypes: ['Literary Analysis'] })
     })
@@ -144,24 +146,24 @@ describe('Annotation popover content', () => {
         .and('not.have.attr', 'data-selected')
 
       // nothing is selected until the normal annotation is clicked
-      cy.get(selectors.sidebarContainer).should('not.exist')
+      cy.get(selectors.annotationsView).should('not.exist')
     })
 
-    it('Selects the normal annotation in the sidebar when clicking it in the popover', () => {
+    it('Selects the normal annotation in the annotations view when clicking it in the popover', () => {
       target('#truth').click()
       popover().should('be.visible')
 
       normalItem().click()
 
-      // the sidebar opens with the clicked annotation selected - and only that one
-      cy.get(selectors.sidebarContainer).should('be.visible')
-      cy.get(selectors.sidebarContainer)
+      // the annotations view opens with the clicked annotation selected - and only that one
+      cy.get(selectors.annotationsView).should('be.visible')
+      cy.get(selectors.annotationsView)
         .find(`[data-annotation="${annotation('annotation-7')}"]`)
         .should('have.attr', 'data-selected', 'true')
-      cy.get(selectors.sidebarContainer).find('[data-selected]').should('have.length', 1)
+      cy.get(selectors.annotationsView).find('[data-selected]').should('have.length', 1)
 
-      // the tooltip annotation is not listed in the sidebar
-      cy.get(selectors.sidebarContainer).find(`[data-annotation="${annotation('annotation-1')}"]`).should('not.exist')
+      // the tooltip annotation is not listed in the annotations view
+      cy.get(selectors.annotationsView).find(`[data-annotation="${annotation('annotation-1')}"]`).should('not.exist')
 
       // the popover item and the target show the selection as well
       normalItem().should('have.attr', 'data-selected')
@@ -177,7 +179,7 @@ describe('Annotation popover content', () => {
     })
 
     const normalItems = () => popover().find('[data-cy="popover-annotation-item"]')
-    const sidebarCard = (id) => cy.get(selectors.sidebarContainer).find(`[data-annotation="${annotation(id)}"]`)
+    const annotationsCard = (id) => cy.get(selectors.annotationsView).find(`[data-annotation="${annotation(id)}"]`)
 
     it('Gives the target both annotation ids and the highlight style', () => {
       target('#truth')
@@ -208,28 +210,28 @@ describe('Annotation popover content', () => {
       popover().find('[data-cy="popover-annotation-item"][data-selected]').should('not.exist')
 
       // nothing is selected until one of the items is clicked
-      cy.get(selectors.sidebarContainer).should('not.exist')
+      cy.get(selectors.annotationsView).should('not.exist')
     })
 
-    it('Selects the respective annotation in the sidebar when clicking each item', () => {
+    it('Selects the respective annotation in the annotations view when clicking each item', () => {
       target('#truth').click()
       popover().should('be.visible')
 
       // 1. the first item selects annotation-1
       normalItems().eq(0).click()
 
-      cy.get(selectors.sidebarContainer).should('be.visible')
-      sidebarCard('annotation-1').should('have.attr', 'data-selected', 'true')
-      sidebarCard('annotation-7').should('not.have.attr', 'data-selected')
+      cy.get(selectors.annotationsView).should('be.visible')
+      annotationsCard('annotation-1').should('have.attr', 'data-selected', 'true')
+      annotationsCard('annotation-7').should('not.have.attr', 'data-selected')
       normalItems().eq(0).should('have.attr', 'data-selected')
       normalItems().eq(1).should('not.have.attr', 'data-selected')
 
       // 2. the second item moves the selection to annotation-7
       normalItems().eq(1).click()
 
-      sidebarCard('annotation-7').should('have.attr', 'data-selected', 'true')
-      sidebarCard('annotation-1').should('not.have.attr', 'data-selected')
-      cy.get(selectors.sidebarContainer).find('[data-selected]').should('have.length', 1)
+      annotationsCard('annotation-7').should('have.attr', 'data-selected', 'true')
+      annotationsCard('annotation-1').should('not.have.attr', 'data-selected')
+      cy.get(selectors.annotationsView).find('[data-selected]').should('have.length', 1)
       normalItems().eq(1).should('have.attr', 'data-selected')
       normalItems().eq(0).should('not.have.attr', 'data-selected')
 
@@ -271,12 +273,12 @@ describe('Annotation popover content', () => {
         cy.contains('button', 'Open in new Panel').should('exist')
       })
 
-      // a cross ref is not selected in the sidebar
-      cy.get(selectors.sidebarContainer).should('not.exist')
+      // a cross ref is not selected in the annotations view
+      cy.get(selectors.annotationsView).should('not.exist')
     })
   })
 
-  describe('2 cross ref links in a target with 1 sidebar annotation', () => {
+  describe('2 cross ref links in a target with 1 annotations view annotation', () => {
     // #para4 is the target of annotation-9 (Narrative Technique). Two spans inside it are cross ref links,
     // both pointing into Moby-Dick, item "1":
     //   - #replied (annotation-crossref-text-nested-1) at #spleen of the transcription
@@ -325,22 +327,22 @@ describe('Annotation popover content', () => {
           .and('contain.text', 'Mr. Bennet\'s terse reply demonstrates')
 
         // nothing is selected until the annotation is clicked
-        cy.get(selectors.sidebarContainer).should('not.exist')
+        cy.get(selectors.annotationsView).should('not.exist')
       })
     })
 
-    it('Selects the annotation in the sidebar without a popover when clicking the target outside the links', () => {
+    it('Selects the annotation in the annotations view without a popover when clicking the target outside the links', () => {
       // a few pixels into the first line of the paragraph is "Mr. Bennet", before the first link - the
       // exact corner is covered by the pane edge
       target('#para4').click(15, 8, { scrollBehavior: 'center' })
 
       popover().should('not.exist')
 
-      cy.get(selectors.sidebarContainer).should('be.visible')
-      cy.get(selectors.sidebarContainer)
+      cy.get(selectors.annotationsView).should('be.visible')
+      cy.get(selectors.annotationsView)
         .find(`[data-annotation="${annotation('annotation-9')}"]`)
         .should('have.attr', 'data-selected', 'true')
-      cy.get(selectors.sidebarContainer).find('[data-selected]').should('have.length', 1)
+      cy.get(selectors.annotationsView).find('[data-selected]').should('have.length', 1)
 
       target('#para4').should('have.class', 'bg-annotation-selected')
     })
@@ -385,7 +387,7 @@ describe('Annotation popover content', () => {
         .and('contain.text', 'The estate rented by Mr. Bingley')
 
       popover().find(selectors.tooltipSection).should('not.exist')
-      cy.get(selectors.sidebarContainer).should('not.exist')
+      cy.get(selectors.annotationsView).should('not.exist')
     })
   })
 
@@ -420,7 +422,7 @@ describe('Annotation popover content', () => {
       })
 
       popover().find('[data-cy="popover-annotations-section"]').should('not.exist')
-      cy.get(selectors.sidebarContainer).should('not.exist')
+      cy.get(selectors.annotationsView).should('not.exist')
     })
   })
 
@@ -442,12 +444,12 @@ describe('Annotation popover content', () => {
     const parent = { selector: '#para6', id: 'annotation-11', text: 'The exchange sets Mr. Bennet\'s silence against' }
 
     const items = () => popover().find('[data-cy="popover-annotation-item"]')
-    const sidebarCard = (id) => cy.get(selectors.sidebarContainer).find(`[data-annotation="${annotation(id)}"]`)
+    const annotationsCard = (id) => cy.get(selectors.annotationsView).find(`[data-annotation="${annotation(id)}"]`)
 
     // The selected card sits at the same height as its target
     const expectCardAlignedWithTarget = (id, selector) => {
       cy.get(selectors.textContainer).find(selector).then(($target) => {
-        sidebarCard(id).should(($card) => {
+        annotationsCard(id).should(($card) => {
           const targetY = $target[0].getBoundingClientRect().top
           const cardY = $card[0].getBoundingClientRect().top
           expect(cardY, `card y ${cardY} vs target y ${targetY}`).to.be.closeTo(targetY, 2)
@@ -456,8 +458,8 @@ describe('Annotation popover content', () => {
     }
 
     const expectSelected = (selected, selector) => {
-      sidebarCard(selected.id).should('have.attr', 'data-selected', 'true')
-      cy.get(selectors.sidebarContainer).find('[data-selected]').should('have.length', 1)
+      annotationsCard(selected.id).should('have.attr', 'data-selected', 'true')
+      cy.get(selectors.annotationsView).find('[data-selected]').should('have.length', 1)
       target(selector).should('have.class', 'bg-annotation-selected')
       expectCardAlignedWithTarget(selected.id, selector)
     }
@@ -493,14 +495,14 @@ describe('Annotation popover content', () => {
           items().filter(`[data-annotation="${annotation(parent.id)}"]`).should('contain.text', parent.text)
           items().filter(`[data-annotation="${annotation(other.id)}"]`).should('not.exist')
 
-          cy.get(selectors.sidebarContainer).should('not.exist')
+          cy.get(selectors.annotationsView).should('not.exist')
         })
 
         it('Selects its own annotation and target when clicking its item', () => {
           target(child.selector).click()
           items().filter(`[data-annotation="${annotation(child.id)}"]`).click()
 
-          cy.get(selectors.sidebarContainer).should('be.visible')
+          cy.get(selectors.annotationsView).should('be.visible')
           expectSelected(child, child.selector)
           target(parent.selector).should('not.have.class', 'bg-annotation-selected')
         })
@@ -509,7 +511,7 @@ describe('Annotation popover content', () => {
           target(child.selector).click()
           items().filter(`[data-annotation="${annotation(parent.id)}"]`).click()
 
-          cy.get(selectors.sidebarContainer).should('be.visible')
+          cy.get(selectors.annotationsView).should('be.visible')
           expectSelected(parent, parent.selector)
         })
       })
@@ -519,7 +521,7 @@ describe('Annotation popover content', () => {
   describe('targets with sync targets', () => {
     // #para7 is the target of annotation-14 (Narrative Technique). Nested in it, #no-objection carries
     //   - a tooltip annotation: annotation-15 (Editorial Note, configured as tooltip type)
-    //   - a sidebar annotation: annotation-16 (Historical Context)
+    //   - an annotations view annotation: annotation-16 (Historical Context)
     //   - a cross ref link inside it: #objection (annotation-crossref-text-nested-2, at #ishmael of Moby-Dick)
     //   - 3 synoptic targets (no-objection-sync in the collection's sync annotations), each in a manifest
     //     of its own: Moby-Dick, The Great Gatsby and The Road Not Taken

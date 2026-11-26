@@ -37,7 +37,7 @@ export function findFocusedTarget(scrollContainer: HTMLElement, targets: Element
 }
 
 class Scroller {
-  private sidebar: HTMLElement | null = null
+  private annotationsScrollContainer: HTMLElement | null = null
   private texts: {[contentUrl: string]: HTMLElement} = {}
   private isSyncing = false
   private syncEnabled = false
@@ -45,20 +45,20 @@ class Scroller {
   private focusedAnnotationId: string | null = null
   private matchedMap: {[contentUrl: string]: MatchedAnnotationsMap} = {}
   private syncMaps: {[contentUrl: string]: SyncMap} = {}
-  private handleSidebarScrollBound: EventListener
+  private handleAnnotationsScrollBound: EventListener
   private handleTextScrollBound: EventListener
 
   constructor() {
-    this.handleSidebarScrollBound = this.handleSidebarScroll.bind(this)
+    this.handleAnnotationsScrollBound = this.handleAnnotationsScroll.bind(this)
     this.handleTextScrollBound = this.handleTextScroll.bind(this)
   }
 
-  setSidebar(element: HTMLElement) {
-    this.sidebar = element
+  setAnnotations(element: HTMLElement) {
+    this.annotationsScrollContainer = element
   }
 
-  getSidebar() {
-    return this.sidebar
+  getAnnotations() {
+    return this.annotationsScrollContainer
   }
 
   setText(url: string, element: HTMLElement) {
@@ -141,17 +141,17 @@ class Scroller {
     setTimeout(() => this.isSyncing = false, 20)
   }
 
-  syncSidebarToText(targetSource: string | AnnotationTargetSource) {
+  syncAnnotationsToText(targetSource: string | AnnotationTargetSource) {
     const url = typeof targetSource === 'string' ? targetSource : targetSource.id
-    this.syncScroll(this.texts[url], this.sidebar)
+    this.syncScroll(this.texts[url], this.annotationsScrollContainer)
   }
 
 
-  handleSidebarScroll() {
-    // isSyncing alone misses the sidebar scroll caused by syncScroll: that scroll event fires a frame
+  handleAnnotationsScroll() {
+    // isSyncing alone misses the annotations view scroll caused by syncScroll: that scroll event fires a frame
     // after the rAF has already lifted the flag.
-    if (this.isSyncing || !this.sidebar || isProgrammaticScroll(this.sidebar)) return
-    const refY = this.sidebar.scrollTop + this.sidebar.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
+    if (this.isSyncing || !this.annotationsScrollContainer || isProgrammaticScroll(this.annotationsScrollContainer)) return
+    const refY = this.annotationsScrollContainer.scrollTop + this.annotationsScrollContainer.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
 
     const mapEntries = Object
       .values(this.matchedMap)
@@ -160,7 +160,7 @@ class Scroller {
     // TODO: Ther problem here is that tooltip annotations appear also as filtered=true, we need to handle them better
 
     const bandEntry = mapEntries.find(entry => {
-      const card = this.sidebar.querySelector(`[data-annotation="${entry.annotation.id}"]`) as HTMLElement
+      const card = this.annotationsScrollContainer.querySelector(`[data-annotation="${entry.annotation.id}"]`) as HTMLElement
       if (!card) return false
       const top = parseInt(card.style.top)
       const bottom = top + card.offsetHeight
@@ -194,33 +194,33 @@ class Scroller {
     const contentUrl = (e.target as HTMLElement).getAttribute('data-content-url')
     this.scrollOtherTexts(contentUrl)
     if (this.originSelection === 'text')  {
-      this.syncScroll(this.texts[contentUrl], this.sidebar)
+      this.syncScroll(this.texts[contentUrl], this.annotationsScrollContainer)
     }
   }
 
-  // Sidebar and text scroll in lockstep only while the aligned annotation list is mounted - it is
+  // Annotations view and text scroll in lockstep only while the aligned annotation list is mounted - it is
   // what positions its cards against their targets. Everywhere else the two scroll independently,
   // so the listeners stay off and a text view registering in the meantime does not turn them back
   // on by itself.
   startSync() {
     this.syncEnabled = true
-    this.startSidebar()
+    this.startAnnotations()
     Object.keys(this.texts).forEach(contentUrl => this.startText(contentUrl))
   }
 
   stopSync() {
     this.syncEnabled = false
-    this.stopSidebar()
+    this.stopAnnotations()
     Object.keys(this.texts).forEach(contentUrl => this.stopText(contentUrl))
   }
 
-  startSidebar() {
+  startAnnotations() {
     if (!this.syncEnabled) return
-    this.sidebar?.addEventListener('scroll', this.handleSidebarScrollBound)
+    this.annotationsScrollContainer?.addEventListener('scroll', this.handleAnnotationsScrollBound)
   }
 
-  stopSidebar() {
-    this.sidebar?.removeEventListener('scroll', this.handleSidebarScrollBound)
+  stopAnnotations() {
+    this.annotationsScrollContainer?.removeEventListener('scroll', this.handleAnnotationsScrollBound)
   }
 
   startText(contentUrl: string) {

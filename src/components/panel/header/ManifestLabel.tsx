@@ -5,16 +5,15 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from '@/components/ui/button.tsx'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
-interface ManifestLabelProps {
+interface ManifestLabelProps extends LabelStyleProps {
   isSelecting: boolean,
   onSelect: (manifestId: string) => void,
   options: DropdownOption[]
   selectedLabel: string
   dataCy?: string
-  merged?: boolean
 }
 
-const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelecting, onSelect, dataCy = 'manifest-label', merged = false }) => {
+const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelecting, onSelect, dataCy = 'manifest-label', variant = 'outline', className = '' }) => {
   const { panelState, usePanelTranslation, panelRootRef } = usePanel()
   const { t } = usePanelTranslation()
   const [showModal, setShowModal] = useState(false)
@@ -29,10 +28,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelec
     setShowModal(open)
   }
 
-  // When the item label is merged into the manifest label, the combined label needs more room.
-  const widthClasses = merged
-    ? 'max-w-[240px] @max-[600px]/panel:max-w-[180px] @min-[1200px]/panel:max-w-[420px]'
-    : 'max-w-[120px] @max-[600px]/panel:max-w-[80px] @min-[1200px]/panel:max-w-[420px]'
+  const widthClasses = 'max-w-[120px] @max-[600px]/panel:max-w-[80px] @min-[1200px]/panel:max-w-[420px]'
 
   return (
     <DropdownMenu
@@ -43,9 +39,9 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelec
         <DropdownMenuTrigger asChild>
           <TooltipTrigger asChild>
             <Button
-              variant="outline"
+              variant={variant}
               size="sm"
-              className={`relative h-full truncate ${widthClasses} ${isSelecting ? 'text-muted-foreground animate-pulse' : ''}`}
+              className={`relative h-full truncate ${widthClasses} ${className} ${isSelecting ? 'text-muted-foreground animate-pulse' : ''}`}
               data-cy={dataCy}>
               <span className="truncate">{ selectedLabel }</span>
             </Button>

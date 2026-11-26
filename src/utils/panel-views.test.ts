@@ -10,6 +10,14 @@ import {
   shownViews,
   textSources,
   visibleTextSources,
+  panelPanes,
+  isContentView,
+  annotationsShown,
+  showAnnotations,
+  hasAnnotations,
+  paneNames,
+  hasViewToggles,
+  switchPanes,
 } from './panel-views.ts'
 
 const url = (name: string, type: string) => `https://example.org/${name}/${type}.html`
@@ -24,6 +32,7 @@ function item(name: string, types: string[], withImage = false): Item {
 
 const text = (view: Partial<PanelView> = {}): PanelView => ({ view: 'text', ...view })
 const image: PanelView = { view: 'image' }
+const annotations = (view: Partial<PanelView> = {}): PanelView => ({ view: 'annotations', ...view })
 
 const page1 = item('page1', ['transcription', 'edited'], true)
 const page2 = item('page2', ['edited'])
@@ -80,6 +89,13 @@ describe('resolveViews on item navigation', () => {
   it('keeps a view the user hid', () => {
     const first = resolve([text(), image], page1).map(v => v.key === 1 ? { ...v, visible: false } : v)
     expect(resolve([text(), image], page3, first)[1].visible).toBe(false)
+  })
+
+  it('keeps the configured showContentTypesToggle of a view on every item', () => {
+    const configured = [text({ contentTypes: ['edited'], showContentTypesToggle: false }), text()]
+    const first = resolve(configured, page1)
+    const next = resolve(configured, page2, first)
+    expect(next.map(v => v.showContentTypesToggle)).toEqual([false, undefined])
   })
 
   it('never takes the offered content types from the previous item', () => {
@@ -274,8 +290,171 @@ describe('configureViews', () => {
     expect(hideEmptyViews).toEqual([])
   })
 
+  it('takes showContentTypesToggle from the panel views of the panel, never from the global ones', () => {
+    const withToggle = { ...global, panelViews: [text({ showContentTypesToggle: false })] }
+    const views = (panel?: { views: PanelView[] }) => resolve(configureViews(withToggle, panel).configured, page1)
+    expect(views()[0].showContentTypesToggle).toBe(false)
+    expect(views({ views: [text({ showContentTypesToggle: false }), text()] }).map(v => v.showContentTypesToggle)).toEqual([false, undefined])
+    expect(views({ views: [text()] })[0].showContentTypesToggle).toBeUndefined()
+  })
+
   it('gives each view its width ratio, or none when the ratio does not fit the views', () => {
     expect(configureViews(global, { viewsWidthRatio: [1, '3'] as unknown as number[] }).configured.map(v => v.widthRatio)).toEqual([1, 3])
     expect(configureViews(global, { viewsWidthRatio: [1] }).configured.map(v => v.widthRatio)).toEqual([undefined, undefined])
+  })
+
+  it('gives the width ratios to the text and image views only - the annotations view counts for none', () => {
+    const views = [image, annotations(), text()]
+    expect(configureViews(global, { views, viewsWidthRatio: [1, 3] }).configured.map(v => v.widthRatio)).toEqual([1, undefined, 3])
+    expect(configureViews(global, { views, viewsWidthRatio: [1, 2, 3] }).configured.map(v => v.widthRatio)).toEqual([undefined, undefined, undefined])
+  })
+})
+
+describe('the annotations view', () => {
+  const paneKeys = (panes: PanelViewState[]) => panes.map(({ key, view, visible }) => ({ key, view, visible }))
+
+  it('is placed where the panel views configure it', () => {
+    const views = resolve([text(), annotations({ label: 'Notes', visible: true }), image], page1)
+
+    expect(paneKeys(panelPanes(views))).toEqual([
+      { key: 0, view: 'text', visible: true },
+      { key: 1, view: 'annotations', visible: true },
+      { key: 2, view: 'image', visible: true },
+    ])
+    expect(panelPanes(views)[1].label).toBe('Notes')
+  })
+
+  it('is not added when the panel views configure none - the panel then has no annotations', () => {
+    const views = resolve(configureViews({ panelViews: [text(), image], hideEmptyViews: [] }).configured, page1)
+    expect(paneKeys(panelPanes(views))).toEqual([
+      { key: 0, view: 'text', visible: true },
+      { key: 1, view: 'image', visible: true },
+    ])
+    expect(hasAnnotations(views)).toBe(false)
+    expect(annotationsShown(showAnnotations(views, true))).toBe(false)
+    expect(hasAnnotations(resolve([text(), annotations()], page1))).toBe(true)
+  })
+
+  it('is hidden unless configured visible, and keeps what it was set to on the next item', () => {
+    expect(annotationsShown(resolve([text(), annotations()], page1))).toBe(false)
+    expect(annotationsShown(resolve([text(), annotations({ visible: true })], page1))).toBe(true)
+
+    const shown = showAnnotations(resolve([text(), annotations()], page1), true)
+    expect(annotationsShown(shown)).toBe(true)
+    expect(annotationsShown(resolve([text(), annotations()], page3, shown))).toBe(true)
+    expect(annotationsShown(resolve([text(), annotations({ visible: true })], page3, showAnnotations(shown, false)))).toBe(false)
+  })
+
+  it('is bookmarked with the other views, by its view key', () => {
+    const views = showAnnotations(resolve([text(), annotations()], page1), true)
+    expect(viewOverrides(views)[1]).toEqual({ visible: true })
+    expect(applyViewOverrides([text(), annotations()], viewOverrides(views))[1]).toEqual({ view: 'annotations', visible: true })
+  })
+
+  it('counts only once when configured twice', () => {
+    const panes = panelPanes(resolve([annotations(), text(), annotations()], page1))
+    expect(panes.filter(pane => !isContentView(pane))).toHaveLength(1)
+    expect(panes[0].view).toBe('annotations')
+  })
+
+  it('offers no content types, is never omitted as empty and is no text source', () => {
+    const views = resolve([text(), annotations()], page2, undefined, ['text', 'image'])
+
+    expect(views[1].contentTypes).toBeUndefined()
+    expect(views[1].omitted).toBeUndefined()
+    expect(textSources({ panelViews: views, item: page2 }).map(s => s.viewKey)).toEqual([0])
+  })
+
+  it('keeps the view keys of the views after it, so bookmarks stay valid', () => {
+    const views = resolve([annotations(), text({ activeContentType: 'edited' })], page1)
+    expect(views.map(v => v.key)).toEqual([0, 1])
+    expect(applyViewOverrides([annotations(), text()], viewOverrides(views))[1].activeContentType).toBe('edited')
+  })
+})
+
+describe('paneNames', () => {
+  const translate = (key: string) => `t:${key}`
+  const pane = (key: number, view: Partial<PanelViewState> = {}): PanelViewState => ({ view: 'text', key, ...view })
+
+  it('names a pane by its label, else by its kind of view', () => {
+    expect(paneNames([pane(0, { label: 'Edition' }), pane(1, { view: 'image' }), pane(2, { view: 'annotations' })], translate))
+      .toEqual(['t:Edition', 't:image', 't:annotations'])
+  })
+
+  it('tells panes with the same name apart by their content type', () => {
+    const panes = [
+      pane(0, { label: 'Text', activeContentType: 'transcription' }),
+      pane(1, { label: 'Text', activeContentType: 'diplomatic' }),
+      pane(2, { view: 'annotations' }),
+    ]
+    expect(paneNames(panes, translate)).toEqual(['t:transcription', 't:diplomatic', 't:annotations'])
+  })
+
+  it('keeps a unique label even when it shows a content type', () => {
+    expect(paneNames([pane(0, { label: 'Edition', activeContentType: 'transcription' }), pane(1, { view: 'image' })], translate))
+      .toEqual(['t:Edition', 't:image'])
+  })
+
+  it('numbers panes that show the same content type', () => {
+    const panes = [pane(0, { activeContentType: 'transcription' }), pane(1, { activeContentType: 'transcription' })]
+    expect(paneNames(panes, translate)).toEqual(['t:transcription 1', 't:transcription 2'])
+  })
+})
+
+describe('the view toggles', () => {
+  const visibility = (views: PanelViewState[]) => views.map(({ view, visible }) => ({ view, visible }))
+
+  it('are offered when there is a choice: two panes or more, or an annotations pane', () => {
+    expect(hasViewToggles(panelPanes(resolve([text()], page1)))).toBe(false)
+    expect(hasViewToggles(panelPanes(resolve([text(), image], page1)))).toBe(true)
+    expect(hasViewToggles(panelPanes(resolve([text(), annotations()], page1)))).toBe(true)
+    // the text view is omitted on this item - the annotations stay switchable
+    const omitted = resolve([text({ contentTypes: ['transcription'] }), annotations()], page2, undefined, ['text', 'image'])
+    expect(panelPanes(omitted)).toHaveLength(1)
+    expect(hasViewToggles(panelPanes(omitted))).toBe(true)
+    expect(hasViewToggles(panelPanes(resolve([annotations()], page1)))).toBe(true)
+  })
+
+  it('switch the panes that are on and leave the omitted views alone', () => {
+    const views = resolve([text(), image, annotations()], page1)
+    expect(visibility(switchPanes(views, ['1', '2'])!)).toEqual([
+      { view: 'text', visible: false },
+      { view: 'image', visible: true },
+      { view: 'annotations', visible: true },
+    ])
+  })
+
+  it('refuse to switch off the last text or image view - the annotations do not count', () => {
+    const views = showAnnotations(resolve([text(), annotations()], page1), true)
+    expect(switchPanes(views, ['1'])).toBeNull()
+    expect(switchPanes(views, [])).toBeNull()
+  })
+
+  it('switch the annotations freely when the panel shows no text or image view on the item', () => {
+    const omitted = resolve([text({ contentTypes: ['transcription'] }), annotations()], page2, undefined, ['text', 'image'])
+    expect(annotationsShown(switchPanes(omitted, ['1'])!)).toBe(true)
+    expect(annotationsShown(switchPanes(showAnnotations(omitted, true), [])!)).toBe(false)
+    expect(annotationsShown(switchPanes(resolve([annotations()], page1), ['0'])!)).toBe(true)
+  })
+})
+
+describe('a panel keeps a text or image view open', () => {
+  it('opens the first one shown when the configuration or the bookmark hide them all', () => {
+    const views = resolve([image, text({ visible: false }), annotations({ visible: true })], page1)
+    // the image view is configured visible by default - hide it too
+    const hidden = resolve([{ ...image, visible: false }, text({ visible: false }), annotations({ visible: true })], page1)
+
+    expect(views.map(v => v.visible)).toEqual([true, false, true])
+    expect(hidden.map(v => v.visible)).toEqual([true, false, true])
+  })
+
+  it('opens the first one shown on the item, not an omitted one', () => {
+    const views = resolve([{ ...image, visible: false }, text({ visible: false }), annotations()], page2, undefined, ['image'])
+    expect(views.map(v => [v.view, v.visible, !!v.omitted])).toEqual([['image', false, true], ['text', true, false], ['annotations', false, false]])
+  })
+
+  it('leaves a panel that shows no text or image view on the item as it is', () => {
+    const views = resolve([text({ contentTypes: ['transcription'], visible: false }), annotations({ visible: true })], page2, undefined, ['text'])
+    expect(views.map(v => v.visible)).toEqual([false, true])
   })
 })

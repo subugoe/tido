@@ -1,7 +1,7 @@
-import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { getFilteredAnnotations } from '@/utils/annotations.ts'
-import { visibleTextSources } from '@/utils/panel-views.ts'
+import { hasAnnotations, visibleTextSources } from '@/utils/panel-views.ts'
 import { PanelViewState } from '@/types'
 import { getAnnotationType } from '@/utils/annotation-data.ts'
 import { CustomError } from '@/utils/custom-error.ts'
@@ -9,7 +9,7 @@ import { CustomError } from '@/utils/custom-error.ts'
 type MatchedMaps = {[id: string]: MatchedAnnotationsMap}
 
 type State = {
-  // Computed in PanelContext via useFilteredAnnotations, passed through for the sidebar components
+  // Computed in PanelContext via useFilteredAnnotations, passed through for the annotations view components
   filteredAnnotations: Annotation[],
   matchedMaps: MatchedMaps,
   updateMatchedMap: (id: string, map: MatchedAnnotationsMap) => void,
@@ -25,26 +25,35 @@ function getVisibleContentUrls(panelViews: PanelViewState[] | undefined, item: I
 }
 
 // Derives the filtered annotations of the visible text views (in panelViews order), without tooltip types.
-// It is called from PanelProvider, so the result is part of PanelContext and available outside the sidebar
-// (e.g. for the header badge)
+// It is called from PanelProvider, so the result is part of PanelContext and available outside the annotations view
+// (e.g. for the header badge). The previous list is kept as long as it holds the same annotations in the
+// same order - switching views often leads to the same list again, and a new one would make the annotations view
+// lay out its cards again for nothing.
 export function useFilteredAnnotations(
   textMatchedMaps: MatchedMaps,
   panelViews: PanelViewState[] | undefined,
   item: Item | undefined,
   tooltipTypes: string[] | undefined
 ): Annotation[] {
+  const previous = useRef<Annotation[]>([])
+
   return useMemo(() => {
-    return getVisibleContentUrls(panelViews, item).flatMap(contentUrl => {
+    const annotations = getVisibleContentUrls(panelViews, item).flatMap(contentUrl => {
       const map = textMatchedMaps[contentUrl]
       if (!map) return []
       return getFilteredAnnotations(map).filter(a => !(tooltipTypes ?? []).includes(getAnnotationType(a)))
     })
+
+    const unchanged = annotations.length === previous.current.length
+      && annotations.every((annotation, i) => annotation === previous.current[i])
+    if (!unchanged) previous.current = annotations
+    return previous.current
   }, [textMatchedMaps, panelViews, item, tooltipTypes])
 }
 
 // True while the filtered annotations are not final yet: the panel is still loading, or a visible text has
-// not been matched against the item's annotations. Without an annotation collection, or when it could not
-// be loaded, no match is waited for.
+// not been matched against the item's annotations. Without an annotation collection, when it could not be
+// loaded or when the panel has no annotations view (see hasAnnotations), no match is waited for.
 export function useAnnotationsPending(
   textMatchedMaps: MatchedMaps,
   panelViews: PanelViewState[] | undefined,
@@ -54,7 +63,7 @@ export function useAnnotationsPending(
 ): boolean {
   return useMemo(() => {
     if (loading) return true
-    if (!item?.annotationCollection || annotationsError) return false
+    if (!item?.annotationCollection || annotationsError || !hasAnnotations(panelViews ?? [])) return false
     return getVisibleContentUrls(panelViews, item).some(contentUrl => !textMatchedMaps[contentUrl])
   }, [textMatchedMaps, panelViews, item, loading, annotationsError])
 }

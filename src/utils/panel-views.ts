@@ -23,14 +23,15 @@ export interface TextSource {
   visible: boolean
 }
 
-// The viewsWidthRatio of a panel as positive numbers, one per view - null when it is not set or does not
-// fit the views, in which case the views share the panel width equally. Values from the url are strings.
+// The viewsWidthRatio of a panel as positive numbers, one per text or image view - the annotations view has
+// no ratio, it takes the width it had last. Null when it is not set or does not fit the views, in which case
+// the views share the panel width equally. Values from the url are strings.
 function getViewsWidthRatio(viewsWidthRatio: unknown, viewsCount: number): number[] | null {
   if (viewsWidthRatio === undefined) return null
 
   const ratios = Array.isArray(viewsWidthRatio) ? viewsWidthRatio.map(Number) : []
   if (ratios.length !== viewsCount || ratios.some(r => !Number.isFinite(r) || r <= 0)) {
-    console.warn(`viewsWidthRatio must have one positive number for each of the ${viewsCount} views - the views get equal widths`)
+    console.warn(`viewsWidthRatio must have one positive number for each of the ${viewsCount} text and image views - the views get equal widths`)
     return null
   }
 
@@ -39,15 +40,17 @@ function getViewsWidthRatio(viewsWidthRatio: unknown, viewsCount: number): numbe
 
 // The configured panel views of a panel, local first: its own views when it has any - the global panelViews
 // are not looked at then - else the global ones, each with its width ratio. The same for hideEmptyViews.
+// A panel shows annotations only when its panel views configure an annotations view (see hasAnnotations).
 export function configureViews(
   config: Pick<TidoConfig, 'panelViews' | 'hideEmptyViews'>,
   panel: Pick<PanelConfig, 'views' | 'viewsWidthRatio' | 'hideEmptyViews'> = {},
 ): Pick<ResolveViewsInput, 'configured' | 'hideEmptyViews'> {
   const views = panel.views?.length > 0 ? panel.views : config.panelViews
-  const ratios = getViewsWidthRatio(panel.viewsWidthRatio, views.length)
+  const ratios = getViewsWidthRatio(panel.viewsWidthRatio, views.filter(isContentView).length)
+  let next = 0
 
   return {
-    configured: views.map((view, i) => ({ ...view, widthRatio: ratios?.[i] })),
+    configured: views.map(view => isContentView(view) ? { ...view, widthRatio: ratios?.[next++] } : view),
     hideEmptyViews: panel.hideEmptyViews ?? config.hideEmptyViews,
   }
 }
@@ -133,15 +136,16 @@ function resolveActiveContentType(contentTypes: string[], preferred?: string, co
 }
 
 // One view on an item. Only the visibility and the preferred content type come from what the view was
-// before - everything else from its configuration, never from what it offered on another item.
+// before - everything else from its configuration, never from what it offered on another item. Content
+// views are visible unless configured otherwise, the annotations view is hidden unless configured otherwise.
 function resolveView(
   key: number,
   configured: PanelView,
   itemContentTypes: string[],
   carried: { visible?: boolean, preferredContentType?: string } | undefined,
 ): PanelViewState {
-  const view: PanelViewState = { ...configured, key, visible: carried?.visible ?? configured.visible ?? true }
-  if (configured.view === 'image') return view
+  const view: PanelViewState = { ...configured, key, visible: carried?.visible ?? configured.visible ?? isContentView(configured) }
+  if (configured.view !== 'text') return view
 
   const contentTypes = resolveContentTypes(itemContentTypes, configured.contentTypes)
   const preferredContentType = carried ? carried.preferredContentType : configured.activeContentType
@@ -161,8 +165,9 @@ function appendedView(key: number, label: string | undefined, itemContentTypes: 
 }
 
 // Whether a view has nothing to show on the item: an image view on an item without image, a text view
-// offering none of its content types
+// offering none of its content types. The annotations view is never empty - it says so itself.
 function isEmpty(view: PanelViewState, item: Item): boolean {
+  if (view.view === 'annotations') return false
   return view.view === 'image' ? !hasImage(item) : view.contentTypes?.length === 0
 }
 
@@ -177,7 +182,15 @@ export function resolveViews({ configured, hideEmptyViews, item, previous = [] }
     .filter(p => p.appended)
     .map((p, i) => ({ ...appendedView(configured.length + i, p.label, itemContentTypes, p), widthRatio: p.widthRatio }))
 
-  return [...views, ...appended].map(view => hideEmptyViews.includes(view.view) && isEmpty(view, item) ? { ...view, omitted: true } : view)
+  return keepContentViewOpen([...views, ...appended].map(view => hideEmptyViews.includes(view.view) && isEmpty(view, item) ? { ...view, omitted: true } : view))
+}
+
+// A panel always keeps one text or image view open - the annotations view never counts as one. When the
+// configuration or a bookmark hide all those it shows on the item, the first one is opened.
+function keepContentViewOpen(views: PanelViewState[]): PanelViewState[] {
+  const contentViews = shownViews(views).filter(isContentView)
+  if (contentViews.length === 0 || contentViews.some(view => view.visible)) return views
+  return views.map(view => view === contentViews[0] ? { ...view, visible: true } : view)
 }
 
 // A choice of the user on the current item: the content type becomes the preferred one of the view
@@ -220,6 +233,51 @@ export function shownViews(views: PanelViewState[]): PanelViewState[] {
   return views.filter(view => !view.omitted)
 }
 
+// Whether a view shows content of the item (text or image) - every view but the annotations view
+export function isContentView(view: PanelView): boolean {
+  return view.view !== 'annotations'
+}
+
+// Whether a view is the annotations view - the one view that is no content view
+export function isAnnotationsView(view: PanelView): boolean {
+  return !isContentView(view)
+}
+
+// Whether a view is visible: as set on it, else content views are and the annotations view is not
+export function isVisible(view: PanelView): boolean {
+  return view.visible ?? isContentView(view)
+}
+
+// The annotations view of a panel - only the first one counts
+export function annotationsView<T extends PanelView>(views: T[]): T | undefined {
+  return views.find(isAnnotationsView)
+}
+
+// Whether the panel has annotations at all: only a panel with an annotations view loads, highlights and
+// shows the annotations of its items - without one the item's annotations are left alone
+export function hasAnnotations(views: PanelView[]): boolean {
+  return annotationsView(views) !== undefined
+}
+
+// Whether the panel shows its annotations: its annotations view is visible
+export function annotationsShown(views: PanelView[]): boolean {
+  return annotationsView(views)?.visible === true
+}
+
+// The views with the annotations view shown or hidden - by the user, a selected annotation or a cross-reference
+export function showAnnotations<T extends PanelView>(views: T[], shown: boolean): T[] {
+  const annotations = annotationsView(views)
+  return views.map(view => view === annotations ? { ...view, visible: shown } : view)
+}
+
+// The panes of a panel side by side, in order: the views it shows on its current item, its annotations
+// view among them where the panel views place it - only the first one counts.
+export function panelPanes(views: PanelViewState[]): PanelViewState[] {
+  const shown = shownViews(views)
+  const annotations = annotationsView(shown)
+  return shown.filter(view => isContentView(view) || view === annotations)
+}
+
 // The contents the text views of a panel show, in view order - one per text view, also when two show the same
 export function textSources(panel: { panelViews: PanelViewState[], item: Item | null }): TextSource[] {
   if (!panel.item) return []
@@ -228,10 +286,52 @@ export function textSources(panel: { panelViews: PanelViewState[], item: Item | 
     if (view.view !== 'text' || view.omitted) return []
     const content = findContentByType(panel.item.contents, view.activeContentType)
     if (!content) return []
-    return [{ viewKey: view.key, contentUrl: content.id, visible: view.visible ?? true }]
+    return [{ viewKey: view.key, contentUrl: content.id, visible: isVisible(view) }]
   })
 }
 
 export function visibleTextSources(panel: { panelViews: PanelViewState[], item: Item | null }): TextSource[] {
   return textSources(panel).filter(source => source.visible)
+}
+
+// The DOM id of a pane of a panel - the view toggles point to it with aria-controls
+export function paneDomId(panelId: string, viewKey: number): string {
+  return `tido-pane-${panelId}-${viewKey}`
+}
+
+// The names of the panes, for the view toggles: a pane is named by its label, else by its kind of view.
+// Panes sharing a name are told apart by the content type they show - two text views labelled "Text"
+// become "transcription" and "diplomatic" - and when even that is the same, by a number.
+export function paneNames(panes: PanelViewState[], translate: (key: string) => string): string[] {
+  const nameOf = (pane: PanelViewState) => pane.label ? translate(pane.label) : translate(pane.view)
+  const count = (names: string[], name: string) => names.filter(n => n === name).length
+
+  const names = panes.map(nameOf)
+  const distinct = names.map((name, i) => {
+    const contentType = panes[i].activeContentType
+    return count(names, name) > 1 && contentType ? translate(contentType) : name
+  })
+
+  return distinct.map((name, i) => count(distinct, name) > 1
+    ? `${name} ${count(distinct.slice(0, i), name) + 1}`
+    : name)
+}
+
+// Whether the panel header offers view toggles: when there is a choice - two panes or more, or an
+// annotations pane, which never counts as the last open view and so can always be switched
+export function hasViewToggles(panes: PanelViewState[]): boolean {
+  return panes.length > 1 || panes.some(isAnnotationsView)
+}
+
+// The views with the panes switched on whose view keys are given and the others switched off - views that
+// are no pane (omitted ones) stay as they are. Null when that would switch off the last text or image
+// view the panel shows: one of them always stays on. The annotations view never counts as one, so a panel
+// showing no text or image view on its item switches its annotations freely.
+export function switchPanes(views: PanelViewState[], keys: string[]): PanelViewState[] | null {
+  const panes = panelPanes(views)
+  const isOn = (pane: PanelViewState) => keys.includes(String(pane.key))
+  const contentPanes = panes.filter(isContentView)
+  if (contentPanes.length > 0 && !contentPanes.some(isOn)) return null
+
+  return views.map(view => panes.includes(view) ? { ...view, visible: isOn(view) } : view)
 }

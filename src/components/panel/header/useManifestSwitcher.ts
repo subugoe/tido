@@ -5,7 +5,8 @@ import { logError } from '@/utils/custom-error.ts'
 
 interface ManifestSwitcher {
   manifestOptions: DropdownOption[]
-  selectedLabel: string
+  // the title of the manifest shown, or being selected
+  manifestLabel: string
   isSelecting: boolean
   isSingleItem: boolean
   onManifestSelect: (manifestId: string) => void
@@ -32,15 +33,7 @@ function useManifestSwitcher(): ManifestSwitcher {
 
   const isSingleItem = (targetManifest?.items?.length ?? 0) === 1
 
-  const selectedLabel = useMemo(() => {
-    const manifestLabel = selectedManifest?.titles?.[0] ?? panelState?.manifest?.titles?.[0] ?? ''
-    if (!isSingleItem) return manifestLabel
-
-    // With only one item there is nothing to select, so the item label is merged into the
-    // manifest label and the item navigation is hidden entirely.
-    const itemLabel = t(panelState?.item?.division ?? '')
-    return itemLabel && itemLabel !== manifestLabel ? `${manifestLabel} - ${itemLabel}` : manifestLabel
-  }, [selectedManifest, panelState?.manifest?.titles, panelState?.item, isSingleItem, t])
+  const manifestLabel = selectedManifest?.titles?.[0] ?? panelState?.manifest?.titles?.[0] ?? ''
 
   useEffect(() => {
     async function loadManifestOptions() {
@@ -117,7 +110,7 @@ function useManifestSwitcher(): ManifestSwitcher {
 
   return {
     manifestOptions,
-    selectedLabel,
+    manifestLabel,
     isSelecting,
     isSingleItem,
     onManifestSelect: (...args: Parameters<typeof onManifestSelect>) => { onManifestSelect(...args).catch(e => logError(e, t)) },

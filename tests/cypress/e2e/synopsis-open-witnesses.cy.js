@@ -32,6 +32,7 @@ const config = [
   `panels[0].manifest=${source.manifest}`,
   `panels[0].item=${source.item}`,
   `panelViews[]=${encodeURIComponent(JSON.stringify(textView))}`,
+  `panelViews[]=${encodeURIComponent(JSON.stringify({ view: 'annotations' }))}`,
 ].join('&')
 
 // utils/constants.ts - SYNOPSIS_SELECTED_STYLE, the background of a target of the active connection
@@ -134,7 +135,10 @@ describe('Synopsis: hovering interconnected sync targets across panels', () => {
     `panels[${i}].collection=${synopsisCollection}`,
     `panels[${i}].manifest=${panel.manifest}`,
     `panels[${i}].item=${panel.item}`,
-  ]).concat(`panelViews[]=${encodeURIComponent(JSON.stringify(textView))}`).join('&')
+  ]).concat(
+    `panelViews[]=${encodeURIComponent(JSON.stringify(textView))}`,
+    `panelViews[]=${encodeURIComponent(JSON.stringify({ view: 'annotations' }))}`,
+  ).join('&')
 
   // utils/constants.ts - SYNOPSIS_HOVER_STYLE, the background of a hovered target and its synced ones
   const SYNOPSIS_HOVER_CLASS = 'bg-synopsis-hover'

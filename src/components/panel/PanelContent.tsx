@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { cloneElement, FC, ReactElement, useEffect, useRef, useState } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
@@ -9,47 +9,75 @@ import { TextProvider } from '@/contexts/TextContext.tsx'
 import TextView from '@/components/panel/views/text/TextView.tsx'
 import 'allotment/dist/style.css'
 import { Allotment, AllotmentHandle } from 'allotment'
-import SidebarView from '@/components/panel/views/sidebar/SidebarView.tsx'
+import AnnotationsView from '@/components/panel/views/annotations/AnnotationsView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
-import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
 import PaneResizeHandles from '@/components/panel/PaneResizeHandles.tsx'
-import Loading from '@/components/ui/loading.tsx'
-import { shownViews, visibleTextSources } from '@/utils/panel-views.ts'
+import { annotationsShown, isAnnotationsView, isContentView, isVisible, paneDomId, panelPanes, shownViews, visibleTextSources } from '@/utils/panel-views.ts'
 import EmptyViews from '@/components/panel/views/EmptyViews.tsx'
-import { PanelView } from '@/types'
+import { PanelViewState } from '@/types'
+import { ANNOTATIONS_PANE_MAX_SHARE, ANNOTATIONS_PANE_MIN_WIDTH, ANNOTATIONS_PANE_DEFAULT_WIDTH } from '@/utils/constants.ts'
 
 const PanelContent: FC = React.memo(() => {
-  const { init, panelState, resizer, error, loading, syncedTargetsMap, setSyncedTargets } = usePanel()
-  const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
-  const [contentPanes, setContentPanes] = useState([])
+  const { init, panelId, panelState, error, loading, syncedTargetsMap, setSyncedTargets } = usePanel()
+  // the rendered text and image views by view key - kept, so a view keeps its state while panes move
+  const [contentPanes, setContentPanes] = useState<Record<number, ReactElement>>({})
   const allotmentRef = useRef<AllotmentHandle>(null)
   const allotmentContainerRef = useRef<HTMLDivElement>(null)
+  // The width the user last gave the annotations pane - it is reapplied when allotment.reset() lays
+  // the panes out again, so changing the views does not snap the annotations back to their default.
+  const annotationsWidth = useRef(ANNOTATIONS_PANE_DEFAULT_WIDTH)
 
+  const showAnnotations = annotationsShown(panelState.panelViews)
 
-  // the views shown on the current item - the panel shows an empty state when there are none
-  const views = shownViews(panelState.panelViews)
-  const showsNoView = !loading && !!panelState.item && views.length === 0
-  const visibleViews = views.filter(v => v.visible ?? true)
+  // The panes side by side: the views shown on the current item and the annotations among them. The
+  // panel shows an empty state when it shows no text or image view.
+  const panes = panelPanes(panelState.panelViews)
+  const showsNoView = !loading && !!panelState.item && !panes.some(isContentView)
+  // the panes allotment renders: the annotations pane only while it is shown, see below
+  const renderedPanes = panes.filter(pane => isContentView(pane) ? !!contentPanes[pane.key] : pane.visible)
+
+  // The annotations pane opens at the width it had last, but never takes more than a share of a
+  // narrow panel - the views next to it would be squeezed to nothing otherwise.
+  const containerWidth = allotmentContainerRef.current?.clientWidth ?? 0
+  function getAnnotationsPreferredSize() {
+    if (!containerWidth) return annotationsWidth.current
+    const maxWidth = Math.max(ANNOTATIONS_PANE_MIN_WIDTH, containerWidth * ANNOTATIONS_PANE_MAX_SHARE)
+    return Math.min(annotationsWidth.current, maxWidth)
+  }
+
   // the preferred sizes are computed before rendering - when we call allotment.reset() -> Allotment uses the updated preferred sizes.
-  // Each visible view gets its share of the width ratios of the visible views, or an equal share without ratios.
-  const hasRatios = visibleViews.length > 0 && visibleViews.every(v => v.widthRatio > 0)
-  const ratioSum = hasRatios ? visibleViews.reduce((sum, v) => sum + v.widthRatio, 0) : 0
-  const getPreferredSize = (view: PanelView) => {
-    if (hasRatios) return `${view.widthRatio / ratioSum * 100}%`
-    return visibleViews.length > 0 ? `${100 / visibleViews.length}%` : '100%'
+  // The annotations take the width they had last, and the visible text and image views share the room left:
+  // each by its share of the width ratios of the visible views, or an equal share without ratios.
+  const visibleContentViews = panes.filter(pane => isContentView(pane) && isVisible(pane))
+  const hasRatios = visibleContentViews.length > 0 && visibleContentViews.every(v => v.widthRatio > 0)
+  const ratioSum = !hasRatios ? 0 : visibleContentViews.reduce((sum, v) => sum + v.widthRatio, 0)
+
+  function getPreferredSize(pane: PanelViewState): string | number {
+    if (isAnnotationsView(pane)) return getAnnotationsPreferredSize()
+
+    const share = hasRatios ? pane.widthRatio / ratioSum : visibleContentViews.length > 0 ? 1 / visibleContentViews.length : 1
+    const annotationsShare = showAnnotations && containerWidth > 0 ? getAnnotationsPreferredSize() / containerWidth : 0
+    return `${share * (1 - annotationsShare) * 100}%`
   }
 
   useEffect(() => {
-    const panes = shownViews(panelState.panelViews).map((v) => {
+    const views = shownViews(panelState.panelViews).filter(isContentView)
+    const elements = Object.fromEntries(views.map((v) => {
       const key = `${v.view}-${v.label || 'default'}-${v.key}`
-      const visible = v.visible ?? true
-      if (v.view === 'image') return <ImageView key={key} />
-      else return <TextView key={key} viewKey={v.key} visible={visible} />
-    })
+      // the visibility of a text view is given when rendering (see paneContent) - not from here, which is a render late
+      return [v.key, v.view === 'image' ? <ImageView key={key} viewKey={v.key} /> : <TextView key={key} viewKey={v.key} visible={isVisible(v)} />]
+    }))
 
     allotmentRef.current?.reset()
-    setContentPanes(panes)
+    setContentPanes(elements)
   }, [panelState.panelViews])
+
+  // Allotment takes the room for a pane that is added from its neighbour only, so opening the
+  // annotations would squeeze the last view alone. Laying the panes out again from their preferred
+  // sizes lets all the views shrink by their share - and grow back by it once the pane is closed.
+  useEffect(() => {
+    allotmentRef.current?.reset()
+  }, [showAnnotations])
 
   // Aggregate the per-source sync targets into a single ordered list, walking the panelViews in
   // order and only including the visible text views. Re-runs when the views change or when a
@@ -59,27 +87,18 @@ const PanelContent: FC = React.memo(() => {
     setSyncedTargets(aggregated)
   }, [panelState.panelViews, panelState.item, syncedTargetsMap])
 
+  // The element of a text or image pane. A text view gets its visibility in the same render the pane is shown
+  // or hidden in, so its annotations are handed to the panel right away - not one render later, after the
+  // effect above has built the elements anew, which would make the annotations change twice.
+  function paneContent(pane: PanelViewState): ReactElement {
+    const element = contentPanes[pane.key]
+    return pane.view === 'text' ? cloneElement(element as ReactElement<{ visible: boolean }>, { visible: isVisible(pane) }) : element
+  }
 
-  useEffect(() => {
-    if (!resizer) return
-    resizer.setShowSidebar(panelState.showSidebar)
-
-    let sidebarContentTimeout = null
-
-    if (panelState.showSidebar) {
-      // Set flag that displays sidebar pane after the panel shell transition has finished
-      sidebarContentTimeout = setTimeout(() => {
-        setShowSidebarContent(true)
-      }, 200)
-    } else {
-      setShowSidebarContent(false)
-    }
-
-    return () => {
-      if (sidebarContentTimeout) clearTimeout(sidebarContentTimeout)
-    }
-  }, [panelState.showSidebar])
-
+  function onPaneSizesChange(sizes: number[]) {
+    const width = sizes[renderedPanes.findIndex(isAnnotationsView)]
+    if (showAnnotations && width > 0) annotationsWidth.current = width
+  }
 
   if (error && !loading) return <PanelError error={error} resetErrorBoundary={() =>  init(panelState.config)} />
 
@@ -92,26 +111,28 @@ const PanelContent: FC = React.memo(() => {
       <div className="h-full w-full overflow-hidden relative" data-cy="panel-container">
         <div className="main-content flex flex-col h-full @container/panel">
           <PanelHeader />
-          <div className="flex-1" ref={allotmentContainerRef}>
+          <div className="flex-1 min-h-0" ref={allotmentContainerRef}>
             {showsNoView && <EmptyViews />}
-            {!showsNoView && <Allotment ref={allotmentRef} proportionalLayout={true}>
-              {contentPanes.map((pane, index) => {
-                const view = views[index]
-                const visible = view?.visible ?? true
-                return <Allotment.Pane key={pane.key} visible={visible} preferredSize={view ? getPreferredSize(view) : undefined}>
-                  {pane}
+            {!showsNoView && <Allotment ref={allotmentRef} proportionalLayout={true} onChange={onPaneSizesChange}>
+              {renderedPanes.map(pane => isContentView(pane)
+                ? <Allotment.Pane key={contentPanes[pane.key].key} visible={isVisible(pane)} preferredSize={getPreferredSize(pane)}>
+                  {/* the element the view toggles control - hidden with the pane */}
+                  <div id={paneDomId(panelId, pane.key)} className="h-full w-full" hidden={!isVisible(pane)}>
+                    {paneContent(pane)}
+                  </div>
                 </Allotment.Pane>
-              })}
+                // Only rendered while shown: a hidden pane with a preferred size throws off the layout of the
+                // views next to it.
+                : <Allotment.Pane key="annotations" minSize={ANNOTATIONS_PANE_MIN_WIDTH} preferredSize={getPreferredSize(pane)}>
+                  <div id={paneDomId(panelId, pane.key)} className="h-full w-full">
+                    <AnnotationsView />
+                  </div>
+                </Allotment.Pane>
+              )}
             </Allotment>}
             {!showsNoView && <PaneResizeHandles containerRef={allotmentContainerRef} />}
           </div>
           <PanelFooter />
-        </div>
-        <div className="absolute h-full top-0" data-sidebar-container>
-          <div className={`absolute ${panelState.showSidebar ? 'inset-y-0' : ''} left-0 w-px bg-border z-40`} />
-          {!showSidebarContent && <Loading />}
-          {showSidebarContent && <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle />}
-          {showSidebarContent && <SidebarView />}
         </div>
       </div>
     </div>

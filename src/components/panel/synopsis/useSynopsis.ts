@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import { SyncedTargetRef, useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { flattenSyncedTargets, getSelectorValue, getSource } from '@/utils/annotations.ts'
 import { getOtherSyncedTargets } from '@/utils/synopsis.ts'
 import { findFocusedTarget } from '@/utils/scroller.ts'
@@ -55,7 +55,7 @@ function scrollInOtherTexts(targetEls: HTMLElement[], yPos: number, scrolledText
 
 function useSynopsis(): SynopsisLogic {
   const { addSyncedTargets } = usePanel()
-  // null when the text is not rendered inside a text view (e.g. in the annotations sidebar)
+  // null when the text is not rendered inside a text view (e.g. in the annotations annotations view)
   const textView = useTextView()
   // the targets we gave the hover style, so onHoverEnd can drop it from exactly those again
   const hoveredTargetsRef = useRef<HTMLElement[]>([])

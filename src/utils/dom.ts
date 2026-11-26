@@ -122,7 +122,7 @@ const SCROLL_QUIET_TIMEOUT = 150
 // Runs the callback once every scroll inside root has come to rest. Scroll events do not bubble, so
 // they are listened to in the capture phase, which catches the scrolling of any container in root.
 // After each scrollend (or, without scrollend, after each scroll event) it waits SCROLL_QUIET_TIMEOUT
-// for a follow-up scroll, so chained scrolls (a sidebar card, then the text aligned to it) count as
+// for a follow-up scroll, so chained scrolls (an annotations view card, then the text aligned to it) count as
 // one. When nothing scrolls at all - the target was on screen already - it runs after that wait too.
 function onScrollEnd(root: Element, callback: () => void) {
   const supportsScrollEnd = 'onscrollend' in window

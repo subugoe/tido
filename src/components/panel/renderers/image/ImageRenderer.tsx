@@ -2,7 +2,6 @@ import  { useEffect, FC, useState, useRef } from 'react'
 import OpenSeadragon, { Viewer } from 'openseadragon'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
-import ImageActionButtons from '@/components/panel/views/image/ImageActionButtons.tsx'
 import { useErrorBoundary } from 'react-error-boundary'
 import Loading from '@/components/ui/loading.tsx'
 
@@ -116,7 +115,6 @@ const ImageRenderer: FC = () => {
   return (
     <>
       <div className="flex relative flex-col h-full w-full">
-        <ImageActionButtons />
         <div ref={viewerContainerRef} className="w-full h-full" />
       </div>
       {loading && <div className="absolute z-50 bg-background w-full h-full">

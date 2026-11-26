@@ -12,7 +12,7 @@ interface Props {
 const TextView: FC<Props> = ({ viewKey, visible }) => {
   const { panelState } = usePanel()
 
-  return <div className={`bg-background relative z-1 flex h-full w-full overflow-hidden`}>
+  return <div className={`bg-background relative z-1 flex flex-col h-full w-full overflow-hidden`}>
     <ErrorBoundary FallbackComponent={TextViewError} resetKeys={[panelState.item?.id]}>
       <TextViewProvider viewKey={viewKey} visible={visible}>
         <TextViewContent />

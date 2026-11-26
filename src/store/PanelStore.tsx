@@ -20,7 +20,6 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     item: null,
     manifest: null,
     activeTargetIndex: -1,
-    showSidebar: false,
     panelViews: []
   }
 }

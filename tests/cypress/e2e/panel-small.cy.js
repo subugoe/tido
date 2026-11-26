@@ -1,26 +1,30 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 /**
- * Header behaviour at small panel sizes (<600px breakpoint).
+ * Header behaviour in narrow panels (< 700px).
  *
- * Below that width the manifest navigation is collapsed (prev/next manifest buttons disappear)
- * and the collection title is replaced by a compact button group made of the collection icon
- * and the clickable manifest title. This spec verifies the switch and that each button keeps its
- * original functionality (collection icon -> local tree, manifest title -> manifest dropdown).
+ * Below that width the collection segment of the breadcrumb shows its icon only - the title is in its
+ * tooltip - and the view toggles show the icons of the views only. Every segment keeps what it opens:
+ * the collection icon the local tree, the manifest the manifest dropdown.
  *
  * Note: panels loaded from the config open with the width available to them (the default is only
- * used by panels opened later), so this spec resizes the panel explicitly: below the 600px
- * breakpoint in `beforeEach`, and back above it in the large-layout test.
+ * used by panels opened later), so this spec resizes the panel explicitly: below the 700px
+ * breakpoint in `beforeEach`, and back above it in the wide-layout test.
  */
 
 const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181'
 const collection = `${apiUrl}/example/collections/example.json`
 const manifest = `${apiUrl}/example/manifests/book2.json`
-const singleItemCollection = `${apiUrl}/example/collections/example-single-item.json`
 // the local tree tests navigate from the root node, which is shown by default
 const config = `panels[0].collection=${collection}&panels[0].manifest=${manifest}&tree.showRootNode=true`
 
-// Widths for switching the panel between the small (<600px) and large (>=600px) layout.
+// Widths for switching the panel between the narrow (< 700px) and wide (>= 1000px) layout.
 const SMALL_PANEL_WIDTH = 500
-const LARGE_PANEL_WIDTH = 800
+const LARGE_PANEL_WIDTH = 1100
+
+const selectors = {
+  ...panelSelectors,
+}
 
 function getPanel(panelIndex = 0) {
   return cy.get('#panels-wrapper')
@@ -40,33 +44,34 @@ function resizePanel(width, panelIndex = 0) {
 describe('Panel header at small panel sizes', () => {
   beforeEach(() => {
     cy.visit('/e2e.html?' + config)
-    // Shrink the panel below the breakpoint so the compact header renders,
-    // then wait for it (means the panel loaded).
+    getPanel().find(selectors.manifestLabel).should('contain.text', 'Moby-Dick')
     resizePanel(SMALL_PANEL_WIDTH)
-    getPanel().find('[data-cy="manifest-label-compact"]').should('be.visible')
   })
 
-  it('should replace the collection title and collapsed manifest navigation with a compact button group', () => {
-    getPanel().within(() => {
-      // the compact button group consists of the collection icon and the clickable manifest title
-      cy.get('[data-cy="collection-icon-button"]').should('be.visible')
-      cy.get('[data-cy="manifest-label-compact"]').should('be.visible')
-
-      // the normal collection title and the centred manifest navigation are hidden
-      cy.get('[data-cy="collection-title"]').should('not.be.visible')
-      cy.get('[data-cy="manifest-label"]').should('not.be.visible')
-      cy.get('[data-cy="prev-manifest-button"]').should('not.be.visible')
-      cy.get('[data-cy="next-manifest-button"]').should('not.be.visible')
-
-      // the item navigation stays available
-      cy.get('[data-cy="item-label"]').should('be.visible')
-      cy.get('[data-cy="prev-item-button"]').should('be.visible')
-      cy.get('[data-cy="next-item-button"]').should('be.visible')
+  it('shows the collection as an icon with its title in the tooltip, and the rest of the breadcrumb', () => {
+    getPanel().find(selectors.breadcrumb).within(() => {
+      cy.get(selectors.collectionTitle)
+        .should('be.visible')
+        .and('have.attr', 'title', 'Classic Literature Collection')
+        .find('span').should('not.be.visible')
+      cy.get(selectors.manifestLabel).should('be.visible')
+      cy.get(selectors.itemLabel).should('be.visible')
     })
+
+    // the item navigation stays available
+    getPanel().find('[data-cy="prev-item-button"]').should('be.visible')
+    getPanel().find('[data-cy="next-item-button"]').should('be.visible')
   })
 
-  it('should open the local collection tree when the collection icon is clicked', () => {
-    getPanel().find('[data-cy="collection-icon-button"]').click()
+  it('shows the icons of the views only, with their names in the tooltip', () => {
+    getPanel().find(selectors.viewToggle).first()
+      .should('have.attr', 'title')
+    // the name is only for screen readers: visually hidden (sr-only) - Cypress counts that as visible
+    getPanel().find(selectors.viewToggle).first().find('span').should('have.css', 'position', 'absolute')
+  })
+
+  it('opens the local collection tree from the collection icon', () => {
+    getPanel().find(selectors.collectionTitle).click()
 
     cy.get('[data-cy="tree"]')
       .should('be.visible')
@@ -80,8 +85,8 @@ describe('Panel header at small panel sizes', () => {
     cy.get('[data-cy="tree"]').should('not.exist')
   })
 
-  it('should navigate through the local collection tree opened from the compact icon', () => {
-    getPanel().find('[data-cy="collection-icon-button"]').click()
+  it('navigates through the local collection tree opened from the collection icon', () => {
+    getPanel().find(selectors.collectionTitle).click()
 
     cy.get('[data-cy="tree"]')
       .children('[data-cy="tree-node"]').eq(0)
@@ -98,17 +103,14 @@ describe('Panel header at small panel sizes', () => {
     // popover is closed and the panel shows the chosen manifest and item
     cy.get('[data-cy="tree"]').should('not.exist')
     getPanel().within(() => {
-      cy.get('[data-cy="manifest-label-compact"]').should('contain.text', 'The Great Gatsby')
-      cy.get('[data-cy="item-label"]').should('contain.text', 'Page 2')
+      cy.get(selectors.manifestLabel).should('contain.text', 'The Great Gatsby')
+      cy.get(selectors.itemLabel).should('contain.text', 'Page 2')
     })
   })
 
-  it('should open the manifest dropdown from the compact manifest title and keep the selection flow', () => {
-    getPanel().find('[data-cy="manifest-label-compact"]')
-      .should('contain.text', 'Moby-Dick')
-      .click()
+  it('opens the manifest dropdown from the manifest segment and keeps the selection flow', () => {
+    getPanel().find(selectors.manifestLabel).click()
 
-    // the same dropdown as the regular manifest button opens
     cy.get('[data-cy="manifests-dropdown"]')
       .should('be.visible')
       .children()
@@ -116,7 +118,7 @@ describe('Panel header at small panel sizes', () => {
       .contains('The Great Gatsby')
       .click()
 
-    // choosing a manifest still opens the item selection dropdown
+    // choosing a manifest opens the item selection dropdown
     cy.get('[data-cy="items-dropdown"]')
       .should('be.visible')
       .children()
@@ -125,50 +127,17 @@ describe('Panel header at small panel sizes', () => {
       .click()
 
     getPanel().within(() => {
-      cy.get('[data-cy="manifest-label-compact"]').should('contain.text', 'The Great Gatsby')
-      cy.get('[data-cy="item-label"]').should('contain.text', 'Page 2')
+      cy.get(selectors.manifestLabel).should('contain.text', 'The Great Gatsby')
+      cy.get(selectors.itemLabel).should('contain.text', 'Page 2')
     })
   })
 
-  it('should keep the normal collection title and manifest navigation above the breakpoint', () => {
+  it('shows the collection title and the names of the views in wide panels', () => {
     resizePanel(LARGE_PANEL_WIDTH)
 
-    getPanel().within(() => {
-      cy.get('[data-cy="collection-title"]')
-        .should('be.visible')
-        .should('contain.text', 'Classic Literature Collection')
-      cy.get('[data-cy="manifest-label"]').should('be.visible')
-      cy.get('[data-cy="prev-manifest-button"]').should('be.visible')
-      cy.get('[data-cy="next-manifest-button"]').should('be.visible')
-
-      // the compact resources stay hidden
-      cy.get('[data-cy="collection-icon-button"]').should('not.be.visible')
-      cy.get('[data-cy="manifest-label-compact"]').should('not.be.visible')
-    })
-  })
-
-  it('should merge the item label into the compact manifest title for a single-item manifest', () => {
-    cy.visit('/e2e.html?panels[0].collection=' + singleItemCollection)
-    resizePanel(SMALL_PANEL_WIDTH)
-
-    // the compact manifest title opens the same dropdown; select the single-item manifest
-    getPanel()
-      .find('[data-cy="manifest-label-compact"]')
-      .should('contain.text', 'Pride and Prejudice')
-      .click()
-    cy.get('[data-cy="manifests-dropdown"]')
-      .contains('Single Item Book')
-      .click()
-
-    getPanel().within(() => {
-      // the only item is loaded directly and its label is merged into the compact manifest title
-      cy.get('[data-cy="items-dropdown"]').should('not.exist')
-      cy.get('[data-cy="manifest-label-compact"]').should('contain.text', 'Single Item Book - Page 2')
-
-      // no item selector and no item arrows when there is only one item
-      cy.get('[data-cy="item-label"]').should('not.exist')
-      cy.get('[data-cy="prev-item-button"]').should('not.exist')
-      cy.get('[data-cy="next-item-button"]').should('not.exist')
-    })
+    getPanel().find(selectors.collectionTitle)
+      .should('contain.text', 'Classic Literature Collection')
+      .find('span').should('be.visible')
+    getPanel().find(selectors.viewToggle).first().find('span').should('have.css', 'position', 'static')
   })
 })

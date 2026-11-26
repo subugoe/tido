@@ -1,46 +1,56 @@
 /**
- * Opens the panel's "more" menu (the "…" button in the panel header) whose dropdown holds the
- * per-view visibility switches.
- * @param {number} panelIndex
- * @returns {Cypress.Chainable<JQuery<HTMLElement>>} the visible panel menu dropdown
+ * Selectors shared by the panel specs - spread them into the selectors of a spec: \`{ ...panelSelectors, ... }\`.
  */
-export function openPanelViewMenu(panelIndex = 0) {
-  cy.get('[data-cy="panels-wrapper"]')
-    .find('[data-cy="panel"]')
-    .eq(panelIndex)
-    .find('[data-cy="panel-menu"]')
-    .click()
-
-  return cy.get('[data-cy="panel-menu-dropdown"]').should('be.visible')
+export const panelSelectors = {
+  panelsWrapper: '[data-cy="panels-wrapper"]',
+  panel: '[data-cy="panel"]',
+  panes: '[data-cy="panel-container"] .split-view-view-visible',
+  breadcrumb: '[data-cy="panel-breadcrumb"]',
+  collectionTitle: '[data-cy="collection-title"]',
+  manifestLabel: '[data-cy="manifest-label"]',
+  itemLabel: '[data-cy="item-label"]',
+  nextItemButton: '[data-cy="next-item-button"]',
+  prevItemButton: '[data-cy="prev-item-button"]',
+  viewToggles: '[data-cy="panel-views"]',
+  viewToggle: '[data-cy="panel-view-toggle"]',
+  annotationsToggle: '[data-cy="annotations-toggle"]',
+  textContainer: '[data-text-container]',
+  contentType: '[data-cy="content-type"]',
+  contentTypesDropdown: '[data-cy="content-types-dropdown"]',
+  contentTypeOption: '[role="menuitemradio"]',
+  annotationsView: '[data-annotations-view]',
+  annotationsScrollContainer: '[data-annotations-scroll-container]',
+  annotationsHeader: '[data-cy="annotations-header"]',
+  annotationsLoading: '[data-cy="annotations-loading"]',
+  popover: '[data-slot="popover-content"]',
+  checkbox: '[data-slot="checkbox"]',
 }
 
 /**
- * Toggles the visibility switch of the view at viewIndex in the panel at panelIndex's menu and
- * closes the menu again.
+ * The view toggles of a panel in its header: one per pane, the annotations among them.
+ * @param {number} panelIndex
+ * @returns {Cypress.Chainable<JQuery<HTMLElement>>} the toggle group
+ */
+export function getPanelViews(panelIndex = 0) {
+  return cy.get('[data-cy="panels-wrapper"]')
+    .find('[data-cy="panel"]')
+    .eq(panelIndex)
+    .find('[data-cy="panel-views"]')
+}
+
+/**
+ * Toggles the text or image view at viewIndex in the panel at panelIndex.
  * @param {number} panelIndex
  * @param {number} viewIndex
  */
 export function togglePanelView(panelIndex, viewIndex) {
-  openPanelViewMenu(panelIndex)
-
-  cy.get('[data-cy="panel-menu-dropdown"]')
+  getPanelViews(panelIndex)
     .find('[data-cy="panel-view-toggle"]')
     .eq(viewIndex)
     .click()
-
-  closePanelViewMenu()
-}
-
-/**
- * Closes an open panel view menu.
- */
-export function closePanelViewMenu() {
-  cy.get('body').type('{esc}')
-  cy.get('[data-cy="panel-menu-dropdown"]').should('not.exist')
 }
 
 export const Panel = {
-  openPanelViewMenu,
+  getPanelViews,
   togglePanelView,
-  closePanelViewMenu,
 }

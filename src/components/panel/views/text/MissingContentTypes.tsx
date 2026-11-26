@@ -12,7 +12,7 @@ const MissingContentTypes: FC = () => {
 
   const contentTypes = missingContentTypes.map(type => t(type)).join(', ')
 
-  return <div className="p-3 pt-14 h-full w-full flex">
+  return <div className="p-3 flex-1 min-h-0 w-full flex">
     <Empty className="bg-muted/40 border border-border border-solid" data-cy="missing-content-types">
       <EmptyHeader>
         <EmptyMedia className="text-muted-foreground mb-6">

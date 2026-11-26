@@ -7,7 +7,6 @@ import {
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
-import { useConfig } from '@/contexts/ConfigContext.tsx'
 import GenericTextRenderer from '@/components/panel/renderers/text/GenericTextRenderer.tsx'
 
 interface Props {
@@ -15,9 +14,8 @@ interface Props {
 }
 
 const TextRenderer: FC<Props> = memo(({ onReady }) => {
-  const { showContentTypeToggle } = useConfig()
   const {
-    updatePanel,
+    openAnnotations,
     annotationsMode
   } = usePanel()
 
@@ -26,7 +24,7 @@ const TextRenderer: FC<Props> = memo(({ onReady }) => {
   const annotationsModeRef = useRef<'aligned' | 'list'>(null)
 
   function onSelect() {
-    updatePanel({ showSidebar: true })
+    openAnnotations()
   }
 
   useEffect(() => {
@@ -41,7 +39,7 @@ const TextRenderer: FC<Props> = memo(({ onReady }) => {
       source={activeContentUrl}
       sourceType="text"
       onSelect={onSelect}
-      paddingTop={showContentTypeToggle ? 16 : 2}
+      paddingTop={3}
     />
   </div>
 })

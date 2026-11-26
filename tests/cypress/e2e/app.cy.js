@@ -1,6 +1,8 @@
+import { panelSelectors } from '../support/panel-helpers'
 import { commonSelectors } from '../support/globals';
 
 const selectors = {
+  ...panelSelectors,
   ...commonSelectors,
   tab: '[role="tablist"] [data-pc-section="nav"] [data-pc-name="tabpanel"]'
 }

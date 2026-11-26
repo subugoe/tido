@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button.tsx'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { cn } from '@/lib/utils'
 interface Props {
   isPrev?: boolean
   isDisabled?: boolean
@@ -19,11 +20,11 @@ const NavigationButton: FC<Props> = ({ isPrev = false, isDisabled = false, navig
   return <Tooltip>
     <TooltipTrigger asChild>
       <Button
-        variant="outline"
+        variant="ghost"
         size="iconSm"
         disabled={isDisabled}
         onClick={navigate}
-        className={className}
+        className={cn('text-muted-foreground hover:text-foreground', className)}
         data-cy={dataCy}>
         { isPrev ? <ChevronLeft /> : <ChevronRight /> }
       </Button>

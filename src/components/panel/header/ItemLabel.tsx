@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button.tsx'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
-interface ItemLabelProps {
+interface ItemLabelProps extends LabelStyleProps {
   onSelect?: (itemId: string) => void
   onDropdownClose?: () => void
   showDropdown?: boolean,
@@ -18,7 +18,7 @@ interface ItemLabelProps {
   options: DropdownOption[]
 }
 
-const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowDropdown, onSelect, onDropdownClose }) => {
+const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowDropdown, onSelect, onDropdownClose, variant = 'outline', className = '' }) => {
   const { panelState, usePanelTranslation, panelRootRef } = usePanel()
   const { t } = usePanelTranslation()
 
@@ -37,7 +37,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowD
     return t(panelState?.item?.division ?? 'unknown')
   }
 
-  const buttonClasses = 'max-w-[120px] @max-[600px]/panel:max-w-[60px] @min-[1200px]/panel:max-w-[300px] truncate'
+  const buttonClasses = `max-w-[120px] @max-[600px]/panel:max-w-[60px] @min-[1200px]/panel:max-w-[300px] truncate ${className}`
 
   if (options.length <= 1) {
     // Nothing to select from: render the label as a plain, non-interactive button
@@ -46,7 +46,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowD
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            variant="outline"
+            variant={variant}
             size="sm"
             className={`${buttonClasses} cursor-default`}
             data-cy="item-label"
@@ -71,7 +71,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowD
         <DropdownMenuTrigger asChild>
           <TooltipTrigger asChild>
             <Button
-              variant="outline"
+              variant={variant}
               size="sm"
               className={`${buttonClasses} ${showDropdown ? 'bg-muted' : ''}`}
               data-cy="item-label">
