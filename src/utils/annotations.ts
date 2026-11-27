@@ -2,7 +2,6 @@ import { AnnotationFiltersConfig, FilterNodeWithSelection, VariantType } from '@
 import { apiRequest } from '@/utils/api.ts'
 import { getTypeValue } from '@/utils/filter-tree.ts'
 import { CustomError } from '@/utils/custom-error.ts'
-import type { SyncedTargetRef, SyncedTargetsMap, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { ANNOTATION_TARGET_JSON_FORMAT } from '@/utils/constants.ts'
 import { getContentType } from '@/utils/panel-views.ts'

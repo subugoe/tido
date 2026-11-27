@@ -1,4 +1,4 @@
-import { SyncedTargetsMap, useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { getSyncedTargets } from '@/utils/annotations.ts'
 
 // The targets the given one is synced with, resolved from the sync annotations of its source -

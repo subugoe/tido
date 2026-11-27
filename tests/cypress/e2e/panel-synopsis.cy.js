@@ -9,6 +9,7 @@ import {
   SYNC_SCROLL_THRESHOLD_BOTTOM,
   SYNC_SCROLL_THRESHOLD_TOP
 } from '../support/synopsis-helpers'
+import { togglePanelView } from '../support/panel-helpers'
 
 // Panels are opened exactly as in examples/config/example.json:
 // Panel 1: 'Example' collection, second manifest (book2), first item
@@ -51,7 +52,7 @@ const config = [
   ]),
   ...rootCollections.map(collection => `rootCollections[]=${collection}`),
   'annotations.crossRefContentType=CrossRef',
-  ...panelViews.map(view => `panelViews[]=${encodeURIComponent(JSON.stringify(view))}`)
+  ...[...panelViews, { view: 'annotations' }].map(view => `panelViews[]=${encodeURIComponent(JSON.stringify(view))}`)
 ].join('&')
 
 // utils/constants.ts - SYNOPSIS_SELECTED_STYLE, the background of a target of the active connection
@@ -104,22 +105,6 @@ function getPanel(index) {
 
 function getSyncTargetNavigation(panelIndex) {
   return getPanel(panelIndex).find('[data-cy="sync-target-navigation"]')
-}
-
-// Toggle a text view of a panel on/off in the panel views menu
-function togglePanelView(panelIndex, viewIndex) {
-  getPanel(panelIndex)
-    .find('[data-cy="panel-menu"]')
-    .click()
-
-  cy.get('[data-cy="panel-menu-dropdown"]')
-    .find('[data-cy="panel-view-toggle"]')
-    .eq(viewIndex)
-    .click()
-
-  // close the menu again so it does not cover the panel
-  cy.get('body').type('{esc}')
-  cy.get('[data-cy="panel-menu-dropdown"]').should('not.exist')
 }
 
 // Navigate a panel to the next / previous item
@@ -217,7 +202,12 @@ function hoverTarget(contentUrl, selector, event) {
     // negative: the target sits above the safe area, positive: below it, 0: it is already inside
     const delta = above < 0 ? above : Math.max(below, 0)
 
-    if (delta !== 0) cy.wrap($pane).scrollTo(0, Math.max(0, pane.scrollTop + delta))
+    if (delta === 0) return
+    cy.wrap($pane).scrollTo(0, Math.max(0, pane.scrollTop + delta))
+    // The scroll event of the correction fires a frame later. Wait for it, so it cannot arrive after
+    // a pointer pressed in the next command and pass for a scroll of the user.
+    cy.window().then(win => new Cypress.Promise(resolve =>
+      win.requestAnimationFrame(() => win.requestAnimationFrame(resolve))))
   })
 
   getTextPane(contentUrl).find(selector).trigger(event, { scrollBehavior: false, force: true })
@@ -413,7 +403,17 @@ describe('Panel Synopsis', () => {
     // '#meditation' carries no other annotation and is synced with a single target, so the click
     // selects the connection right away without a popover
     hoverTarget(transcription.contentUrl, MEDITATION, 'mouseenter')
-    getTextPane(transcription.contentUrl).find(MEDITATION).click({ scrollBehavior: false, force: true })
+    // The target can wrap onto a second line. The middle of its bounding box then lies between the two
+    // line boxes, on the paragraph, so the click goes to the middle of its first line box instead.
+    getTextPane(transcription.contentUrl).find(MEDITATION).then(($target) => {
+      const box = $target[0].getBoundingClientRect()
+      const line = $target[0].getClientRects()[0]
+      cy.wrap($target).click(
+        line.left - box.left + line.width / 2,
+        line.top - box.top + line.height / 2,
+        { scrollBehavior: false, force: true }
+      )
+    })
 
     DIPL_MEDITATION_TARGETS.forEach(selector =>
       getTextPane(diplomatic.contentUrl).find(selector).should('have.class', SYNOPSIS_STYLE_CLASS))
@@ -538,13 +538,13 @@ describe('Panel Synopsis', () => {
       .find('[data-cy="witness-label"]')
       .should('have.text', WITNESS_TITLE)
 
-    // 4. selecting the annotation in the popover opens the sidebar and selects the card of the
+    // 4. selecting the annotation in the popover opens the annotations view and selects the card of the
     // same annotation there
     getPopover().find('[data-cy="popover-annotation-item"]').click()
 
-    getPanel(SYNOPSIS_PANEL).find('[data-sidebar-view]').should('be.visible')
+    getPanel(SYNOPSIS_PANEL).find('[data-annotations-view]').should('be.visible')
     getPanel(SYNOPSIS_PANEL)
-      .find(`[data-sidebar-view] [data-annotation="${OCEAN_ANNOTATION}"]`)
+      .find(`[data-annotations-view] [data-annotation="${OCEAN_ANNOTATION}"]`)
       .should('have.attr', 'data-selected')
 
     // 5. deselecting it in the popover clears the selection in both places
@@ -552,7 +552,7 @@ describe('Panel Synopsis', () => {
 
     getPopover().find('[data-cy="popover-annotation-item"]').should('not.have.attr', 'data-selected')
     getPanel(SYNOPSIS_PANEL)
-      .find(`[data-sidebar-view] [data-annotation="${OCEAN_ANNOTATION}"]`)
+      .find(`[data-annotations-view] [data-annotation="${OCEAN_ANNOTATION}"]`)
       .should('not.have.attr', 'data-selected')
 
     // 6. selecting the 'Country Manners' witness and opening it adds a third panel showing the
@@ -662,10 +662,10 @@ describe('Panel Synopsis', () => {
 
 */
 
-  // Opening and closing the sidebar mounts and unmounts the annotation cards, and every card
+  // Opening and closing the annotations view mounts and unmounts the annotation cards, and every card
   // renders a GenericTextRenderer of its own. Those renderers must leave the active connection
-  // alone: its targets live in the texts of the panels, never in the sidebar.
-  it('Should keep the styles of a sync connection spanning two panels when the sidebar of the clicked target is opened and closed', () => {
+  // alone: its targets live in the texts of the panels, never in the annotations view.
+  it('Should keep the styles of a sync connection spanning two panels when the annotations view of the clicked target is opened and closed', () => {
     const transcription = findText(SYNOPSIS_PANEL, 'transcription')
     // the witness panel the connection is opened into, appended after the configured ones
     const WITNESS_PANEL = panels.length
@@ -684,7 +684,7 @@ describe('Panel Synopsis', () => {
     cy.get('[data-cy="panel"]').should('have.length', WITNESS_PANEL + 1)
 
     // The clicked target carries the active style, its synced target the synopsis style - the two
-    // styles the sidebar must not touch, asserted after every step below.
+    // styles the annotations view must not touch, asserted after every step below.
     const expectConnectionStyled = (label) => {
       getTextPane(transcription.contentUrl).find(OCEAN).should($target =>
         expect($target[0].classList.contains(SYNOPSIS_STYLE_CLASS)))
@@ -698,19 +698,19 @@ describe('Panel Synopsis', () => {
 
     expectConnectionStyled('after opening the witness panel')
 
-    // 2. open the sidebar of Panel 2 - the panel the clicked target lives in - and wait until its
+    // 2. open the annotations view of Panel 2 - the panel the clicked target lives in - and wait until its
     // annotation cards have actually rendered, so their renderers have run
-    getPanel(SYNOPSIS_PANEL).find('[data-cy="sidebar-toggle"]').click()
-    getPanel(SYNOPSIS_PANEL).find('[data-sidebar-view]').should('be.visible')
-    getPanel(SYNOPSIS_PANEL).find('[data-sidebar-view] [data-annotation]').should('exist')
+    getPanel(SYNOPSIS_PANEL).find('[data-cy="annotations-toggle"]').click()
+    getPanel(SYNOPSIS_PANEL).find('[data-annotations-view]').should('be.visible')
+    getPanel(SYNOPSIS_PANEL).find('[data-annotations-view] [data-annotation]').should('exist')
 
-    expectConnectionStyled('while the sidebar is open')
+    expectConnectionStyled('while the annotations view is open')
 
     // 3. close it again: unmounting the cards runs their cleanups, which must not reach the
     // connection - the regression this test covers
-    getPanel(SYNOPSIS_PANEL).find('[data-cy="close-sidebar"]').click()
-    getPanel(SYNOPSIS_PANEL).find('[data-sidebar-view]').should('not.exist')
+    getPanel(SYNOPSIS_PANEL).find('[data-cy="annotations-toggle"]').click()
+    getPanel(SYNOPSIS_PANEL).find('[data-annotations-view]').should('not.exist')
 
-    expectConnectionStyled('after closing the sidebar')
+    expectConnectionStyled('after closing the annotations view')
   })
 })

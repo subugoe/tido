@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Annotation filters derived from the rendered texts', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -14,53 +16,33 @@ describe('Annotation filters derived from the rendered texts', () => {
   ];
 
   const config = `panels[0].collection=${collection}&panels[0].manifest=${manifest}&panels[0].item=${item}`
-    + views.map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
+    + [...views, { view: 'annotations' }].map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
 
   const selectors = {
-    sidebarToggle: '[data-cy="sidebar-toggle"]',
-    sidebarContainer: '[data-sidebar-view]',
-    contentType: '[data-cy="content-type"]',
-    textContainer: '[data-text-container]',
-    popover: '[data-slot="popover-content"]',
-    checkbox: '[data-slot="checkbox"]',
-    viewsMenuToggle: '[data-cy="panel-menu"]',
-    viewsMenu: '[data-cy="panel-menu-dropdown"]',
-    viewSwitch: '[data-cy="panel-view-toggle"]',
-    prevItem: '[data-cy="prev-item-button"]',
-    nextItem: '[data-cy="next-item-button"]',
+    ...panelSelectors,
+    viewsMenu: '[data-cy="panel"]:first [data-cy="panel-views"]',
   };
 
-  const sidebar = () => cy.get(selectors.sidebarContainer);
+  const annotationsView = () => cy.get(selectors.annotationsView);
 
   // Each derived type is a <label> with a checkbox and the type name as text; the type names are
   // unique so a plain contains is enough to single one out.
   const filterRow = (label) => cy.get(selectors.popover).contains('label', label);
 
-  const openViewsMenu = () => {
-    cy.get(selectors.viewsMenuToggle).click();
-    cy.get(selectors.viewsMenu).should('be.visible');
-  };
-
   // Toggle a view's visibility switch and assert the resulting state so the next step doesn't race.
   const setView = (index, visible) => {
-    cy.get(`${selectors.viewsMenu} ${selectors.viewSwitch}`).eq(index).click();
-    cy.get(`${selectors.viewsMenu} ${selectors.viewSwitch}`)
+    cy.get(`${selectors.viewsMenu} ${selectors.viewToggle}`).eq(index).click();
+    cy.get(`${selectors.viewsMenu} ${selectors.viewToggle}`)
       .eq(index)
-      .should('have.attr', 'data-state', visible ? 'checked' : 'unchecked');
+      .should('have.attr', 'data-state', visible ? 'on' : 'off');
   };
 
-  // Dismiss the open Radix dropdown menu (clicking the trigger no longer closes it reliably once
-  // an item has been interacted with, so Escape is used).
-  const closeViewsMenu = () => {
-    cy.get('body').type('{esc}');
-    cy.get(selectors.viewsMenu).should('not.exist');
-  };
 
-  // Open the sidebar and the filters popover. Filters are derived asynchronously as each text renders,
+  // Open the annotations view and the filters popover. Filters are derived asynchronously as each text renders,
   // so wait for the button to enable first.
   const openFilters = () => {
-    cy.get(selectors.sidebarToggle).click();
-    sidebar().contains('button', /filters/i).should('not.be.disabled').click();
+    cy.get(selectors.annotationsToggle).click();
+    annotationsView().contains('button', /filters/i).should('not.be.disabled').click();
     cy.get(selectors.popover).should('be.visible');
   };
 
@@ -93,6 +75,7 @@ describe('Annotation filters derived from the rendered texts', () => {
     params.set('panels[0].manifest', `${apiUrl}/example/manifests/book1.json`);
     params.set('panels[0].item', book1Item);
     params.append('panelViews[]', JSON.stringify(transcriptionView));
+    params.append('panelViews[]', JSON.stringify({ view: 'annotations' }));
     params.append('annotations.tooltipTypes[]', type);
     params.append('annotations.disableHighlighting[]', type);
 
@@ -120,10 +103,10 @@ describe('Annotation filters derived from the rendered texts', () => {
   });
 
   it('should include in annotation filters the types from all rendered texts when no filters provided in config', () => {
-    cy.get(selectors.sidebarToggle).click();
+    cy.get(selectors.annotationsToggle).click();
 
     // Filters are derived asynchronously as each text renders, so wait for the button to enable.
-    sidebar().contains('button', /filters/i).should('not.be.disabled').click();
+    annotationsView().contains('button', /filters/i).should('not.be.disabled').click();
     cy.get(selectors.popover).should('be.visible');
 
     // 8 types: transcription contributes Character, Artistic Object, Historical Context, Setting;
@@ -151,9 +134,7 @@ describe('Annotation filters derived from the rendered texts', () => {
   });
 
   it('lists only the visible view\'s types after the first (transcription) view is hidden', () => {
-    openViewsMenu();
     setView(0, false); // hide the transcription view, leaving the diplomatic one
-    closeViewsMenu();
 
     openFilters();
 
@@ -162,10 +143,8 @@ describe('Annotation filters derived from the rendered texts', () => {
   });
 
   it('restores the hidden view\'s types once it is shown again', () => {
-    openViewsMenu();
     setView(0, false); // hide the transcription view ...
     setView(0, true); //  ... and show it again
-    closeViewsMenu();
 
     openFilters();
 
@@ -177,7 +156,7 @@ describe('Annotation filters derived from the rendered texts', () => {
   });
 
   it('derives the types of both texts of the second item', () => {
-    cy.get(selectors.prevItem).click();
+    cy.get(selectors.prevItemButton).click();
 
     // The second item (Chapter 2): wait for both texts to render before reading the filters.
     cy.get(selectors.textContainer).eq(0).find('#carpet-bag').should('exist');
@@ -191,15 +170,13 @@ describe('Annotation filters derived from the rendered texts', () => {
 
   it('keeps a view hidden across navigation and derives only the remaining visible text', () => {
     // Move to the second item, hide the diplomatic view there ...
-    cy.get(selectors.prevItem).click();
+    cy.get(selectors.prevItemButton).click();
     cy.get(selectors.textContainer).eq(0).find('#carpet-bag').should('exist');
 
-    openViewsMenu();
     setView(1, false); // hide the diplomatic view
-    closeViewsMenu();
 
     // ... then move to the third item; the diplomatic view stays hidden.
-    cy.get(selectors.nextItem).click();
+    cy.get(selectors.nextItemButton).click();
     cy.get(selectors.textContainer).eq(0).find('#para1').should('exist');
 
     openFilters();
@@ -287,47 +264,29 @@ describe('Annotation filters configured in config', () => {
 
   const config = `panels[0].collection=${collection}&panels[0].manifest=${manifest}&panels[0].item=${item}`
     + filtersParam
-    + views.map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
+    + [...views, { view: 'annotations' }].map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
 
   const selectors = {
-    sidebarToggle: '[data-cy="sidebar-toggle"]',
-    sidebarContainer: '[data-sidebar-view]',
-    contentType: '[data-cy="content-type"]',
-    textContainer: '[data-text-container]',
-    popover: '[data-slot="popover-content"]',
-    checkbox: '[data-slot="checkbox"]',
-    viewsMenuToggle: '[data-cy="panel-menu"]',
-    viewsMenu: '[data-cy="panel-menu-dropdown"]',
-    viewSwitch: '[data-cy="panel-view-toggle"]',
-    prevItem: '[data-cy="prev-item-button"]',
-    nextItem: '[data-cy="next-item-button"]',
+    ...panelSelectors,
+    viewsMenu: '[data-cy="panel"]:first [data-cy="panel-views"]',
   };
 
-  const sidebar = () => cy.get(selectors.sidebarContainer);
+  const annotationsView = () => cy.get(selectors.annotationsView);
   const filterRow = (label) => cy.get(selectors.popover).contains('label', label);
 
   const openFilters = () => {
-    cy.get(selectors.sidebarToggle).click();
-    sidebar().contains('button', /filters/i).click();
+    cy.get(selectors.annotationsToggle).click();
+    annotationsView().contains('button', /filters/i).click();
     cy.get(selectors.popover).should('be.visible');
   };
 
-  const openViewsMenu = () => {
-    cy.get(selectors.viewsMenuToggle).click();
-    cy.get(selectors.viewsMenu).should('be.visible');
-  };
-
   const setView = (index, visible) => {
-    cy.get(`${selectors.viewsMenu} ${selectors.viewSwitch}`).eq(index).click();
-    cy.get(`${selectors.viewsMenu} ${selectors.viewSwitch}`)
+    cy.get(`${selectors.viewsMenu} ${selectors.viewToggle}`).eq(index).click();
+    cy.get(`${selectors.viewsMenu} ${selectors.viewToggle}`)
       .eq(index)
-      .should('have.attr', 'data-state', visible ? 'checked' : 'unchecked');
+      .should('have.attr', 'data-state', visible ? 'on' : 'off');
   };
 
-  const closeViewsMenu = () => {
-    cy.get('body').type('{esc}');
-    cy.get(selectors.viewsMenu).should('not.exist');
-  };
 
   beforeEach(() => {
     cy.visit('/e2e.html?' + config);
@@ -374,9 +333,7 @@ describe('Annotation filters configured in config', () => {
   });
 
   it('keeps configured filters unchanged when a view is hidden', () => {
-    openViewsMenu();
     setView(0, false); // hide the transcription view
-    closeViewsMenu();
 
     openFilters();
 
@@ -390,12 +347,12 @@ describe('Annotation filters configured in config', () => {
     openFilters();
     cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 2);
 
-    // Navigate to the previous item (Chapter 2). Sidebar stays open.
-    cy.get(selectors.prevItem).click();
+    // Navigate to the previous item (Chapter 2). Annotations view stays open.
+    cy.get(selectors.prevItemButton).click();
     cy.get(selectors.textContainer).eq(0).find('#carpet-bag').should('exist');
     cy.get(selectors.textContainer).eq(1).find('#dipl-shirt').should('exist');
 
-    sidebar().contains('button', /filters/i).click();
+    annotationsView().contains('button', /filters/i).click();
     cy.get(selectors.popover).should('be.visible');
 
     // The filter list is still the same 2 configured items, regardless of what types Chapter 2 has.
@@ -403,11 +360,11 @@ describe('Annotation filters configured in config', () => {
     filterRow('Place').should('exist');
     filterRow('Character').should('exist');
 
-    // Navigate back to Chapter 3. Sidebar stays open.
-    cy.get(selectors.nextItem).click();
+    // Navigate back to Chapter 3. Annotations view stays open.
+    cy.get(selectors.nextItemButton).click();
     cy.get(selectors.textContainer).eq(0).find('#para1').should('exist');
 
-    sidebar().contains('button', /filters/i).click();
+    annotationsView().contains('button', /filters/i).click();
     cy.get(selectors.popover).should('be.visible');
     cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 2);
   });
@@ -418,7 +375,7 @@ describe('Annotation filters configured in config', () => {
     const extraConfig = `panels[0].collection=${collection}&panels[0].manifest=${manifest}&panels[0].item=${item}`
       + `&annotations.filters.items[]=${encodeURIComponent(JSON.stringify(filterItems[0]))}`
       + `&annotations.filters.items[]=${encodeURIComponent(JSON.stringify(extraFilter))}`
-      + views.map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
+      + [...views, { view: 'annotations' }].map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
 
     cy.visit('/e2e.html?' + extraConfig);
     cy.get(selectors.textContainer).should('have.length', 2);
@@ -464,22 +421,14 @@ describe('Preservation of the selected annotation types across item navigation (
   // No "annotations.filters" in the config, so the filter list is derived from the rendered texts and
   // its selection state is the one the panel aggregated while the user navigated.
   const config = `panels[0].collection=${collection}&panels[0].manifest=${manifest}&panels[0].item=${item}`
-    + views.map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
+    + [...views, { view: 'annotations' }].map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
 
   const selectors = {
-    sidebarToggle: '[data-cy="sidebar-toggle"]',
-    sidebarContainer: '[data-sidebar-view]',
-    textContainer: '[data-text-container]',
-    popover: '[data-slot="popover-content"]',
-    checkbox: '[data-slot="checkbox"]',
-    viewsMenuToggle: '[data-cy="panel-menu"]',
-    viewsMenu: '[data-cy="panel-menu-dropdown"]',
-    viewSwitch: '[data-cy="panel-view-toggle"]',
-    prevItem: '[data-cy="prev-item-button"]',
-    nextItem: '[data-cy="next-item-button"]',
+    ...panelSelectors,
+    viewsMenu: '[data-cy="panel"]:first [data-cy="panel-views"]',
   };
 
-  const sidebar = () => cy.get(selectors.sidebarContainer);
+  const annotationsView = () => cy.get(selectors.annotationsView);
   const filterRow = (label) => cy.get(selectors.popover).contains('label', label);
   const target = (viewIndex, selector) => cy.get(selectors.textContainer).eq(viewIndex).find(selector);
 
@@ -488,7 +437,7 @@ describe('Preservation of the selected annotation types across item navigation (
   const openFilters = () => {
     cy.get('body').type('{esc}');
     cy.get(selectors.popover).should('not.exist');
-    sidebar().contains('button', /filters/i).should('not.be.disabled').click();
+    annotationsView().contains('button', /filters/i).should('not.be.disabled').click();
     cy.get(selectors.popover).should('be.visible');
   };
 
@@ -502,7 +451,7 @@ describe('Preservation of the selected annotation types across item navigation (
   // Navigate and wait for a target of the new item, so the assertions don't read the previous item's DOM.
   const goToItem = (direction, waitSelector, viewIndex = 0) => {
     cy.get('body').type('{esc}');
-    cy.get(direction === 'prev' ? selectors.prevItem : selectors.nextItem).click();
+    cy.get(direction === 'prev' ? selectors.prevItemButton : selectors.nextItemButton).click();
     target(viewIndex, waitSelector).should('exist');
   };
 
@@ -510,23 +459,18 @@ describe('Preservation of the selected annotation types across item navigation (
   const goToChapter1 = () => goToItem('prev', '#usher');
   const goToChapter3 = () => goToItem('next', '#para1');
 
+  // the view toggles are in the panel header - an open popover is dismissed first
   const openViewsMenu = () => {
     cy.get('body').type('{esc}');
-    cy.get(selectors.viewsMenuToggle).click();
-    cy.get(selectors.viewsMenu).should('be.visible');
   };
 
   const setView = (index, visible) => {
-    cy.get(`${selectors.viewsMenu} ${selectors.viewSwitch}`).eq(index).click();
-    cy.get(`${selectors.viewsMenu} ${selectors.viewSwitch}`)
+    cy.get(`${selectors.viewsMenu} ${selectors.viewToggle}`).eq(index).click();
+    cy.get(`${selectors.viewsMenu} ${selectors.viewToggle}`)
       .eq(index)
-      .should('have.attr', 'data-state', visible ? 'checked' : 'unchecked');
+      .should('have.attr', 'data-state', visible ? 'on' : 'off');
   };
 
-  const closeViewsMenu = () => {
-    cy.get('body').type('{esc}');
-    cy.get(selectors.viewsMenu).should('not.exist');
-  };
 
   beforeEach(() => {
     cy.visit('/e2e.html?' + config);
@@ -536,8 +480,8 @@ describe('Preservation of the selected annotation types across item navigation (
     target(0, '#para1').should('exist');
     target(1, '#spouter-inn').should('exist');
 
-    cy.get(selectors.sidebarToggle).click();
-    sidebar().should('be.visible');
+    cy.get(selectors.annotationsToggle).click();
+    annotationsView().should('be.visible');
   });
 
   it('keeps a type deselected when the next item contains it as well', () => {
@@ -669,7 +613,6 @@ describe('Preservation of the selected annotation types across item navigation (
 
     openViewsMenu();
     setView(1, false); // hiding the diplomatic view drops "Place" from the derived list ...
-    closeViewsMenu();
 
     openFilters();
     filterRow('Setting').should('exist');
@@ -677,14 +620,13 @@ describe('Preservation of the selected annotation types across item navigation (
 
     openViewsMenu();
     setView(1, true); // ... and showing it again brings the type back, still deselected.
-    closeViewsMenu();
 
     openFilters();
     expectSelected('Place', false);
     target(1, '#spouter-inn').should('not.have.attr', 'data-annotation-ids');
   });
 
-  it('applies the preserved deselection to the annotations listed in the sidebar', () => {
+  it('applies the preserved deselection to the annotations listed in the annotations view', () => {
     openFilters();
 
     toggle('Place');
@@ -692,12 +634,12 @@ describe('Preservation of the selected annotation types across item navigation (
     goToChapter2();
     openFilters();
 
-    // Chapter 2 holds 29 annotations across both texts, 8 of them of type "Place" - which the sidebar
+    // Chapter 2 holds 29 annotations across both texts, 8 of them of type "Place" - which the annotations view
     // leaves out as long as the preserved deselection applies.
-    sidebar().find('[data-annotation]').should('have.length', 21);
+    annotationsView().find('[data-annotation]').should('have.length', 21);
 
     toggle('Place');
 
-    sidebar().find('[data-annotation]').should('have.length', 29);
+    annotationsView().find('[data-annotation]').should('have.length', 29);
   });
 });

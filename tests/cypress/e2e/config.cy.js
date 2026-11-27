@@ -333,26 +333,22 @@ describe('Config', () => {
       cy
         .get('[data-cy="item-label"')
         .should('contain', 'Page 1')
-      //open annotations sidebar
-        .get('[data-cy="sidebar-toggle"]')
+      //open annotations annotations view
+        .get('[data-cy="annotations-toggle"]')
         .should('be.enabled')
         .click()
         .get('[data-cy="annotations-header"]')
         .should('be.visible')
-      //the mode toggle moved behind the "…" menu - open it to inspect the preselected mode
-        .get('[data-cy="annotations-menu"]')
-        .click()
-      cy.get('[data-cy="list"]')
+      //the list mode is preselected
+      cy.get('[data-cy="annotations-mode-toggle"] [data-cy="list"]')
         .should('be.visible')
         .should('have.attr', 'data-state', 'on')
-      cy.get('[data-cy="aligned"]').should('have.attr', 'data-state', 'off')
-      cy.get('body').type('{esc}')
 
       // Hint: commented out this test because the order of annotations it's not a testable evidence.
       // Annotations in list view should actually also maintain the order of appearance.
       //check if "Successful courtier" is the last annotation
       // Successful courtier is the last item in list view but not in align view
-      // cy.get('[data-sidebar-view="true"]')
+      // cy.get('[data-annotations-view="true"]')
       //   .find('[data-annotation]')
       //   .should('have.length', 10)
       //   .then($annotations => {
@@ -367,29 +363,25 @@ describe('Config', () => {
   //collection with annotations
   runConfigTest('defaultAnnotationsMode=align&panels[0].collection=http://localhost:8181/example/collections/example.json',
     'Should have annotations align view preselected', () => {
-      //open annotations sidebar
+      //open annotations annotations view
       cy
         .get('[data-cy="item-label"')
         .should('contain', 'Page 1')
-        .get('[data-cy="sidebar-toggle"]')
+        .get('[data-cy="annotations-toggle"]')
         .should('be.enabled')
         .click()
         .get('[data-cy="annotations-header"]')
         .should('be.visible')
-      //the mode toggle moved behind the "…" menu - open it to inspect the preselected mode
-        .get('[data-cy="annotations-menu"]')
-        .click()
-      cy.get('[data-cy="aligned"]')
+      //the aligned mode is preselected
+      cy.get('[data-cy="annotations-mode-toggle"] [data-cy="aligned"]')
         .should('be.visible')
         .should('have.attr', 'data-state', 'on')
-      cy.get('[data-cy="list"]').should('have.attr', 'data-state', 'off')
-      cy.get('body').type('{esc}')
 
       // Hint: commented out this test because the order of annotations it's not a testable evidence.
       // Annotations in both views should actually also maintain the order of appearance.
       //check if "Successful courtier" is NOT the last annotation
       // Successful courtier is the last item in list view but not in align view
-      // cy.wait(1000).get('[data-sidebar-view="true"]')
+      // cy.wait(1000).get('[data-annotations-view="true"]')
       //   .find('[data-annotation]')
       //   .should('have.length', 10)
       //   .then($annotations => {

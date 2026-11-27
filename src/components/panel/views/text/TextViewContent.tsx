@@ -1,19 +1,16 @@
-import { FC, UIEvent, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import TextRenderer from '@/components/panel/renderers/text/TextRenderer.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Loading from '@/components/ui/loading.tsx'
-import TextOptions from '@/components/panel/views/text/TextOptions.tsx'
+import TextViewHeader from '@/components/panel/views/text/TextViewHeader.tsx'
 import TextViewWarning from '@/components/panel/views/text/TextViewWarning.tsx'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
-import { useConfig } from '@/contexts/ConfigContext.tsx'
 import MissingContentTypes from '@/components/panel/views/text/MissingContentTypes.tsx'
 
 const TextViewContent: FC = () => {
   const { panelState, getScroller } = usePanel()
   const { activeContentUrl, loadingText, setLoadingText, missingContentTypes } = useTextView()
-  const { showContentTypeToggle } = useConfig()
   const scrollContainer = useRef<HTMLDivElement>(null)
-  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     const url = activeContentUrl
@@ -27,23 +24,18 @@ const TextViewContent: FC = () => {
   useEffect(() => {
     if (!scrollContainer.current) return
     scrollContainer.current.scrollTop = 0
-    setScrolled(false)
   }, [panelState.item])
-
-  function onScroll(e: UIEvent<HTMLDivElement>) {
-    setScrolled(e.currentTarget.scrollTop > 0)
-  }
 
   function onReady() {
     setLoadingText(false)
   }
 
   return <>
-    {showContentTypeToggle && <div data-text-options className="absolute w-full top-0 z-10 flex flex-col items-center justify-center">
-      <TextOptions scrolled={scrolled} />
-    </div>}
+    <TextViewHeader />
     { missingContentTypes.length > 0 && <MissingContentTypes /> }
-    <div data-text-container ref={scrollContainer} hidden={missingContentTypes.length > 0} tabIndex={-1} onScroll={onScroll} className="h-full w-full overflow-auto px-3 focus:outline-none">
+    {/* the text scrolls below the header */}
+    <div data-text-container ref={scrollContainer} hidden={missingContentTypes.length > 0} tabIndex={-1}
+      className="flex-1 min-h-0 w-full overflow-auto px-3 focus:outline-none">
       <TextRenderer onReady={onReady} />
     </div>
     <div data-text-warning className="absolute w-full bottom-0 z-10 flex flex-col items-center justify-center">

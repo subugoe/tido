@@ -3,7 +3,6 @@ import { GripVertical } from 'lucide-react'
 
 interface Props {
   className?: string
-  'data-sidebar-resize-handle'?: boolean
   'data-panel-resize-handle'?: boolean
   'data-pane-resize-handle'?: boolean
 }

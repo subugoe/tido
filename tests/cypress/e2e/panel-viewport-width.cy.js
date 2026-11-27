@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Panel viewport width', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -5,16 +7,9 @@ describe('Panel viewport width', () => {
   const manifest = `${apiUrl}/example/manifests/book2.json`;
   const item = `${apiUrl}/example/items/book2-page1.json`;
 
-  // the room a panel keeps for the sidebar by default (SIDEBAR_DEFAULT_WIDTH)
-  const sidebarRoom = 400
-
   const selectors = {
-    itemLabel: '[data-cy="item-label"]',
+    ...panelSelectors,
     mainContent: '.main-content',
-    panel: '[data-cy="panel"]',
-    panelsWrapper: '[data-cy="panels-wrapper"]',
-    sidebarContainer: '[data-sidebar-view]',
-    sidebarToggle: '[data-cy="sidebar-toggle"]',
   };
 
   const visit = (showViewportWidth) => {
@@ -44,9 +39,9 @@ describe('Panel viewport width', () => {
     })
   }
 
-  it('Keeps room for the sidebar without the option', () => {
+  it('Takes the room of the viewport without the option - no room is kept for the annotations', () => {
     visit()
-    withViewportWidth((viewportWidth) => expectWidth(selectors.panel, viewportWidth - sidebarRoom))
+    withViewportWidth((viewportWidth) => expectWidth(selectors.panel, viewportWidth))
   })
 
   it('Spans the full viewport width with the option', () => {
@@ -54,14 +49,15 @@ describe('Panel viewport width', () => {
     withViewportWidth((viewportWidth) => expectWidth(selectors.panel, viewportWidth))
   })
 
-  it('Adds the sidebar beyond the viewport and keeps the content at the viewport width', () => {
+  it('Opens the annotations inside the panel and keeps the panel at the viewport width', () => {
     visit(true)
-    cy.get(selectors.sidebarToggle).click()
-    cy.get(selectors.sidebarContainer).should('be.visible')
+    cy.get(selectors.annotationsToggle).click()
+    cy.get(selectors.annotationsView).should('be.visible')
 
     withViewportWidth((viewportWidth) => {
-      expectWidth(selectors.panel, viewportWidth + sidebarRoom)
-      // the content keeps the full viewport width, apart from the panel's borders
+      expectWidth(selectors.panel, viewportWidth)
+      // the content keeps the full viewport width, apart from the panel's borders - the annotations
+      // pane takes its room from the views
       expectWidth(selectors.mainContent, viewportWidth - 2)
     })
   })

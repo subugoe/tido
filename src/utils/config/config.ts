@@ -2,13 +2,13 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
-import { TidoConfig, PanelConfig, TidoContentState, TidoContentStateTarget } from '@/types'
+import { TidoConfig, PanelConfig, PanelView, TidoContentState, TidoContentStateTarget } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
 import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { TFunction } from 'i18next'
 import { translateError } from '@/utils/custom-error.ts'
-import { applyViewOverrides } from '@/utils/panel-views.ts'
+import { applyViewOverrides, showAnnotations } from '@/utils/panel-views.ts'
 
 type ValidationResult<T> = {
   result: T;
@@ -93,13 +93,67 @@ function validateShowSynopsisNavigation(input: unknown): ValidationResult<TidoCo
   return { result, errors }
 }
 
-function validatePanels(input: unknown): ValidationResult<TidoConfig['panels']> {
+// The default of showContentTypesToggle - the one of the text view of the default panel views
+const DEFAULT_SHOW_CONTENT_TYPES_TOGGLE = defaultConfig.panelViews
+  .find(view => view.view === 'text')?.showContentTypesToggle ?? true
+
+// The options of each view of panel views (the global panelViews or panels[i].views, named by path): a text
+// view gets the default of an option it does not set, an invalid value is reported and replaced by it. An
+// annotations view after the first is reported - it is kept, so the view keys of bookmarks stay valid.
+function validateViewOptions(views: PanelView[], path: string): ValidationResult<PanelView[]> {
   const errors: Record<string, string> = {}
-  const result = Array.isArray(input) ? input as TidoConfig['panels'] : (() => {
+  const firstAnnotations = views.findIndex(view => view?.view === 'annotations')
+
+  const result = views.map((view, i) => {
+    if (view?.view === 'annotations' && i !== firstAnnotations) {
+      errors[`${path}[${i}]`] = 'only the first annotations view counts - this one is ignored'
+    }
+    if (view?.view !== 'text') return view
+
+    const { showContentTypesToggle } = view
+    if (typeof showContentTypesToggle === 'boolean') return view
+    if (showContentTypesToggle !== undefined) errors[`${path}[${i}].showContentTypesToggle`] = 'must be a boolean'
+    return { ...view, showContentTypesToggle: DEFAULT_SHOW_CONTENT_TYPES_TOGGLE }
+  })
+
+  return { result, errors }
+}
+
+// The former panels[i].showSidebar, from before the annotations were a view: it becomes the visibility of
+// the annotations view of the panel, taken from the global panel views when the panel has none of its own.
+// The panel had annotations before, so it gets an annotations view when its panel views have none.
+function migrateShowSidebar(panel: PanelConfig & { showSidebar?: unknown }, panelViews: PanelView[]): PanelConfig {
+  const { showSidebar, ...rest } = panel
+  if (typeof showSidebar !== 'boolean') return panel
+
+  const views = panel.views?.length > 0 ? panel.views : panelViews
+  const hasAnnotationsView = views.some(view => view?.view === 'annotations')
+  const migrated = hasAnnotationsView
+    ? showAnnotations(views, showSidebar)
+    : [...views, { view: 'annotations' as const, visible: showSidebar }]
+
+  return { ...rest, views: migrated }
+}
+
+function validatePanels(input: unknown, panelViews: PanelView[]): ValidationResult<TidoConfig['panels']> {
+  const errors: Record<string, string> = {}
+  const panels = Array.isArray(input) ? input as TidoConfig['panels'] : (() => {
     if (input !== undefined)
       errors['panels'] = 'must be an array'
     return defaultConfig.panels ?? []
   })()
+
+  const result = panels.map((given, i) => {
+    const isObject = typeof given === 'object' && given !== null
+    if (isObject && 'showSidebar' in given) {
+      errors[`panels[${i}].showSidebar`] = 'is no longer supported - set "visible" on the annotations view in panels[i].views or panelViews instead. Migrated for now.'
+    }
+    const panel = isObject ? migrateShowSidebar(given, panelViews) : given
+    if (!Array.isArray(panel?.views)) return panel
+    const views = validateViewOptions(panel.views, `panels[${i}].views`)
+    Object.assign(errors, views.errors)
+    return { ...panel, views: views.result }
+  })
 
   return { result, errors }
 }
@@ -255,7 +309,8 @@ function validatePanelViews(input: unknown): ValidationResult<TidoConfig['panelV
     return { errors, result: defaultConfig.panelViews }
   }
 
-  return { errors, result: input as TidoConfig['panelViews'] }
+  const views = validateViewOptions(input as TidoConfig['panelViews'], 'panelViews')
+  return { errors: views.errors, result: views.result }
 }
 
 function validateHideEmptyViews(input: unknown): ValidationResult<TidoConfig['hideEmptyViews']> {
@@ -401,7 +456,7 @@ export async function mergeAndValidateConfig(
   const container = validateContainer(userConfig.container)
   const panelViews = validatePanelViews(userConfig.panelViews)
   const hideEmptyViews = validateHideEmptyViews(userConfig.hideEmptyViews)
-  const panels = validatePanels(userConfig.panels)
+  const panels = validatePanels(userConfig.panels, panelViews.result)
   const showAddNewPanelButton = validateShowNewCollectionButton(userConfig.showAddNewPanelButton)
   const showCollectionTitle = validateShowCollectionTitle(userConfig.showCollectionTitle)
   const showContentTypeToggle = validateShowContentTypeToggle(userConfig.showContentTypeToggle)
@@ -495,7 +550,7 @@ export async function mergeAndValidateConfig(
             ...(hideEmptyViews && { hideEmptyViews }),
             ...(itemIndex > -1 && { item }),
             ...(manifestIndex > -1 && { manifest }),
-            ...(selectedAnnotationId && { selectedAnnotationId, showSidebar: true }),
+            ...(selectedAnnotationId && { selectedAnnotationId }),
             ...(resultViews && { views: resultViews })
           }
         }))

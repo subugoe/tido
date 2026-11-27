@@ -5,7 +5,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 import { getSelectedTypes } from '@/utils/annotations.ts'
 import { getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
 import { isNewManifest } from '@/utils/panel.ts'
-import { configureViews, getContentTypes, resolveViews } from '@/utils/panel-views.ts'
+import { configureViews, getContentTypes, hasAnnotations, resolveViews, showAnnotations } from '@/utils/panel-views.ts'
 import { getAssets } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
 import { FilterNodeWithSelection, PanelConfig, SelectedAnnotation } from '@/types'
@@ -28,6 +28,8 @@ interface PanelContextType {
   panelState: PanelState | null
   loading: boolean
   updatePanel: (data: Partial<PanelState>) => void
+  // shows the annotations view, together with the given changes
+  openAnnotations: (data?: Partial<PanelState>) => void
   remove: () => void
   // The outermost element of this panel - the one that goes fullscreen, and the one portalled content
   // (popovers, dropdowns, tooltips) must render into, since only the fullscreen element gets painted.
@@ -70,7 +72,7 @@ interface PanelContextType {
   matchedAnnotationsMaps: {[contentUrl: string]: MatchedAnnotationsMap}
   updateMatchedAnnotationsMap: (contentUrl: string, map: MatchedAnnotationsMap) => void
   // Filtered annotations of the visible text views, in panelViews order. Computed by useFilteredAnnotations
-  // (AnnotationsContext), read by the sidebar list and the header badge.
+  // (AnnotationsContext), read by the annotations view list and the header badge.
   filteredAnnotations: Annotation[]
   // True while filteredAnnotations is not final yet, e.g. after navigating until the new text is matched
   annotationsPending: boolean
@@ -243,12 +245,13 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       // configuration - the views of the previous item only hand over what the user changed (see resolveViews).
       // The navigation only hands over where to go, so without views in the given config the panel keeps
       // the views it was opened with.
+      const configuredViews = configureViews(tidoConfig, {
+        views: config.views ?? panelState.config?.views,
+        viewsWidthRatio: config.viewsWidthRatio ?? panelState.config?.viewsWidthRatio,
+        hideEmptyViews: config.hideEmptyViews ?? panelState.config?.hideEmptyViews,
+      })
       const resultPanelViews = resolveViews({
-        ...configureViews(tidoConfig, {
-          views: config.views ?? panelState.config?.views,
-          viewsWidthRatio: config.viewsWidthRatio ?? panelState.config?.viewsWidthRatio,
-          hideEmptyViews: config.hideEmptyViews ?? panelState.config?.hideEmptyViews,
-        }),
+        ...configuredViews,
         item,
         previous: panelState.panelViews,
       })
@@ -259,10 +262,13 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         manifest,
         item,
         panelViews: resultPanelViews,
-        showSidebar: config.showSidebar ?? panelState.showSidebar,
       })
 
-      if (item.annotationCollection) {
+      if (!hasAnnotations(resultPanelViews)) {
+        // 6. A panel without an annotations view has no annotations: nothing is loaded, highlighted or selected
+        setAnnotations(null)
+        setAnnotationsLoading(false)
+      } else if (item.annotationCollection) {
         // 6. Retrieve annotation data
         // Get an array of annotations and set up the witnesses
         // Update annotations data separately for progressive loading (still show text if annotations are broken)
@@ -281,12 +287,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
           setAnnotations(annotations)
           if (config.selectedAnnotationId) {
             getScroller().setOriginSelection('config')
-            updatePanel({ selectedAnnotation: {
+            openAnnotations({ selectedAnnotation: {
               annotation: annotations.find(a => a.id === config.selectedAnnotationId) ?? null,
               origin: 'config'
-            },
-            showSidebar: true
-            })          }
+            } })
+          }
         } catch (e) {
           logError(e, t)
           setAnnotationsError(e)
@@ -383,7 +388,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
   // What the renderers filter with: with configured filters that is selectedAnnotationTypes, without one
   // it is the aggregated dynamicAnnotationTypes in the same dict shape (the shape isFiltered and the
-  // annotation sidebar expect). Null means no filtering at all - nothing has been discovered yet.
+  // annotation annotations view expect). Null means no filtering at all - nothing has been discovered yet.
   const activeAnnotationTypes = useMemo<AnnotationTypesDict | null>(() => {
     if (annotationsConfig.filters) return selectedAnnotationTypes
     if (dynamicAnnotationTypes.length === 0) return null
@@ -416,6 +421,13 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     usePanelStore.getState().updatePanel(panelId, data)
   }
 
+  // Shows the annotations view of the panel, together with the given changes - from the current views in
+  // the store, so it does not undo a change of the views made in the same tick
+  function openAnnotations(data: Partial<PanelState> = {}) {
+    const panelViews = usePanelStore.getState().getPanel(panelId)?.panelViews ?? []
+    updatePanel({ ...data, panelViews: showAnnotations(panelViews, true) })
+  }
+
   function remove() {
     usePanelStore.getState().removePanel(panelId)
   }
@@ -440,6 +452,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       panelId,
       panelState,
       updatePanel,
+      openAnnotations,
       loading,
       remove,
       panelRootRef,

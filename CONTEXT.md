@@ -10,12 +10,20 @@ A viewer for TextAPI resources. It shows the items of collections and manifests 
 A column of the viewer that shows one item at a time through its views and can navigate to other items. Its views come from the configuration (its own views, else the global ones), a bookmark or the defaults, and can grow while it is open by appended views. It can show no view at all on an item.
 
 **Panel view**:
-A view of a panel as the project configures it: text or image, a label, the content types it may offer, and its configured content type.
+A view of a panel as the project configures it: text, image or annotations, a label, the content types it may offer, and its configured content type.
 _Avoid_: view config, views config
+
+**Annotations view**:
+The view showing the annotations of the item. It sits where the panel views configure it, like any other view, and only the first one counts. A panel without one has no annotations: they are not loaded, highlighted or listed. Whether the panel shows its annotations is the visibility of this view, like any other view: hidden unless configured visible, then switched by the user, a selected annotation or a cross-reference, and kept across items and in the bookmark. It never counts as the last open view of a panel.
+_Avoid_: sidebar, showSidebar, annotations panel
 
 **View state**:
 A panel view as it is shown on the current item: its offered content types, its active content type and whether it is visible.
 _Avoid_: resolved view, panel view (for the shown one)
+
+**Pane**:
+The place a view gets in the layout of its panel: one of the resizable columns side by side, with its position, width and whether it is shown. A pane is layout only - the view is the content, which exists independently of a pane and is put into one when the panel lays its views out. Widths, resizing and the order side by side belong to panes; a header, a scroll container, content types and annotations belong to views.
+_Avoid_: pane (for the content of a view, its header or its scroll container), view (for the place in the layout)
 
 **View key**:
 The stable identity of a view within its panel: its position among the configured panel views, continued for appended views. Survives item navigation and bookmarks.

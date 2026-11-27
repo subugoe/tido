@@ -1,139 +1,48 @@
-import { FC, memo, useEffect, useRef, useState } from 'react'
-import { MoreVertical, Image, AlignCenter, FileQuestionMark, MessageSquareText, X, type LucideIcon } from 'lucide-react'
+import { FC } from 'react'
+import { MoreVertical, X } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
-import { Badge } from '@/components/ui/badge.tsx'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu.tsx'
-import { Switch } from '@/components/ui/switch.tsx'
 
-import PanelTitle from '@/components/panel/header/PanelTitle.tsx'
 import { useManifestSwitcher } from '@/components/panel/header/useManifestSwitcher.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useConfig } from '@/contexts/ConfigContext.tsx'
-import { shownViews } from '@/utils/panel-views.ts'
 import { PANEL_HEADER_HEIGHT } from '@/utils/constants.ts'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
-import CollectionTitle from '@/components/panel/header/CollectionTitle.tsx'
-import CollectionIconButton from '@/components/panel/header/CollectionIconButton.tsx'
 import FullScreenToggle from '@/components/panel/header/FullScreenToggle.tsx'
-import ManifestLabel from '@/components/panel/header/ManifestLabel.tsx'
-import { ButtonGroup } from '@/components/ui/button-group.tsx'
-import { cn } from '@/lib/utils'
-
-interface PanelView {
-  key: number
-  icon: LucideIcon
-  label: string
-  visible: boolean
-}
-
-const SidebarToggle = memo((props) => {
-  const { panelState, updatePanel, usePanelTranslation, filteredAnnotations, annotationsPending } = usePanel()
-  const [tooltipMessage, setTooltipMessage] = useState('')
-  const { t } = usePanelTranslation()
-
-  // The annotations are empty for a moment when navigating to another item, so the last final count
-  // is kept until the new one is known - otherwise the toggle would flicker on every navigation.
-  const annotationsCount = useRef(0)
-  if (!annotationsPending) annotationsCount.current = filteredAnnotations.length
-
-  useEffect(() => {
-    setTooltipMessage(t(panelState.showSidebar ? 'hide_annotations' : 'display_annotations'))
-  }, [panelState.showSidebar])
-
-  function onClick() {
-    const showSidebar = !panelState.showSidebar
-    // closing the sidebar deselects the annotation in the same update
-    updatePanel(showSidebar ? { showSidebar } : { showSidebar, selectedAnnotation: null })
-  }
-
-  // Without any annotations there is nothing to display in the sidebar,
-  // so the toggle is hidden entirely.
-  if (annotationsCount.current === 0) return null
-
-  return <BaseTooltip message={tooltipMessage}>
-    <Button
-      variant="outline"
-      size="sm"
-      {...props}
-      className={cn('group', panelState.showSidebar ? 'ring-1 ring-secondary/50 border-secondary' : '')}
-      onClick={onClick} data-cy="sidebar-toggle"
-    >
-      <span className="hidden @min-[1000px]/panel:inline">{ t('annotations') }</span>
-      <MessageSquareText className="hidden @max-[999px]/panel:inline" />
-      <Badge className={`px-1.5 py-0.5 rounded-full text-xs leading-none  transition-colors ${panelState.showSidebar ? '' : 'text-foreground group-hover:bg-accent'}`} variant={panelState.showSidebar ? 'secondary' : 'muted'}>
-        { annotationsCount.current }
-      </Badge>
-    </Button>
-  </BaseTooltip>
-})
+import ViewToggles from '@/components/panel/header/ViewToggles.tsx'
+import PanelBreadcrumb from '@/components/panel/header/PanelBreadcrumb.tsx'
+import PrevItemButton from '@/components/panel/navigation/PrevItemButton.tsx'
+import NextItemButton from '@/components/panel/navigation/NextItemButton.tsx'
 
 const PanelHeader: FC = () => {
-  const { panelState, usePanelTranslation, updatePanel, remove, panelRootRef } = usePanel()
+  const { usePanelTranslation, remove, panelRootRef } = usePanel()
   const { t } = usePanelTranslation()
-  const [views, setViews] = useState<PanelView[]>([])
   const switcher = useManifestSwitcher()
-  const { showCollectionTitle } = useConfig()
-
-  useEffect(() => {
-    // only the views shown on the current item can be toggled
-    const data = shownViews(panelState.panelViews).map(({ key, view, label, visible }) => ({
-      key,
-      icon: view === 'text' ? AlignCenter : view === 'image' ? Image : FileQuestionMark,
-      label,
-      visible
-    }))
-    setViews(data)
-  }, [panelState.panelViews])
-
-  function updateView(index: number, visible: boolean) {
-    if (!visible && views.filter(v => v.visible).length === 1) return
-
-    const { key } = views[index]
-    updatePanel({
-      panelViews: panelState.panelViews.map(view => view.key === key ? { ...view, visible } : view)
-    })
-  }
-
-  const hasManifest = panelState && panelState.manifest
 
   return (
-    // equal side columns keep the title centered, whether or not the sidebar toggle is shown
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center border-b border-border px-2 bg-background" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
-      <div className="flex items-center">
-        {showCollectionTitle && (
-          <div className="hidden @min-[600px]/panel:inline-flex">
-            <CollectionTitle />
-          </div>
-        )}
-        <div className="flex items-center @min-[600px]/panel:hidden">
-          {hasManifest ? (
-            <ButtonGroup className="h-7">
-              {showCollectionTitle && <CollectionIconButton />}
-              <ManifestLabel
-                dataCy="manifest-label-compact"
-                options={switcher.manifestOptions}
-                selectedLabel={switcher.selectedLabel}
-                onSelect={switcher.onManifestSelect}
-                isSelecting={switcher.isSelecting}
-                merged={switcher.isSingleItem}
-              />
-            </ButtonGroup>
-          ) : (
-            showCollectionTitle && <CollectionTitle />
-          )}
+    // In wide panels three columns: the view toggles centered in the header, the title and the panel actions
+    // sharing the room left and right of them equally. In narrow panels the title takes all the room left
+    // and the toggles sit on the right, next to the actions.
+    <div
+      className="flex @min-[700px]/panel:grid @min-[700px]/panel:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 border-b border-border px-2 bg-background"
+      style={{ height: `${PANEL_HEADER_HEIGHT}px` }}
+    >
+      {/* where the panel is, and the way to the previous and next item - across manifests */}
+      <div className="flex items-center gap-1 min-w-0 flex-1" data-cy="panel-title-and-nav-arrows">
+        <PanelBreadcrumb switcher={switcher} />
+        <div className="flex items-center shrink-0">
+          <PrevItemButton />
+          <NextItemButton />
         </div>
       </div>
-      <div className="flex items-center justify-center gap-1 min-w-0 overflow-hidden @min-[600px]/panel:gap-2" data-cy="panel-title-and-nav-arrows">
-        <PanelTitle switcher={switcher} />
+      {/* always in place, so the actions stay in the last column when a panel has no view toggles */}
+      <div className="flex justify-center min-w-0 shrink-0">
+        <ViewToggles />
       </div>
-      <div className="flex items-center justify-end gap-1 @min-[600px]/panel:gap-2">
-        <SidebarToggle />
+      <div className="flex items-center justify-end gap-1 shrink-0 @min-[600px]/panel:gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild data-cy="panel-menu">
             <Button size="iconSm" variant="ghost">
@@ -141,33 +50,14 @@ const PanelHeader: FC = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" data-cy="panel-menu-dropdown" container={panelRootRef.current}>
-            {views.length > 1 && views.map((view, i) => {
-              const Icon = view.icon
-              return (
-                <DropdownMenuItem key={i} className="focus:bg-transparent cursor-default" onSelect={e => e.preventDefault()}>
-                  <Icon size={16} />
-                  {view.label}
-                  <Switch
-                    className="ml-auto"
-                    data-cy="panel-view-toggle"
-                    onCheckedChange={(checked) => updateView(i, checked)}
-                    checked={view.visible}
-                  />
-                </DropdownMenuItem>
-              )
-            })}
-            {views.length > 1 && <DropdownMenuSeparator />}
             <FullScreenToggle />
-            <DropdownMenuItem
-              className="text-destructive focus:text-destructive cursor-pointer"
-              onClick={remove}
-              data-cy="close-panel"
-            >
-              <X size={16} />
-              {t('close_panel')}
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <BaseTooltip message={t('close_panel')}>
+          <Button size="iconSm" variant="ghost" onClick={remove} aria-label={t('close_panel')} data-cy="close-panel">
+            <X />
+          </Button>
+        </BaseTooltip>
       </div>
     </div>
   )

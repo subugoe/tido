@@ -24,10 +24,16 @@ export const SYNC_HIGHLIGHT_STYLE = ['cursor-pointer']
 
 export const MIN_PANEL_WIDTH = 400
 export const DEFAULT_PANEL_WIDTH = 800
-export const SIDEBAR_DEFAULT_WIDTH = 400
+export const ANNOTATIONS_PANE_DEFAULT_WIDTH = 400
+// The annotations pane is shown next to the views inside the panel and cannot be dragged narrower
+export const ANNOTATIONS_PANE_MIN_WIDTH = 280
+// The annotations pane opens with at most this share of the panel width
+export const ANNOTATIONS_PANE_MAX_SHARE = 0.4
 export const PANEL_BORDER_WIDTH = 1
 export const PANEL_GAP = 16
 export const PANEL_HEADER_HEIGHT = 48
+// The toolbar over the top of a view - text, image or annotations - below the panel header
+export const VIEW_HEADER_HEIGHT = 40
 export const PANEL_FOOTER_HEIGHT = 38
 
 export const RAIL_WIDTH = 72

@@ -33,6 +33,7 @@ function buildConfig(panelOptions = [], rootOptions = []) {
     'showContentTypeToggle=false',
     `panelViews[]=${encodeURIComponent(JSON.stringify(textView('transcription')))}`,
     `panelViews[]=${encodeURIComponent(JSON.stringify(textView('diplomatic')))}`,
+    `panelViews[]=${encodeURIComponent(JSON.stringify({ view: 'annotations' }))}`,
   ].join('&')
 }
 

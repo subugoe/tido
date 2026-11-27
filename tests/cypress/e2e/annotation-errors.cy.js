@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Annotation data errors', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -9,11 +11,8 @@ describe('Annotation data errors', () => {
   // have a nested selector: a valid one, one whose outer part only matches outside the text and one
   // none of whose parts are in the text.
   const selectors = {
+    ...panelSelectors,
     selectedTarget: '[data-annotation-selected="true"]',
-    sidebarContainer: '[data-sidebar-view]',
-    sidebarLoading: '[data-cy="sidebar-loading"]',
-    sidebarToggle: '[data-cy="sidebar-toggle"]',
-    textContainer: '[data-text-container]',
     textWarning: '[data-text-warning]',
   };
 
@@ -35,10 +34,10 @@ describe('Annotation data errors', () => {
   const missingCard = cardFor('annotation-7')
   const missingAnnotationId = `${apiUrl}/example/broken-annotations/annotation-7`
 
-  const openSidebar = () => {
-    cy.get(selectors.sidebarToggle).click()
-    cy.get(selectors.sidebarContainer).should('be.visible')
-    cy.get(selectors.sidebarLoading).should('not.exist')
+  const openAnnotations = () => {
+    cy.get(selectors.annotationsToggle).click()
+    cy.get(selectors.annotationsView).should('be.visible')
+    cy.get(selectors.annotationsLoading).should('not.exist')
   }
 
   beforeEach(() => {
@@ -68,7 +67,7 @@ describe('Annotation data errors', () => {
   })
 
   it('Finds the target of a nested selector and aligns it when its annotation is selected', () => {
-    openSidebar()
+    openAnnotations()
 
     cy.get(nestedCard).should('be.visible')
       .click({ scrollBehavior: false })
@@ -83,7 +82,7 @@ describe('Annotation data errors', () => {
   })
 
   it('Lists only the annotations whose targets are found in the text', () => {
-    openSidebar()
+    openAnnotations()
 
     // annotation-1 (#truth) and annotation-5 (#para3 #bennet) are found in the text
     cy.get(cardFor('annotation-1')).should('be.visible')
@@ -97,7 +96,7 @@ describe('Annotation data errors', () => {
   })
 
   it('Hides the annotation of a nested selector whose outer part only matches outside the text', () => {
-    openSidebar()
+    openAnnotations()
     cy.get(nestedCard).should('be.visible')
 
     cy.get(outsideCard).should('not.exist')
@@ -108,7 +107,7 @@ describe('Annotation data errors', () => {
   })
 
   it('Hides the annotation of a nested selector none of whose parts are in the text', () => {
-    openSidebar()
+    openAnnotations()
     cy.get(nestedCard).should('be.visible')
 
     cy.get(missingCard).should('not.exist')

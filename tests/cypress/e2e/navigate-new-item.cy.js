@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Scroll positions across content type and item changes', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -14,7 +16,7 @@ describe('Scroll positions across content type and item changes', () => {
   // Moby-Dick, first item. The manifest is named explicitly, so the panel opens on Chapter 1 rather
   // than on the first manifest of the collection.
   const config = `panels[0].collection=${collection}&panels[0].manifest=${manifest}`
-    + twoTranscriptionViews
+    + [...twoTranscriptionViews, { view: 'annotations' }]
       .map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`)
       .join('')
 
@@ -29,11 +31,7 @@ describe('Scroll positions across content type and item changes', () => {
   }
 
   const selectors = {
-    contentType: '[data-cy="content-type"]',
-    contentTypesDropdown: '[data-cy="content-types-dropdown"]',
-    itemLabel: '[data-cy="item-label"]',
-    nextItemButton: '[data-cy="next-item-button"]',
-    textContainer: '[data-text-container]',
+    ...panelSelectors,
   }
 
   // Scrolls one of the two views down by the given fraction of its own visible height, so the view

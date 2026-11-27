@@ -31,7 +31,7 @@ import { useTextView } from '@/contexts/TextViewContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { SelectedAnnotation } from '@/types'
 import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
-import { useAnnotationPopover } from '@/components/panel/annotations/popover/useAnnotationPopover.tsx'
+import { useAnnotationPopover } from '@/components/panel/views/annotations/popover/useAnnotationPopover.tsx'
 import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { scrollProgrammatically } from '@/utils/dom.ts'
@@ -78,7 +78,7 @@ const TextAnnotationsLayer: FC<Props> = ({
     getScroller,
     updateMatchedAnnotationsMap
   } = usePanel()
-  // null when this text is not rendered inside a text view (e.g. in the annotations sidebar)
+  // null when this text is not rendered inside a text view (e.g. in the annotations annotations view)
   const textView = useTextView()
 
   // The hook finds this text's sync targets once it has the text and hands them back - what a
@@ -88,6 +88,9 @@ const TextAnnotationsLayer: FC<Props> = ({
   const activeSynopsisConnection = useSynopsisStore((state) => state.activeSynopsisConnection)
 
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
+  // the latest map of the text, null before it has been matched - read when the text is shown again: the
+  // state can still be the one of the render before when that happens in the same commit as the matching
+  const latestMap = useRef<MatchedAnnotationsMap | null>(null)
 
   const selectedAnnotationRef = useRef<SelectedAnnotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
@@ -174,10 +177,18 @@ const TextAnnotationsLayer: FC<Props> = ({
       textView?.addTextWarning('annotation_matching_error')
     } finally {
       report.flush()
+      latestMap.current = resultMap
       setMatchedMap(resultMap)
       updateMatchedMap(resultMap)
     }
   }, [parsedDom, annotations, annotationsConfig])
+
+  // A hidden text hands nothing to the panel (see updateMatchedMap). Once it is shown its map is handed
+  // over, else the panel would count none of its annotations until the next item.
+  useEffect(() => {
+    if (sourceType !== 'text' || !latestMap.current) return
+    updateMatchedMap(latestMap.current)
+  }, [textView?.visible])
 
 
   useEffect(() => {
@@ -315,6 +326,7 @@ const TextAnnotationsLayer: FC<Props> = ({
         resultMap[id].filtered = isFiltered(annotation, activeAnnotationTypes, tooltipTypes)
       })
 
+      latestMap.current = resultMap
       setMatchedMap(resultMap)
       updateMatchedMap(resultMap)
     } catch (e) {
@@ -323,9 +335,12 @@ const TextAnnotationsLayer: FC<Props> = ({
     }
   }, [activeAnnotationTypes])
 
-  // A text stores its map in the panel itself, an annotation in the sidebar hands it to its caller
+  // A text stores its map in the panel itself, an annotation in the annotations view hands it to its caller.
+  // Only a visible text: the panel keeps the maps by content url and only counts the texts of visible
+  // views - two views can show the same content, and a hidden one must not overwrite the map of the
+  // visible one, its annotations would be gone.
   function updateMatchedMap(map: MatchedAnnotationsMap) {
-    if (sourceType === 'text') updateMatchedAnnotationsMap(source, textView?.visible ? map : {})
+    if (sourceType === 'text' && textView?.visible) updateMatchedAnnotationsMap(source, map)
     if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(source, map)
   }
 
@@ -398,7 +413,7 @@ const TextAnnotationsLayer: FC<Props> = ({
     getScroller().setOriginSelection('text')
 
     // The annotations of the clicked target and of its parent targets - the popover sorts them
-    // into the areas it shows (cross references, tooltip items, sidebar items). Any target of an
+    // into the areas it shows (cross references, tooltip items, annotations view items). Any target of an
     // annotation in this text may be the clicked one; a target with an invalid selector cannot.
     const targetAnnotations = (annotations ?? []).filter(annotation =>
       getAnnotationTargets(annotation).some(annotationTarget => {
@@ -418,7 +433,7 @@ const TextAnnotationsLayer: FC<Props> = ({
 
     const { openTooltip, normalAnnotations } = onTargetClick(target, source, targetAnnotations)
 
-    // when we have only one normal annotation then we should select the annotation in Sidebar and not open tooltip. (select + deselect annotation)
+    // when we have only one normal annotation then we should select the annotation in Annotations view and not open tooltip. (select + deselect annotation)
     if (!openTooltip && normalAnnotations.length === 1) {
       // we need selectedAnnotationRef since the click listener has not an updated value of selectedAnnotation, it has the 'null' when it was initially created
       if (normalAnnotations[0].id === selectedAnnotationRef.current?.annotation.id) {

@@ -25,6 +25,8 @@
     {
       "label": "Text",
       "view": "text"
+    }, {
+      "view": "annotations"
     }
   ],
   "annotations": {

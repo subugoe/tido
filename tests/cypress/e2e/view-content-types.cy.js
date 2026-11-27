@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 // Every text view carries its own list of content types (panelViews[].contentTypes). The panel
 // resolves that list against the content types of the item on every navigation: a configured list
 // that the item fully offers is kept, otherwise the view falls back to all content types of the item.
@@ -5,18 +7,12 @@
 const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181'
 
 const selectors = {
-  contentType: '[data-cy="content-type"]',
-  contentTypesDropdown: '[data-cy="content-types-dropdown"]',
-  contentTypeOption: '[role="menuitemradio"]',
-  itemLabel: '[data-cy="item-label"]',
-  nextItemButton: '[data-cy="next-item-button"]',
-  textContainer: '[data-text-container]',
+  ...panelSelectors,
   popoverReferenceSection: '[data-cy="popover-reference-section"]',
   missingContentTypes: '[data-cy="missing-content-types"]',
-  prevItemButton: '[data-cy="prev-item-button"]',
 }
 
-const viewParams = (views) => views
+const viewParams = (views) => (views.length > 0 ? [...views, { view: 'annotations' }] : [])
   .map((view) => `panelViews[]=${encodeURIComponent(JSON.stringify(view))}`)
   .join('&')
 
@@ -88,9 +84,9 @@ describe('Content types of a text view', () => {
     ])
 
     cy.get(selectors.textContainer).find('#truth').should('exist')
-    cy.get('[data-cy="sidebar-toggle"]').click()
-    cy.get('[data-sidebar-view]').should('be.visible')
-    cy.get('[data-cy="sidebar-loading"]').should('not.exist')
+    cy.get('[data-cy="annotations-toggle"]').click()
+    cy.get('[data-annotations-view]').should('be.visible')
+    cy.get('[data-cy="annotations-loading"]').should('not.exist')
 
     cy.get(`[data-annotation="${apiUrl}/example/book1/page1/rev1/annotation-1"]`)
       .find('[id="famous-opening-lines"]')
@@ -155,9 +151,9 @@ describe('Content types of a text view', () => {
     cy.get(selectors.textContainer).find('#page1-transcription').should('not.exist')
     cy.get('@transcription.all').should('have.length', 0)
 
-    // the label of the view is still there, it opens nothing
-    cy.get(selectors.contentType).should('contain.text', 'Text').click()
-    cy.get(selectors.contentTypesDropdown).should('not.exist')
+    // the label of the view is still in its header, but there is no content type to name or switch
+    cy.get('[data-cy="text-view-label"]').should('contain.text', 'Text')
+    cy.get(selectors.contentType).should('not.exist')
 
     cy.get(selectors.nextItemButton).click()
     cy.get(selectors.itemLabel).should('contain.text', 'Three Content Types Page')
@@ -165,8 +161,9 @@ describe('Content types of a text view', () => {
     cy.get(selectors.missingContentTypes).should('not.exist')
     cy.get(selectors.textContainer).find('#page2-translation').should('be.visible')
 
-    // translation is the only configured content type, so the view shows its plain label again
-    cy.get(selectors.contentType).should('contain.text', 'Text').click()
+    // translation is the only configured content type, so it is only named, it opens nothing
+    cy.get('[data-cy="text-view-label"]').should('contain.text', 'Text')
+    cy.get(selectors.contentType).should('contain.text', 'translation').click()
     cy.get(selectors.contentTypesDropdown).should('not.exist')
   })
 

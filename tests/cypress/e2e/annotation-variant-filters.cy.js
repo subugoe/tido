@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Variant annotation filters with multiple root selection', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -30,36 +32,32 @@ describe('Variant annotation filters with multiple root selection', () => {
   };
 
   const selectors = {
-    sidebarToggle: '[data-cy="sidebar-toggle"]',
-    sidebarContainer: '[data-sidebar-view]',
-    textContainer: '[data-text-container]',
-    popover: '[data-slot="popover-content"]',
-    checkbox: '[data-slot="checkbox"]',
+    ...panelSelectors,
     witnessChip: '[data-cy="witness-chip"]',
   };
 
-  const sidebar = () => cy.get(selectors.sidebarContainer);
+  const annotationsView = () => cy.get(selectors.annotationsView);
   const filterRow = (label) => cy.get(selectors.popover).contains('label', label);
   const toggleFilter = (label) => filterRow(label).find(selectors.checkbox).click({ force: true });
-  const sidebarAnnotation = (n) => sidebar().find(`[data-annotation="${annotationId(n)}"]`);
+  const listedAnnotation = (n) => annotationsView().find(`[data-annotation="${annotationId(n)}"]`);
 
   const openFilters = () => {
-    cy.get(selectors.sidebarToggle).click();
-    sidebar().contains('button', /filters/i).click();
+    cy.get(selectors.annotationsToggle).click();
+    annotationsView().contains('button', /filters/i).click();
     cy.get(selectors.popover).should('be.visible');
   };
 
   // The listed annotations are exactly the given ones.
   const expectAnnotations = (numbers) => {
-    sidebar().find('[data-annotation]').should('have.length', numbers.length);
-    numbers.forEach((n) => sidebarAnnotation(n).should('exist'));
+    annotationsView().find('[data-annotation]').should('have.length', numbers.length);
+    numbers.forEach((n) => listedAnnotation(n).should('exist'));
   };
 
   // The card of the given Variant annotation shows exactly the given witness chips.
   const expectWitnesses = (n, labels) => {
-    sidebarAnnotation(n).find(selectors.witnessChip).should('have.length', labels.length);
+    listedAnnotation(n).find(selectors.witnessChip).should('have.length', labels.length);
     labels.forEach((label, i) => {
-      sidebarAnnotation(n).find(selectors.witnessChip).eq(i).should('have.text', label);
+      listedAnnotation(n).find(selectors.witnessChip).eq(i).should('have.text', label);
     });
   };
 
@@ -68,6 +66,7 @@ describe('Variant annotation filters with multiple root selection', () => {
     params.set('panels[0].manifest', manifest);
     params.set('panels[0].item', item);
     params.append('panelViews[]', JSON.stringify(view));
+    params.append('panelViews[]', JSON.stringify({ view: 'annotations' }));
     params.set('annotations.filters.rootSelectionRule', 'multiple');
     filterItems.forEach((filterItem) => params.append('annotations.filters.items[]', JSON.stringify(filterItem)));
 

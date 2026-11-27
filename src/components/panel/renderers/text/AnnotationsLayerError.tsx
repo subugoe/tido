@@ -11,7 +11,7 @@ interface Props {
 // renders nothing: the text next to it stays as it is, only without its annotations, and the
 // visitor is told about it in the text's warning bar.
 const AnnotationsLayerError: FC<Props> = ({ error, source }) => {
-  // null when the text is not rendered inside a text view (e.g. in the annotations sidebar)
+  // null when the text is not rendered inside a text view (e.g. in the annotations annotations view)
   const textView = useTextView()
 
   useEffect(() => {

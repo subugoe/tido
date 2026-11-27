@@ -131,7 +131,7 @@
     <ul>
     <li><strong>Type:</strong> String[]</li>
     </ul>
-    <p>Annotation types to display as a tooltip when clicked instead of in the sidebar. These types will be excluded from the filters.</p>
+    <p>Annotation types to display as a tooltip when clicked instead of in the annotations view. These types will be excluded from the filters.</p>
     <hr>
     <h5><code>annotations.types</code></h5>
     <ul>
@@ -203,12 +203,6 @@
     </ul>
     <p>Specifies the ID of a specific annotation to select/display when the panel loads.</p>
     <hr>
-    <h5><code>panels[i].showSidebar</code></h5>
-    <ul>
-    <li><strong>Type:</strong> Boolean</li>
-    </ul>
-    <p>Controls whether the annotations sidebar is visible for this panel.</p>
-    <hr>
     <h5><code>panels[i].showSynopsisNavigation</code></h5>
     <ul>
     <li><strong>Type:</strong> Boolean</li>
@@ -221,13 +215,13 @@
     <li><strong>Type:</strong> Boolean</li>
     <li><strong>Default:</strong> <code>false</code></li>
     </ul>
-    <p>Lets the panel open at the full width of the viewport. No room is kept for the annotations sidebar: when the sidebar is opened, it is added beside the panel content, beyond the viewport. Panels without this option share the width among themselves as usual.</p>
+    <p>Lets the panel open at the full width of the viewport. Panels without this option share the width among themselves as usual. The annotations are shown inside the panel, so opening them does not change its width.</p>
     <hr>
     <h5><code>panels[i].viewsWidthRatio</code></h5>
     <ul>
     <li><strong>Type:</strong> Number[]</li>
     </ul>
-    <p>Sets the width of each view relative to the others, with one value per view of the panel. With <code>[1, 3]</code> the first view takes 1/4 and the second 3/4 of the panel width. The ratio is kept when navigating to another item. When a view is hidden, the visible views share the width by their ratios. If the number of values does not match the number of views, or a value is not a positive number, the views get equal widths.</p>
+    <p>Sets the width of each text and image view relative to the others, with one value per text or image view of the panel - the annotations view counts for none. With <code>[1, 3]</code> the first view takes 1/4 and the second 3/4 of the panel width. The annotations view opens at its last width and the text and image views share the rest. The ratio is kept when navigating to another item. When a view is hidden, the visible views share the width by their ratios. If the number of values does not match the number of views, or a value is not a positive number, the views get equal widths.</p>
     <hr>
     <h5><code>panels[i].views</code></h5>
     <ul>
@@ -238,9 +232,13 @@
     <h5><code>panelViews</code></h5>
     <ul>
     <li><strong>Type:</strong> PanelViewConfig[]</li>
-    <li><strong>Default:</strong> <code>[{label: &quot;Image&quot;, view: &quot;image&quot;}, {label: &quot;Text&quot;, view: &quot;text&quot;}]</code></li>
+    <li><strong>Default:</strong> <code>[{label: &quot;Image&quot;, view: &quot;image&quot;}, {label: &quot;Text&quot;, view: &quot;text&quot;, showContentTypesToggle: true}, {label: &quot;Annotations&quot;, view: &quot;annotations&quot;}]</code></li>
     </ul>
-    <p>Configures an initial distribution of content views inside each panel. The defined views here can then be toggled on/off in the &quot;View&quot; dropdown in the panel header. See <a href="#panel-views">Panel Views</a> chapter.</p>
+    <p>Configures an initial distribution of views inside each panel. The defined views here can then be toggled on/off with the view toggles in the panel header. See <a href="#panel-views">Panel Views</a> chapter.</p>
+    <p>The annotations are a view too (<code>view: &quot;annotations&quot;</code>): its position, label and width ratio are configured like those of any other view. A panel shows annotations only when its views include one - without an annotations view the annotations of its items are not loaded, highlighted or listed. Only the first annotations view counts.</p>
+    <blockquote>
+    <p><strong>Breaking change in 5.0:</strong> annotations used to be shown for every panel, in a sidebar switched by <code>panels[i].showSidebar</code>. If you configure your own <code>panelViews</code> or <code>panels[i].views</code>, add <code>{ &quot;view&quot;: &quot;annotations&quot; }</code> to them to keep the annotations. <code>panels[i].showSidebar</code> is no longer supported: set <code>visible</code> on the annotations view instead. A panel config that still sets it is migrated - the panel gets an annotations view with that visibility - and the option is reported as a config error. A second annotations view is reported as well and ignored.</p>
+    </blockquote>
     <p>Which of the views are shown on an item is decided by <code>hideEmptyViews</code>: by default an image view is left out on items without images and a text view on items offering none of its content types.</p>
     <hr>
     <h5><code>panelViews[i].activeContentType</code></h5>
@@ -258,23 +256,30 @@
     <h5><code>panelViews[i].label</code></h5>
     <ul>
     <li><strong>Type:</strong> String</li>
-    <li><strong>Default:</strong> <code>Image</code> | <code>Text</code></li>
+    <li><strong>Default:</strong> <code>Image</code> | <code>Text</code> | <code>Annotations</code></li>
     </ul>
-    <p>Specifies a label for a view. It appears as title prefix in the content type toggle and in the &quot;View&quot; selection dropdown in the panel header.</p>
+    <p>Specifies a label for a view. It appears as title prefix in the content type toggle, next to its icon in the view toggles of the panel header (in wide panels) and, for the annotations view, in its toolbar.</p>
+    <hr>
+    <h5><code>panelViews[i].showContentTypesToggle</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Controls whether a text view names its content type in its header, with the dropdown to switch it when there are several. A text view that does not set it gets <code>true</code>; a value that is not a boolean is reported as a config error and replaced by <code>true</code>. When false, the header of this view shows its label only - e.g. for a view configured with a single content type. Applies to <code>panels[i].views</code> as well. The global <code>showContentTypeToggle</code> hides it for all views.</p>
     <hr>
     <h5><code>panelViews[i].view</code></h5>
     <ul>
-    <li><strong>Type:</strong> <code>image</code> | <code>text</code></li>
+    <li><strong>Type:</strong> <code>image</code> | <code>text</code> | <code>annotations</code></li>
     <li><strong>Default:</strong> <code>image</code> | <code>text</code></li>
     </ul>
-    <p>Specifies a view identifier that should be loaded into a split pane.</p>
+    <p>Specifies a view identifier that should be loaded into a split pane. <code>annotations</code> shows the annotations of the item; <code>activeContentType</code> and <code>contentTypes</code> do not apply to it.</p>
     <hr>
     <h5><code>panelViews[i].visible</code></h5>
     <ul>
     <li><strong>Type:</strong> Boolean</li>
     <li><strong>Default:</strong> <code>true</code></li>
     </ul>
-    <p>Controls whether this view is visible in the panel. When false, the view will be hidden but can be toggled on via the &quot;View&quot; dropdown.</p>
+    <p>Controls whether this view is visible in the panel. When false, the view will be hidden but can be toggled on in the panel header. For the annotations view the default is <code>false</code>: <code>true</code> opens the panel with its annotations shown. Afterwards they are shown and hidden by the user, a selected annotation or a cross-reference.</p>
     <hr>
     <h5><code>rootCollections</code></h5>
     <ul>
@@ -419,9 +424,22 @@
     <h3>Panel Views</h3>
     <p>This array of <code>PanelViewConfig</code> objects defines the actual visible content inside a panel. It is a list of
     objects, each of which creates a resizable split pane inside the panel. This configuration will be applied to all
-    additionally added panels. Users can toggle on/off each split pane by the &quot;View&quot; dropdown in the panel header.
-    It will show your configured labels of each <code>PanelViewConfig</code> as options. If no label is stated, it will show the raw
-    content type identifier instead.</p>
+    additionally added panels. Users can toggle on/off each split pane in the panel header: a group of toggles, one per view in the order of the
+    panes, of which several can be on at once. Each toggle shows your configured label next to its icon (in narrow panels
+    only the icon). If no label is stated, it will show the kind of the view instead. At least one text or image view
+    stays on.</p>
+    <p>The annotations are a view as well. Add one with <code>&quot;view&quot;: &quot;annotations&quot;</code> to choose where they appear and how they are
+    labelled; panels without one show no annotations at all. Their toggle is part of the same group and
+    can be switched on only when the item has annotations; while they are shown it stays enabled, so they can be closed.</p>
+    <p><strong>Example:</strong></p>
+    <pre><code class="language-json">{
+      &quot;panelViews&quot;: [
+        { &quot;view&quot;: &quot;annotations&quot;, &quot;label&quot;: &quot;Commentary&quot; },
+        { &quot;view&quot;: &quot;text&quot;, &quot;label&quot;: &quot;Transcription&quot;, &quot;activeContentType&quot;: &quot;transcription&quot; },
+        { &quot;view&quot;: &quot;image&quot;, &quot;label&quot;: &quot;Facsimile&quot; }
+      ]
+    }
+    </code></pre>
     <h3>Annotations</h3>
     <p>We provide configuration options to customize both the display and filtering of annotations.</p>
     <p>The configuration is organized by concern. Each aspect can be defined independently using its own configuration object
@@ -447,7 +465,7 @@
     </tbody></table>
     <p>A map of config objects for annotation types. Each key represents the annotation type string (&quot;x-content-type&quot;).
     Each value is an <code>AnnotationTypeConfig</code> object for setting a custom label and icon.
-    These values will be used in the UI to customize the display of annotations items in the panel sidebar.</p>
+    These values will be used in the UI to customize the display of annotations items in the annotations view of the panel.</p>
     <p>As mentioned above, variant annotations are a special case. In order to configure the witnesses display,
     you can set a the <code>idno</code> value from the <code>refs</code>-Array in the annotationsPage response.</p>
     <p><strong>Example:</strong></p>
@@ -473,7 +491,7 @@
     <td>AnnotationFiltersConfig</td>
     </tr>
     </tbody></table>
-    <p>Annotations displayed in the sidebar can be filtered by their type. You can define a hierarchical structure for these
+    <p>Annotations displayed in the annotations view can be filtered by their type. You can define a hierarchical structure for these
     filter options, referred to as a filter tree.
     Each node in the filter tree can control multiple annotation types simultaneously. Therefore, you need to
     specify an array of annotation types that should be affected by a given filter node.</p>
@@ -534,6 +552,7 @@
         }
       }
     }
+    
     </code></pre>
     <h4>AnnotationsMode</h4>
     <p>By default we provide an AnnotationsMode toggle which enables switching between <code>list</code> and <code>aligned</code> mode. Aligned mode

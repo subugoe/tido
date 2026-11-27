@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Alignment of an annotation with multiple targets', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181'
@@ -13,14 +15,10 @@ describe('Alignment of an annotation with multiple targets', () => {
   const lowerTarget = '#mrs-long'
 
   const selectors = {
-    panel: '[data-cy="panel"]',
-    sidebarContainer: '[data-sidebar-view]',
-    sidebarLoading: '[data-cy="sidebar-loading"]',
-    sidebarToggle: '[data-cy="sidebar-toggle"]',
-    textContainer: '[data-text-container]',
+    ...panelSelectors,
   }
 
-  // Vertical distance from the top of the panel - the frame both the text and the sidebar live in.
+  // Vertical distance from the top of the panel - the frame both the text and the annotations view live in.
   const yInPanel = (el, panel) => el.getBoundingClientRect().top - panel.getBoundingClientRect().top
 
   beforeEach(() => {
@@ -33,9 +31,9 @@ describe('Alignment of an annotation with multiple targets', () => {
     cy.get(selectors.textContainer).find(upperTarget).should('exist')
     cy.get(selectors.textContainer).find(lowerTarget).should('exist')
 
-    cy.get(selectors.sidebarToggle).click()
-    cy.get(selectors.sidebarContainer).should('be.visible')
-    cy.get(selectors.sidebarLoading).should('not.exist')
+    cy.get(selectors.annotationsToggle).click()
+    cy.get(selectors.annotationsView).should('be.visible')
+    cy.get(selectors.annotationsLoading).should('not.exist')
   })
 
   it('Aligns the card with its top most target when its first target is not in the text', () => {

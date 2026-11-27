@@ -32,7 +32,11 @@ const defaultConfig: TidoConfig = {
       view: 'image'
     }, {
       label: 'Text',
-      view: 'text'
+      view: 'text',
+      showContentTypesToggle: true
+    }, {
+      label: 'Annotations',
+      view: 'annotations'
     }
   ],
   annotations: {

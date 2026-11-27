@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Annotation disableHighlighting', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -15,9 +17,7 @@ describe('Annotation disableHighlighting', () => {
   });
 
   const selectors = {
-    sidebarToggle: '[data-cy="sidebar-toggle"]',
-    sidebarContainer: '[data-sidebar-view]',
-    textContainer: '[data-text-container]',
+    ...panelSelectors,
   };
 
   const openPage1 = ({ view = 'transcription', disableHighlighting = [] } = {}) => {
@@ -27,6 +27,7 @@ describe('Annotation disableHighlighting', () => {
     params.set('panels[0].manifest', manifest)
     params.set('panels[0].item', item)
     params.append('panelViews[]', JSON.stringify(textView(view)))
+    params.append('panelViews[]', JSON.stringify({ view: 'annotations' }))
     disableHighlighting.forEach((type) => params.append('annotations.disableHighlighting[]', type))
 
     cy.visit(`/e2e.html?${params.toString()}`)
@@ -47,13 +48,13 @@ describe('Annotation disableHighlighting', () => {
     target('#bennet').should('exist').and('not.have.class', 'bg-accent')
   })
 
-  it('Keeps the click handling and sidebar selection for disabled type targets', () => {
+  it('Keeps the click handling and annotations view selection for disabled type targets', () => {
     openPage1({ disableHighlighting: ['Character'] })
 
     target('#bennet').click()
 
-    cy.get(selectors.sidebarContainer).should('be.visible')
-    cy.get(selectors.sidebarContainer)
+    cy.get(selectors.annotationsView).should('be.visible')
+    cy.get(selectors.annotationsView)
       .find(`[data-annotation="${annotation('annotation-3')}"]`)
       .should('have.attr', 'data-selected', 'true')
 

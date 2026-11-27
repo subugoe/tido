@@ -3,7 +3,6 @@ import { FC, ReactElement } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import { Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react'
-import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
 
 interface ImageActions {
@@ -13,7 +12,6 @@ interface ImageActions {
 }
 
 const ImageActionButtons: FC = () => {
-  const { theme } = useConfig()
   const { panelId } = usePanel()
 
   const actions: ImageActions[] = [
@@ -45,23 +43,19 @@ const ImageActionButtons: FC = () => {
     actions.map((action, i) => (
       <Button
         variant="ghost"
-        size="icon"
+        size="iconSm"
         key={i}
         id={action.id}
         title={action.tooltip}
-        className="rounded-full"
+        // OpenSeadragon sets display: inline-block inline on the buttons it binds, which drops the flex centering
+        className="inline-flex!"
       >
-        <div
-          className="flex items-center justify-center"
-          style={{ color: theme.primaryColor }}
-        >
-          {action.icon}
-        </div>
+        {action.icon}
       </Button>
     ))
 
   return (
-    <div className="flex items-center justify-center image-action-buttons gap-2 my-1">
+    <div className="flex items-center gap-0.5">
       {actionButtons}
     </div>
   )

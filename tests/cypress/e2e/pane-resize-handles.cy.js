@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Pane resize handles', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -13,13 +15,10 @@ describe('Pane resize handles', () => {
   ]
 
   const selectors = {
+    ...panelSelectors,
     handle: '[data-pane-resize-handle]',
-    itemLabel: '[data-cy="item-label"]',
-    panes: '[data-cy="panel-container"] .split-view-view-visible',
     sash: '[data-cy="panel-container"] .sash-container > .sash-vertical',
-    viewsMenu: '[data-cy="panel-menu-dropdown"]',
-    viewsMenuToggle: '[data-cy="panel-menu"]',
-    viewSwitch: '[data-cy="panel-view-toggle"]',
+    viewsMenu: '[data-cy="panel"]:first [data-cy="panel-views"]',
   };
 
   beforeEach(() => {
@@ -40,12 +39,8 @@ describe('Pane resize handles', () => {
   }
 
   const setView = (index, visible) => {
-    cy.get(selectors.viewsMenuToggle).click()
-    cy.get(selectors.viewsMenu).should('be.visible')
-    cy.get(`${selectors.viewsMenu} ${selectors.viewSwitch}`).eq(index).click()
-      .should('have.attr', 'data-state', visible ? 'checked' : 'unchecked')
-    cy.get('body').type('{esc}')
-    cy.get(selectors.viewsMenu).should('not.exist')
+    cy.get(`${selectors.viewsMenu} ${selectors.viewToggle}`).eq(index).click()
+      .should('have.attr', 'data-state', visible ? 'on' : 'off')
   }
 
   it('Shows a handle on every separation line between the panes', () => {

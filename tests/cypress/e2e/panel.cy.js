@@ -237,62 +237,29 @@ describe('Panel with book 1', () => {
   })
 })
 
+// The breadcrumb of a single-item manifest is covered in panel-breadcrumb.cy.js - here its navigation
 describe('Panel with a single-item manifest', () => {
-  const singleItemCollection = 'http://localhost:8181/example/collections/example-single-item.json'
+  const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181'
+  const singleItemCollection = `${apiUrl}/example/collections/example-single-item.json`
+  const singleItemManifest = `${apiUrl}/example/manifests/book-single.json`
+
+  const breadcrumb = '[data-cy="panel-breadcrumb"]'
 
   beforeEach(() => {
-    cy.visit('/e2e.html?panels[0].collection=' + singleItemCollection)
+    cy.visit(`/e2e.html?panels[0].collection=${singleItemCollection}&panels[0].manifest=${singleItemManifest}`)
+    cy.get(breadcrumb).find('[data-cy="manifest-label"]').should('contain.text', 'Single Item Book')
+    cy.get('[data-text-container]').should('contain.text', 'Chapter 2')
   })
 
-  it('Skips the item selection step when a manifest with only one item is selected', () => {
-    // the collection opens with the first manifest and its first item
-    cy.validateLabel('manifest', 'Pride and Prejudice')
-    cy.validateLabel('item', 'Page 1')
+  it('Keeps the item navigation, which leads to the neighbouring manifests', () => {
+    cy.get(breadcrumb).find('[data-cy="item-label"]').should('not.exist')
 
-    // select the single-item manifest
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="manifest-label"]')
-      .click()
-    cy.get('[data-cy="manifests-dropdown"]')
-      .contains('Single Item Book')
-      .click()
+    // the last manifest of the collection: there is nothing after its only item
+    cy.get('[data-cy="next-item-button"]').should('be.disabled')
 
-    // the manifest dropdown closes and the only item is loaded directly without an item dropdown
-    cy.get('[data-cy="manifests-dropdown"]').should('not.exist')
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="items-dropdown"]').should('not.exist')
-
-    // the item is merged into the manifest label and the item selector is removed
-    cy.validateLabel('manifest', 'Single Item Book - Page 2')
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="item-label"]').should('not.exist')
-  })
-
-  it('Merges the item label into the manifest label and hides the item navigation', () => {
-    // open the single-item manifest first
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="manifest-label"]')
-      .click()
-    cy.get('[data-cy="manifests-dropdown"]')
-      .contains('Single Item Book')
-      .click()
-
-    // the item label is merged into the manifest label
-    cy.validateLabel('manifest', 'Single Item Book - Page 2')
-
-    // no item selector and no item arrows, only the manifest navigation remains
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .within(() => {
-        cy.get('[data-cy="item-label"]').should('not.exist')
-        cy.get('[data-cy="prev-item-button"]').should('not.exist')
-        cy.get('[data-cy="next-item-button"]').should('not.exist')
-        cy.get('[data-cy="prev-manifest-button"]').should('exist')
-        cy.get('[data-cy="next-manifest-button"]').should('exist')
-      })
+    // before its only item comes the last item of the previous manifest, which has an item segment again
+    cy.get('[data-cy="prev-item-button"]').should('not.be.disabled').click()
+    cy.get(breadcrumb).find('[data-cy="manifest-label"]').should('contain.text', 'Pride and Prejudice')
+    cy.get(breadcrumb).find('[data-cy="item-label"]').should('contain.text', 'Page 3')
   })
 })

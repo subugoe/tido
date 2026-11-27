@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 // A cross reference opened in a new panel has to bring its target on screen. The new panel is built from
 // the global panelViews and then the content holding the target is shown (see showContent):
 //   - a view already showing it stays as it is (covered in annotation-scroll.cy.js)
@@ -19,15 +21,7 @@ const crossRefStyleTimeout = 8000
 const collection = `${apiUrl}/example/collections/example.json`
 
 const selectors = {
-  panel: '[data-cy="panel"]',
-  popover: '[data-slot="popover-content"]',
-  sidebarToggle: '[data-cy="sidebar-toggle"]',
-  sidebarContainer: '[data-sidebar-view]',
-  sidebarLoading: '[data-cy="sidebar-loading"]',
-  textContainer: '[data-text-container]',
-  contentType: '[data-cy="content-type"]',
-  contentTypesDropdown: '[data-cy="content-types-dropdown"]',
-  contentTypeOption: '[role="menuitemradio"]',
+  ...panelSelectors,
 }
 
 const crossRefSourceCard = `[data-annotation="${apiUrl}/example/book1/page1/rev1/annotation-1"]`
@@ -40,7 +34,8 @@ const diplomaticOnly = '#dipl-note'
 
 const sourcePanelViews = [{ label: 'Text', view: 'text', activeContentType: 'transcription', contentTypes: ['transcription'] }]
 
-const viewParams = (key, views) => views
+// every panel views list gets its annotations view, so the panels show annotations as they would by default
+const viewParams = (key, views) => (views.length > 0 ? [...views, { view: 'annotations' }] : [])
   .map((view) => `${key}[]=${encodeURIComponent(JSON.stringify(view))}`)
   .join('&')
 
@@ -58,9 +53,9 @@ const openCrossRefInNewPanel = () => {
   cy.get(selectors.panel).should('have.length', 1)
   cy.get(selectors.textContainer).eq(0).find(crossRefSourceTarget).should('exist')
 
-  cy.get(selectors.sidebarToggle).click()
-  cy.get(selectors.sidebarContainer).should('be.visible')
-  cy.get(selectors.sidebarLoading).should('not.exist')
+  cy.get(selectors.annotationsToggle).click()
+  cy.get(selectors.annotationsView).should('be.visible')
+  cy.get(selectors.annotationsLoading).should('not.exist')
 
   cy.get(crossRefSourceCard).find(crossRefSpan).click()
   cy.get(selectors.popover).should('be.visible').contains('button', 'Open in new Panel').click()
@@ -86,13 +81,13 @@ const expectOptions = (viewIndex, expected) => {
 }
 
 // Records in the app when the referenced element gets the cross ref style and when it loses it again,
-// whether it lay fully within its scroll container (text view or sidebar) when it got it, and the time
+// whether it lay fully within its scroll container (text view or annotations view) when it got it, and the time
 // of every scroll. Install it right before picking the popover action: the element only renders after.
 const trackCrossRefStyle = (target) => {
   cy.window().then((win) => {
     const track = { scrolls: [] }
     const isOnScreen = (el) => {
-      const container = el.closest('[data-text-container], [data-sidebar-scroll-container]').getBoundingClientRect()
+      const container = el.closest('[data-text-container], [data-annotations-scroll-container]').getBoundingClientRect()
       const rect = el.getBoundingClientRect()
       return rect.top >= container.top - 1 && rect.bottom <= container.bottom + 1
     }
@@ -150,7 +145,7 @@ const expectAppendedDiplomaticView = (panelIndex) => {
   panelAt(panelIndex).find('[data-cy="manifest-label"]').should('contain.text', 'Moby-Dick')
   panelAt(panelIndex).find('[data-cy="item-label"]').should('contain.text', 'Page 1')
   panelAt(panelIndex).find(selectors.textContainer).should('have.length', 2)
-  panelAt(panelIndex).find(selectors.contentType).eq(0).should('contain.text', 'Text')
+  panelAt(panelIndex).find('[data-cy="text-view-label"]').eq(0).should('contain.text', 'Text')
   panelAt(panelIndex).find(selectors.textContainer).eq(0).find(diplomaticOnly).should('not.exist')
   panelAt(panelIndex).find(selectors.contentType).eq(1).should('contain.text', 'diplomatic')
   panelAt(panelIndex).find(selectors.textContainer).eq(1).find(diplomaticOnly).should('exist')
@@ -167,11 +162,11 @@ const expectScrolledTo = (panelIndex, target) => {
   })
 }
 
-// The referenced annotation is selected in the sidebar, its target in the appended view, and both sit
+// The referenced annotation is selected in the annotations view, its target in the appended view, and both sit
 // on the same y position
 const expectReferencedAnnotationSelected = (panelIndex) => {
   panelAt(panelIndex).find(annotationRef.referencedCard).should('have.attr', 'data-selected', 'true')
-  // the card is marked as the referenced element only briefly, once the sidebar has scrolled to it
+  // the card is marked as the referenced element only briefly, once the annotations view has scrolled to it
   expectCrossRefStyleShownOnScreen()
   panelAt(panelIndex).find(selectors.textContainer).eq(1).find(annotationRef.target)
     .should('have.attr', 'data-annotation-selected', 'true')
@@ -196,7 +191,7 @@ describe('Cross reference views of a new panel', () => {
     secondPanel().find(selectors.contentType).should('have.length', 1).and('contain.text', 'transcription')
     secondPanel().find(selectors.textContainer).eq(0).find(diplomaticOnly).should('not.exist')
 
-    // b. The target is in that view and selected, together with its annotation in the sidebar
+    // b. The target is in that view and selected, together with its annotation in the annotations view
     secondPanel().find(ishmaelCard).should('have.attr', 'data-selected', 'true')
     secondPanel().find(selectors.textContainer).eq(0).find(ishmaelTargetSelector)
       .should('have.attr', 'data-annotation-selected', 'true')
@@ -222,14 +217,14 @@ describe('Cross reference views of a new panel', () => {
     // a. The configured view is kept as it is - a single content type, so it shows its label only - and
     // the appended one, labelled with the content type it was appended for, comes after it
     secondPanel().find(selectors.textContainer).should('have.length', 2)
-    secondPanel().find(selectors.contentType).eq(0).should('contain.text', 'Text')
+    secondPanel().find('[data-cy="text-view-label"]').eq(0).should('contain.text', 'Text')
     secondPanel().find(selectors.textContainer).eq(0).find(diplomaticOnly).should('exist')
     secondPanel().find(selectors.contentType).eq(1).should('contain.text', 'transcription')
     secondPanel().find(selectors.textContainer).eq(1).find(diplomaticOnly).should('not.exist')
     secondPanel().find(selectors.textContainer).eq(0).find(ishmaelTargetSelector)
       .should('not.have.attr', 'data-annotation-selected')
 
-    // b. The target is in the appended view and selected, together with its annotation in the sidebar
+    // b. The target is in the appended view and selected, together with its annotation in the annotations view
     secondPanel().find(ishmaelCard).should('have.attr', 'data-selected', 'true')
     secondPanel().find(selectors.textContainer).eq(1).find(ishmaelTargetSelector)
       .should('have.attr', 'data-annotation-selected', 'true')
@@ -276,7 +271,7 @@ describe('Cross reference opened in this panel', () => {
 
     // b. The panel's own view keeps the transcription, the appended view to its right shows the diplomatic text
     cy.get(selectors.textContainer).should('have.length', 2)
-    cy.get(selectors.contentType).eq(0).should('contain.text', 'Text')
+    cy.get('[data-cy="text-view-label"]').eq(0).should('contain.text', 'Text')
     cy.get(selectors.textContainer).eq(0).find(diplomaticOnly).should('not.exist')
     cy.get(selectors.contentType).eq(1).should('contain.text', 'diplomatic')
     cy.get(selectors.textContainer).eq(1).find(diplomaticOnly).should('exist')
@@ -294,7 +289,7 @@ describe('Cross reference opened in this panel', () => {
   })
 })
 
-// Cross references hanging off a span inside the body of an annotation card in the sidebar of Pride and
+// Cross references hanging off a span inside the body of an annotation card in the annotations view of Pride and
 // Prejudice, chapter 1 - both pointing into the diplomatic text of Moby-Dick, item "1", which the
 // transcription only views of the panels do not offer, so a view showing it is appended:
 //   - "neighbourhood in Regency England ..." (annotation-6) points at a text: #dipl-phantom
@@ -310,9 +305,9 @@ describe('Cross reference in an annotation', () => {
   // Clicks the span in the card of the source panel and picks the given action of the popover
   const openCrossRef = (ref, action) => {
     cy.get(selectors.textContainer).eq(0).find(crossRefSourceTarget).should('exist')
-    cy.get(selectors.sidebarToggle).click()
-    cy.get(selectors.sidebarContainer).should('be.visible')
-    cy.get(selectors.sidebarLoading).should('not.exist')
+    cy.get(selectors.annotationsToggle).click()
+    cy.get(selectors.annotationsView).should('be.visible')
+    cy.get(selectors.annotationsLoading).should('not.exist')
 
     cy.get(ref.card).find(ref.span).click()
     cy.get(selectors.popover).should('be.visible').within(() => {
@@ -377,7 +372,7 @@ describe('Cross reference in an annotation', () => {
 
 // A cross reference on "returned she" in the transcription of Pride and Prejudice, chapter 1, pointing at
 // annotation-diplomatic-3 of Moby-Dick, item "1" - the same annotation as the cross reference in an
-// annotation above. The panel goes there, a diplomatic view is appended, the sidebar opens and scrolls
+// annotation above. The panel goes there, a diplomatic view is appended, the annotations view opens and scrolls
 // down to the card.
 describe('Cross reference in the text pointing at an annotation', () => {
 

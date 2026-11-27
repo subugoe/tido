@@ -1,3 +1,5 @@
+import { panelSelectors } from '../support/panel-helpers'
+
 describe('Annotation filters with single root selection', () => {
 
   const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
@@ -10,16 +12,11 @@ describe('Annotation filters with single root selection', () => {
   };
 
   const selectors = {
-    sidebarToggle: '[data-cy="sidebar-toggle"]',
-    sidebarContainer: '[data-sidebar-view]',
-    textContainer: '[data-text-container]',
-    popover: '[data-slot="popover-content"]',
+    ...panelSelectors,
     tab: '[data-slot="tabs-trigger"]',
-    itemLabel: '[data-cy="item-label"]',
-    nextItem: '[data-cy="next-item-button"]',
   };
 
-  const sidebar = () => cy.get(selectors.sidebarContainer);
+  const annotationsView = () => cy.get(selectors.annotationsView);
 
   // The filter shape of examples/config/mha.json and examples/config/bdn.json: the roots are tabs, of
   // which only one is active. No "selectedIndex", so the first root is the active one.
@@ -29,6 +26,7 @@ describe('Annotation filters with single root selection', () => {
     params.set('panels[0].manifest', manifest);
     params.set('panels[0].item', item);
     params.append('panelViews[]', JSON.stringify(view));
+    params.append('panelViews[]', JSON.stringify({ view: 'annotations' }));
     params.set('annotations.filters.rootSelectionRule', 'single');
     filterItems.forEach((filterItem) => params.append('annotations.filters.items[]', JSON.stringify(filterItem)));
 
@@ -36,7 +34,7 @@ describe('Annotation filters with single root selection', () => {
   };
 
   const expectAnnotationsCount = (count) => {
-    sidebar().find('[data-annotation]').should('have.length', count);
+    annotationsView().find('[data-annotation]').should('have.length', count);
   };
 
   describe('with a witness root and a plain type root', () => {
@@ -60,13 +58,13 @@ describe('Annotation filters with single root selection', () => {
 
     const expectAnnotations = (numbers) => {
       expectAnnotationsCount(numbers.length);
-      numbers.forEach((n) => sidebar().find(`[data-annotation="${annotationId(n)}"]`).should('exist'));
+      numbers.forEach((n) => annotationsView().find(`[data-annotation="${annotationId(n)}"]`).should('exist'));
     };
 
     beforeEach(() => {
       open(`${apiUrl}/example/manifests/variants.json`, `${apiUrl}/example/items/variants-page1.json`, filterItems);
       cy.get(selectors.textContainer).find('#var-ad').should('exist');
-      cy.get(selectors.sidebarToggle).click();
+      cy.get(selectors.annotationsToggle).click();
     });
 
     it('lists only the annotations of the active root on initial load', () => {
@@ -76,7 +74,7 @@ describe('Annotation filters with single root selection', () => {
     it('switches the listed annotations with the active root', () => {
       expectAnnotations([1, 2, 3, 4]);
 
-      sidebar().contains('button', /filters/i).click();
+      annotationsView().contains('button', /filters/i).click();
       cy.get(selectors.popover).contains(selectors.tab, 'Erläuterungen').click();
       expectAnnotations([5]);
 
@@ -94,10 +92,10 @@ describe('Annotation filters with single root selection', () => {
     it('applies the active root to the item navigated to', () => {
       open(`${apiUrl}/example/manifests/book1.json`, `${apiUrl}/example/items/book1-page1.json`, filterItems);
       cy.get(selectors.itemLabel).contains('Page 1');
-      cy.get(selectors.sidebarToggle).click();
+      cy.get(selectors.annotationsToggle).click();
       expectAnnotationsCount(3);
 
-      cy.get(selectors.nextItem).click();
+      cy.get(selectors.nextItemButton).click();
       cy.get(selectors.itemLabel).contains('Page 2');
       expectAnnotationsCount(2);
     });

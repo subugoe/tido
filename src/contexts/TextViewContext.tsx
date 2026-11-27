@@ -16,6 +16,8 @@ type State = {
   // the configured content types of a view that offers none of them on this item, otherwise empty
   missingContentTypes: string[]
   activeContentType: string
+  // whether the header names the content type and offers to switch it: the view's showContentTypesToggle
+  showContentTypesToggle: boolean
   // the url the current text was loaded from - always set together with text, so both describe the same content
   activeContentUrl: string
   setActiveContentType: (contentType: string) => void
@@ -40,6 +42,7 @@ export const TextViewProvider = ({
   const { panelState, loading: loadingPanel, usePanelTranslation, updatePanel, annotationsError } = usePanel()
   const view = panelState.panelViews.find(v => v.key === viewKey)
   const { activeContentType, label } = view ?? {}
+  const showContentTypesToggle = view?.showContentTypesToggle ?? true
   const contentTypes = useMemo(() => view?.contentTypes ?? [], [view?.contentTypes])
   // A view restricted to content types the item does not offer shows a notice instead of a text
   const missingContentTypes = useMemo(
@@ -134,7 +137,7 @@ export const TextViewProvider = ({
 
   }, [loadingPanel, activeContentType, contentUrl, hasMissingContentTypes])
 
-  // The text is shown without annotations when they could not be loaded - the sidebar shows the
+  // The text is shown without annotations when they could not be loaded - the annotations view shows the
   // error itself, this tells a visitor who has it closed. Listed again with every new text, as
   // loading one clears the warnings of the previous.
   useEffect(() => {
@@ -155,6 +158,7 @@ export const TextViewProvider = ({
       contentTypes,
       missingContentTypes,
       activeContentType,
+      showContentTypesToggle,
       activeContentUrl,
       setActiveContentType,
       label,
