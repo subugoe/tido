@@ -72,6 +72,19 @@ describe('Annotations view', () => {
     cy.get(selectors.annotationsToggle).should('have.attr', 'data-state', 'on')
   })
 
+  it('Stops loading when no text view is shown to list annotations for', () => {
+    // Only the annotations of visible text views are listed - with the text view hidden there are none.
+    // In the aligned mode, which is the default, the list used to stay loading then.
+    visit([
+      { view: 'text', label: 'Transcription', visible: false },
+      { view: 'image', label: 'Image' },
+      { view: 'annotations', visible: true },
+    ])
+
+    cy.get(selectors.annotationsView).should('exist')
+    cy.get(selectors.annotationsLoading).should('not.exist')
+  })
+
   it('Leaves the annotations off when the panel views configure none', () => {
     // the annotations of the item - the synopsis annotations of the collection are loaded anyway
     cy.intercept('GET', '**/annotationCollection/book1-page1.json').as('annotations')

@@ -73,9 +73,13 @@ export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
   const [alignmentLoading, setAlignmentLoading] = useState(false)
   const [matchedMaps, setMatchedMaps ] = useState<MatchedMaps>({})
 
+  // The aligned list loads until it has positioned its cards against their targets - it ends the loading
+  // itself. Without annotations to list it is not shown at all (EmptyAnnotations is), so there is nothing to
+  // wait for: e.g. when no text view is visible, as only the annotations of visible texts are listed.
+  const hasFilteredAnnotations = filteredAnnotations.length > 0
   useEffect(() => {
-    if (annotationsMode === 'aligned') setAlignmentLoading(true)
-  }, [annotationsMode])
+    setAlignmentLoading(annotationsMode === 'aligned' && hasFilteredAnnotations)
+  }, [annotationsMode, hasFilteredAnnotations])
 
   function updateMatchedMap(id: string, map: MatchedAnnotationsMap) {
     setMatchedMaps((prev) => {

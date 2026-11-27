@@ -225,13 +225,29 @@ describe('bookmarks', () => {
     expect(resolve(views, page1)[2]).toMatchObject({ contentTypes: ['transcription', 'edited'], activeContentType: 'edited' })
   })
 
+  it('leave a configured view alone when the bookmark has another kind of view at its key', () => {
+    // bookmarked with [annotations, text], the project now configures [image, text]
+    const views = applyViewOverrides(configured, [{ view: 'annotations', visible: true }, { view: 'text', activeContentType: 'edited' }])
+    expect(views).toEqual([image, { view: 'text', activeContentType: 'edited' }])
+  })
+
+  it('apply bookmarks without the kind of view by view key, as they were made before', () => {
+    expect(applyViewOverrides(configured, [{ visible: false }, {}])[0]).toEqual({ view: 'image', visible: false })
+  })
+
+  it('turn only text views beyond the configured ones into appended views', () => {
+    const views = applyViewOverrides(configured, [{}, {}, { view: 'annotations', visible: true }, { view: 'text', activeContentType: 'edited' }])
+    expect(views.map(view => view.view)).toEqual(['image', 'text', 'text'])
+    expect(views[2]).toMatchObject({ activeContentType: 'edited' })
+  })
+
   it('leave what the bookmark does not give to the configured view', () => {
     expect(applyViewOverrides(configured, [{ visible: undefined }, {}])).toEqual(configured)
   })
 
   it('hold every view by its key, omitted ones too', () => {
     const views = resolve(configured, page2, undefined, ['image', 'text'])
-    expect(viewOverrides(views)).toEqual([{ visible: true }, { visible: true, activeContentType: 'transcription' }])
+    expect(viewOverrides(views)).toEqual([{ view: 'image', visible: true }, { view: 'text', visible: true, activeContentType: 'transcription' }])
   })
 
   it('round-trip the preference and the appended views, not a fallback shown on the bookmarked item', () => {
@@ -347,7 +363,7 @@ describe('the annotations view', () => {
 
   it('is bookmarked with the other views, by its view key', () => {
     const views = showAnnotations(resolve([text(), annotations()], page1), true)
-    expect(viewOverrides(views)[1]).toEqual({ visible: true })
+    expect(viewOverrides(views)[1]).toEqual({ view: 'annotations', visible: true })
     expect(applyViewOverrides([text(), annotations()], viewOverrides(views))[1]).toEqual({ view: 'annotations', visible: true })
   })
 

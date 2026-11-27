@@ -978,7 +978,7 @@ Optional state attached to the outermost (Item) target:
 
 | Key        | Type                       | Required | Description                                                                              |
 |------------|----------------------------|----------|------------------------------------------------------------------------------------------|
-| views      | `Partial<PanelView>[]`     | No       | Array describing the visibility and active content type of each view in the panel.        |
+| views      | `Partial<PanelView>[]`     | No       | Array describing the kind, visibility and active content type of each view in the panel, in the order of the panel views. |
 | annotation | `string`                   | No       | ID of an annotation to select when the panel loads.                                      |
 
 #### PanelView (partial)
@@ -987,7 +987,8 @@ Each element in the `views` array supports the following keys (all optional with
 
 | Key              | Type       | Description                                                                                     |
 |------------------|------------|-------------------------------------------------------------------------------------------------|
-| visible          | `boolean`  | Whether the view pane is visible. Hidden views can be toggled on via the panel header dropdown.  |
+| view             | `'text' \| 'image' \| 'annotations'` | The kind of the view. The element is only applied to the panel view at the same position when it is of this kind - otherwise that panel view keeps its configuration, e.g. when the panel views changed since the bookmark was made. Elements without it are applied by position. |
+| visible          | `boolean`  | Whether the view is visible. Hidden views can be switched on with the view toggles in the panel header. |
 | activeContentType| `string`   | The content type to activate by default when multiple `contentTypes` are available.              |
 
 #### Full example
@@ -1010,8 +1011,9 @@ Each element in the `views` array supports the following keys (all optional with
       },
       state: {
         views: [
-          { visible: true, activeContentType: 'diplomatic' },
-          { visible: true }
+          { view: 'text', visible: true, activeContentType: 'diplomatic' },
+          { view: 'image', visible: true },
+          { view: 'annotations', visible: false }
         ],
         annotation: 'annotation-123'
       }

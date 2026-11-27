@@ -56,22 +56,29 @@ export function configureViews(
 }
 
 // The view states of a panel as overrides of its panel views, by view key - for a bookmark or a new panel.
-// Every view is part of it, omitted ones too, with its preferred content type - never a fallback shown on
-// this item - as activeContentType.
+// Every view is part of it, omitted ones too, with its kind of view, so the override is only applied to a
+// view of the same kind, and its preferred content type - never a fallback shown on this item - as
+// activeContentType.
 export function viewOverrides(views: PanelViewState[]): Partial<PanelView>[] {
-  return views.map(({ visible, preferredContentType }) => ({
+  return views.map(({ view, visible, preferredContentType }) => ({
+    view,
     visible,
     ...(preferredContentType && { activeContentType: preferredContentType }),
   }))
 }
 
 // The panel views with overrides applied, by view key: what an override gives for a view overrides the
-// configured view, as local config overrides global config. Overrides beyond the configured views are views
-// appended to the panel while it was open - they become text views of it, offering every content type.
+// configured view, as local config overrides global config. An override of another kind of view is left
+// out - it comes from a bookmark made with other panel views - so the configured view stays as it is.
+// Overrides without a kind of view are from bookmarks made before it was kept, and are applied by view key.
+// Overrides beyond the configured views are text views appended to the panel while it was open - they become
+// text views of it, offering every content type.
 export function applyViewOverrides(configured: PanelView[], overrides: Partial<PanelView>[]): PanelView[] {
   const given = (view: Partial<PanelView> = {}) => Object.fromEntries(Object.entries(view).filter(([, value]) => value !== undefined))
-  const views = configured.map((view, key) => ({ ...view, ...given(overrides[key]) }))
+  const sameKind = (view: PanelView, override: Partial<PanelView> = {}) => !override.view || override.view === view.view
+  const views = configured.map((view, key) => sameKind(view, overrides[key]) ? { ...view, ...given(overrides[key]) } : view)
   const appended = overrides.slice(configured.length)
+    .filter(view => !view.view || view.view === 'text')
     .map((view): PanelView => ({ view: 'text', label: view.activeContentType, ...given(view) }))
 
   return [...views, ...appended]

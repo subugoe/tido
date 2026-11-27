@@ -73,10 +73,10 @@ describe('getShareUrl', () => {
     const state = await stateOf(await getShareUrl())
 
     expect(state.target[0].state?.annotation).toBe('https://example.org/annotation-7')
-    // a view carries its preferred content type, not the one shown as a fallback on this item
+    // a view carries its kind and its preferred content type, not the one shown as a fallback on this item
     expect(state.target[0].state?.views).toEqual([
-      { visible: false },
-      { visible: true, activeContentType: 'transcription' }
+      { view: 'image', visible: false },
+      { view: 'text', visible: true, activeContentType: 'transcription' }
     ])
   })
 
